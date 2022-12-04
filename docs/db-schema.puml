@@ -1,5 +1,5 @@
 @startuml
-object Recipe {
+object Recipe  {
     <#F1F1F1,#F1F1F1>|= |= |= |
     | id |  uuid | **PK** |
     | name | varchar(20) |
