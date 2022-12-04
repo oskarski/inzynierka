@@ -3,25 +3,32 @@ object Recipe {
     <#F1F1F1,#F1F1F1>|= |= |= |
     | id |  uuid | **PK** |
     | name | varchar(20) |
+    | cuisine_type_id | uuid | **FK** |
 }
 
 object RecipeInstructionStep {
     <#F1F1F1,#F1F1F1>|= |= |= |
     | id | uuid | **PK** |
-    | dish_id | uuid | **FK** |
     | instruction | varchar(100) |
+    | timer | integer |
+    | recipie_id | uuid | **FK** |
 }
 
 object Ingredient {
   <#F1F1F1,#F1F1F1>|= |= |= |
     | id |  uuid | **PK** |
     | name | varchar(20) |
+    | quantity | integer |
+    | unit | varchar(20) |
+    | food_item_id | uuid| **FK** |
+    | recipie_id | uuid | **FK** |
 }
 
 object FoodItem {
   <#F1F1F1,#F1F1F1>|= |= |= |
     | id |  uuid | **PK** |
     | name | varchar(20) |
+    | food_item_category_id | uuid | **FK** |
 }
 
 object FoodItemCategory {
