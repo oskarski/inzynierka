@@ -61,8 +61,10 @@ object UserFavouriteRecipe {
 
 object Review {
     <#F1F1F1,#F1F1F1>|= |= |= |
-    | user_id |  uuid | **PK FK** |
-    | dish_id |  uuid | **PK FK** |
+    | user_id | uuid | **PK FK** |
+    | dish_id | uuid | **PK FK** |
+    | created_at | timestamp | |
+    | review_value | integer | |
 }
 
 object ShoppingList {
