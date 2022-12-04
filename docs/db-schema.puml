@@ -67,8 +67,11 @@ object Review {
 
 object ShoppingList {
     <#F1F1F1,#F1F1F1>|= |= |= |
-    | user_id |  uuid | **PK FK** |
-    | food_item_id |  uuid | **PK FK** |
+    | user_id | uuid | **PK FK** |
+    | food_item_id | uuid | **PK FK** |
+    | quantity | decimal | |
+    | unit | varchar(20) | |
+    | completed | boolean | |
 }
 
 Recipe -down-{ Ingredient
@@ -76,10 +79,8 @@ RecipeInstructionStep }-- Recipe
 Ingredient }-right- FoodItem
 FoodItem }-- FoodItemCategory
 Recipe }-left- CuisineType
-
 Recipe --{ Recipe_RecipeCategory
 Recipe_RecipeCategory }-- RecipeCategory
-
 Recipe -right-{ UserFavouriteRecipe
 UserFavouriteRecipe }-right- User
 Recipe -up-{ Review
