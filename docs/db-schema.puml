@@ -1,0 +1,6 @@
+@startuml
+object Dish {
+    id: uuid
+    name: varchar(20)
+}
+@enduml
