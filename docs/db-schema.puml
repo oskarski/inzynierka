@@ -1,6 +1,89 @@
 @startuml
-object Dish {
-    id: uuid
-    name: varchar(20)
+object Recipe {
+    <#F1F1F1,#F1F1F1>|= |= |= |
+    | id |  uuid | **PK** |
+    | name | varchar(20) |
 }
+
+object RecipeInstructionStep {
+    <#F1F1F1,#F1F1F1>|= |= |= |
+    | id | uuid | **PK** |
+    | dish_id | uuid | **FK** |
+    | instruction | varchar(100) |
+}
+
+object Ingredient {
+  <#F1F1F1,#F1F1F1>|= |= |= |
+    | id |  uuid | **PK** |
+    | name | varchar(20) |
+}
+
+object FoodItem {
+  <#F1F1F1,#F1F1F1>|= |= |= |
+    | id |  uuid | **PK** |
+    | name | varchar(20) |
+}
+
+object FoodItemCategory {
+  <#F1F1F1,#F1F1F1>|= |= |= |
+    | id |  uuid | **PK** |
+    | name | varchar(20) |
+}
+
+object CuisineType {
+    <#F1F1F1,#F1F1F1>|= |= |= |
+    | id |  uuid | **PK** |
+    | name | varchar(20) |
+}
+
+object RecipeCategory {
+    <#F1F1F1,#F1F1F1>|= |= |= |
+    | id |  uuid | **PK** |
+    | name | varchar(20) |
+}
+
+object Recipe_RecipeCategory {
+    <#F1F1F1,#F1F1F1>|= |= |= |
+    | id |  uuid | **PK** |
+    | name | varchar(20) |
+}
+
+object User {
+    <#F1F1F1,#F1F1F1>|= |= |= |
+    | id |  uuid | **PK** |
+}
+
+object UserFavouriteRecipe {
+    <#F1F1F1,#F1F1F1>|= |= |= |
+    | user_id |  uuid | **PK FK** |
+    | dish_id |  uuid | **PK FK** |
+}
+
+object Review {
+    <#F1F1F1,#F1F1F1>|= |= |= |
+    | user_id |  uuid | **PK FK** |
+    | dish_id |  uuid | **PK FK** |
+}
+
+object ShoppingList {
+    <#F1F1F1,#F1F1F1>|= |= |= |
+    | user_id |  uuid | **PK FK** |
+    | food_item_id |  uuid | **PK FK** |
+}
+
+Recipe -down-{ Ingredient
+RecipeInstructionStep }-- Recipe
+Ingredient }-right- FoodItem
+FoodItem }-- FoodItemCategory
+Recipe }-left- CuisineType
+
+Recipe --{ Recipe_RecipeCategory
+Recipe_RecipeCategory }-- RecipeCategory
+
+Recipe -right-{ UserFavouriteRecipe
+UserFavouriteRecipe }-right- User
+Recipe -up-{ Review
+Review }-down- User
+User -- ShoppingList
+ShoppingList -left- FoodItem
 @enduml
