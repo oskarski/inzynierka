@@ -18,14 +18,14 @@ usecase "Wyświetlanie przepisów\nna bazie filtrów" as recipes_by_filters
 
 usecase "Wyświetlanie szczegółów\nprzepisu" as recipe_details
 usecase "Dostosowywanie ilości\nskładników przepisu" as recipe_details_adjust_quantity
-usecase "Dodawanie przepisu do\nulubionych" as recipe_details_add_to_favourite
-usecase "Usuwanie przepisu z\nulubionych" as recipe_details_remove_from_favourite
 usecase "Ocenianie przepisu" as recipe_details_rate
 usecase "Tryb gotowania" as recipe_details_cooking_mode
-usecase "Dodawanie do\nlisty zakupów" as recipe_details_add_to_shopping_list
 
+usecase "Dodawanie przepisu do\nulubionych" as add_recipe_to_favourite
+usecase "Usuwanie przepisu z\nulubionych" as remove_recipe_from_favourite
 usecase "Wyświetlanie ulubionych\nprzepisów" as favourite_recipes
 
+usecase "Dodawanie składników\nprzepisu do listy zakupów" as add_recipe_ingredients_to_shopping_list
 usecase "Wyświetlenie listy\nzakupów" as shopping_list
 usecase "Czyszczenie listy\nzakupów" as shopping_list_clear
 usecase "Modyfikowanie listy\nzakupów" as shopping_list_edit
@@ -38,33 +38,33 @@ usecase "Publikowanie\nprzepisu" as publish_recipe
 
 anonymous_user <|-right- logged_in_user
 
-anonymous_user --> iam_register
-anonymous_user --> iam_login
+anonymous_user -- iam_register
+anonymous_user -- iam_login
 
-logged_in_user --> home_popular_recipes
-logged_in_user --> home_popular_categories
-logged_in_user --> home_my_recipes
+logged_in_user -- home_popular_recipes
+logged_in_user -- home_popular_categories
+logged_in_user -- home_my_recipes
 
-logged_in_user --> recipes_by_ingredients
-logged_in_user --> recipes_by_filters
+logged_in_user -- recipes_by_ingredients
+logged_in_user -- recipes_by_filters
 
-logged_in_user --> recipe_details
-recipe_details --> recipe_details_adjust_quantity
-recipe_details --> recipe_details_add_to_favourite
-recipe_details --> recipe_details_remove_from_favourite
-recipe_details --> recipe_details_rate
-recipe_details --> recipe_details_cooking_mode
-recipe_details --> recipe_details_add_to_shopping_list
+logged_in_user -- recipe_details
+recipe_details <-- recipe_details_adjust_quantity : <<include>>
+recipe_details <-- recipe_details_rate : <<include>>
+recipe_details <-- recipe_details_cooking_mode : <<include>>
 
-logged_in_user --> favourite_recipes
+logged_in_user -- add_recipe_to_favourite
+logged_in_user -- remove_recipe_from_favourite
+logged_in_user -- favourite_recipes
 
-logged_in_user --> shopping_list
-shopping_list --> shopping_list_clear
-shopping_list --> shopping_list_edit
-shopping_list --> shopping_list_complete
+logged_in_user -- add_recipe_ingredients_to_shopping_list
+logged_in_user -- shopping_list
+shopping_list -- shopping_list_clear : <<include>>
+shopping_list -- shopping_list_edit : <<include>>
+shopping_list -- shopping_list_complete : <<include>>
 
-logged_in_user --> add_recipe
-add_recipe --> edit_recipe
-add_recipe --> delete_recipe
-add_recipe --> publish_recipe
+logged_in_user -- add_recipe
+add_recipe -- publish_recipe : <<include>>
+add_recipe -- edit_recipe : <<include>>
+add_recipe -- delete_recipe : <<include>>
 @enduml
