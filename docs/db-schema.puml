@@ -88,9 +88,9 @@ Recipe -down-{ Ingredient
 RecipeInstructionStep }-- Recipe
 Ingredient }-right- FoodItem
 FoodItem }-- FoodItemCategory
-Recipe }-left- CuisineType
-Recipe --{ Recipe_RecipeCategory
-Recipe_RecipeCategory }-- RecipeCategory
+Recipe }-up- CuisineType
+Recipe -left-{ Recipe_RecipeCategory
+Recipe_RecipeCategory }-up- RecipeCategory
 Recipe -right-{ UserFavouriteRecipe
 UserFavouriteRecipe }-right- User
 Recipe -up-{ Review
