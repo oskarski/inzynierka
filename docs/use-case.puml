@@ -1,8 +1,7 @@
 @startuml
 left to right direction
 
-actor "Niezalogowany\n   użytkownik" as anonymous_user
-actor "Zalogowany\n użytkownik" as logged_in_user
+actor "Użytkownik" as user
 
 rectangle IAM {
     usecase "Rejestracja" as iam_register
@@ -42,40 +41,38 @@ usecase "Modyfikowanie\nprzepisu" as edit_recipe
 usecase "Usuwanie\nprzepisu" as delete_recipe
 usecase "Publikowanie\nprzepisu" as publish_recipe
 
-anonymous_user <|-right- logged_in_user
-
-anonymous_user -- iam_register
-anonymous_user -- iam_login
-anonymous_user -- iam_forgot_password
+user -- iam_register
+user -- iam_login
+user -- iam_forgot_password
 iam_login -- iam_logout : <<include>>
 iam_login -- iam_password_change : <<include>>
 iam_login -- iam_email_change : <<include>>
 iam_login -- iam_me_details : <<include>>
 iam_login -- iam_me_edit : <<include>>
 
-logged_in_user -- home_popular_recipes
-logged_in_user -- home_popular_categories
-logged_in_user -- home_my_recipes
+user -- home_popular_recipes
+user -- home_popular_categories
+user -- home_my_recipes
 
-logged_in_user -- recipes_by_ingredients
-logged_in_user -- recipes_by_filters
+user -- recipes_by_ingredients
+user -- recipes_by_filters
 
-logged_in_user -- recipe_details
+user -- recipe_details
 recipe_details <-- recipe_details_adjust_quantity : <<include>>
 recipe_details <-- recipe_details_rate : <<include>>
 recipe_details <-- recipe_details_cooking_mode : <<include>>
 
-logged_in_user -- add_recipe_to_favourite
-logged_in_user -- remove_recipe_from_favourite
-logged_in_user -- favourite_recipes
+user -- add_recipe_to_favourite
+user -- remove_recipe_from_favourite
+user -- favourite_recipes
 
-logged_in_user -- add_recipe_ingredients_to_shopping_list
-logged_in_user -- shopping_list
+user -- add_recipe_ingredients_to_shopping_list
+user -- shopping_list
 shopping_list -- shopping_list_clear : <<include>>
 shopping_list -- shopping_list_edit : <<include>>
 shopping_list -- shopping_list_complete : <<include>>
 
-logged_in_user -- add_recipe
+user -- add_recipe
 add_recipe -- publish_recipe : <<include>>
 add_recipe -- edit_recipe : <<include>>
 add_recipe -- delete_recipe : <<include>>
