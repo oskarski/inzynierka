@@ -7,6 +7,12 @@ actor "Zalogowany\n użytkownik" as logged_in_user
 rectangle IAM {
     usecase "Rejestracja" as iam_register
     usecase "Logowanie" as iam_login
+    usecase "Przypomnienie\nhasła" as iam_forgot_password
+    usecase "Wylogowanie" as iam_logout
+    usecase "Zmiana hasła" as iam_password_change
+    usecase "Zmiana adresu\nemail" as iam_email_change
+    usecase "Podgląd profilu" as iam_me_details
+    usecase "Modyfikacja profilu" as iam_me_edit
 }
 
 usecase "Wyświetlanie popularnych\nprzepisów" as home_popular_recipes
@@ -40,6 +46,12 @@ anonymous_user <|-right- logged_in_user
 
 anonymous_user -- iam_register
 anonymous_user -- iam_login
+anonymous_user -- iam_forgot_password
+iam_login -- iam_logout : <<include>>
+iam_login -- iam_password_change : <<include>>
+iam_login -- iam_email_change : <<include>>
+iam_login -- iam_me_details : <<include>>
+iam_login -- iam_me_edit : <<include>>
 
 logged_in_user -- home_popular_recipes
 logged_in_user -- home_popular_categories
