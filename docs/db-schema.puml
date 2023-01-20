@@ -96,5 +96,5 @@ UserFavouriteRecipe }-right- User
 Recipe -up-{ Review
 Review }-down- User
 User -- ShoppingList
-ShoppingList -left- FoodItem
+ShoppingList -left-{ FoodItem
 @enduml
