@@ -6,6 +6,12 @@ object Recipe  {
     | cuisine_type_id | uuid | **FK** |
 }
 
+note top of RecipeInstructionStep
+    Not sure if we need this table. Perhaps
+    `Recipie` entity should store instructions
+    as JSON?
+end note
+
 object RecipeInstructionStep {
     <#F1F1F1,#F1F1F1>|= |= |= |
     | id | uuid | **PK** |
@@ -13,6 +19,17 @@ object RecipeInstructionStep {
     | timer | integer |
     | recipie_id | uuid | **FK** |
 }
+
+note bottom of Ingredient
+    Perhaps we should mark some
+    ingredients as "special" and
+    "common" to show that they are
+    really common or really rare?
+
+    Eg. Oil or salt are really common
+    ingredients, but sychuan pepper
+    or thai basil aren't.
+end note
 
 object Ingredient {
   <#F1F1F1,#F1F1F1>|= |= |= |
@@ -31,11 +48,24 @@ object FoodItem {
     | food_item_category_id | uuid | **FK** |
 }
 
+note right of FoodItemCategory
+    Not sure if we need this table. Perhaps
+    `FoodItem` entity should store category
+    as column?
+end note
+
 object FoodItemCategory {
   <#F1F1F1,#F1F1F1>|= |= |= |
     | id |  uuid | **PK** |
     | name | varchar(20) |
 }
+
+note top of CuisineType
+    Not sure if we need this table. Perhaps
+    `Recipie` entity should store cuisine type
+    as column? Or maybe it should be defined
+    as `RecipeCategory`?
+end note
 
 object CuisineType {
     <#F1F1F1,#F1F1F1>|= |= |= |
