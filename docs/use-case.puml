@@ -25,7 +25,7 @@ usecase "Filtrowanie na bazie\ninnych filtrów" as filter_recipes_by_filters
 usecase "Wyświetlanie szczegółów\nprzepisu" as recipe_details
 usecase "Dostosowywanie ilości\nskładników przepisu" as recipe_details_adjust_quantity
 usecase "Ocenianie przepisu" as recipe_details_rate
-usecase "Tryb gotowania" as recipe_details_cooking_mode
+usecase "Wspomaganie gotowania" as recipe_details_cooking_mode
 
 usecase "Dodawanie przepisu do\nulubionych" as add_recipe_to_favourite
 usecase "Usuwanie przepisu z\nulubionych" as remove_recipe_from_favourite
