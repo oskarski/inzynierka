@@ -18,8 +18,9 @@ usecase "Wyświetlanie popularnych\nprzepisów" as home_popular_recipes
 usecase "Wyświetlanie popularnych\nkategorii" as home_popular_categories
 usecase "Wyświetlanie własnych\nprzepisów" as home_my_recipes
 
-usecase "Wyświetlanie przepisów\nna bazie składników" as recipes_by_ingredients
-usecase "Wyświetlanie przepisów\nna bazie filtrów" as recipes_by_filters
+usecase "Wyświetlanie przepisów" as recipes
+usecase "Filtrowanie na bazie\nskładników" as filter_recipes_by_ingredients
+usecase "Filtrowanie na bazie\ninnych filtrów" as filter_recipes_by_filters
 
 usecase "Wyświetlanie szczegółów\nprzepisu" as recipe_details
 usecase "Dostosowywanie ilości\nskładników przepisu" as recipe_details_adjust_quantity
@@ -54,8 +55,10 @@ user -- home_popular_recipes
 user -- home_popular_categories
 user -- home_my_recipes
 
-user -- recipes_by_ingredients
-user -- recipes_by_filters
+user -- recipes
+recipes <-- filter_recipes_by_ingredients : <<extends>>
+recipes <-- filter_recipes_by_filters  : <<extends>>
+
 
 user -- recipe_details
 recipe_details <-- recipe_details_adjust_quantity : <<include>>
