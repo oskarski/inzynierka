@@ -44,12 +44,12 @@ usecase "Publikowanie\nprzepisu" as publish_recipe
 
 user -- iam_register
 user -- iam_login
-user -- iam_forgot_password
-iam_login -- iam_logout : <<include>>
-iam_login -- iam_password_change : <<include>>
-iam_login -- iam_email_change : <<include>>
-iam_login -- iam_me_details : <<include>>
-iam_login -- iam_me_edit : <<include>>
+iam_register <-- iam_forgot_password : <<include>>
+iam_login <-- iam_logout : <<include>>
+iam_login <-- iam_password_change : <<include>>
+iam_login <-- iam_email_change : <<include>>
+iam_login <-- iam_me_details : <<include>>
+iam_login <-- iam_me_edit : <<include>>
 
 user -- home_popular_recipes
 user -- home_popular_categories
@@ -71,12 +71,12 @@ user -- favourite_recipes
 
 user -- add_recipe_ingredients_to_shopping_list
 user -- shopping_list
-shopping_list -- shopping_list_clear : <<include>>
-shopping_list -- shopping_list_edit : <<include>>
-shopping_list -- shopping_list_complete : <<include>>
+shopping_list <-- shopping_list_clear : <<include>>
+shopping_list <-- shopping_list_edit : <<include>>
+shopping_list <-- shopping_list_complete : <<include>>
 
 user -- add_recipe
-add_recipe -- publish_recipe : <<include>>
-add_recipe -- edit_recipe : <<include>>
-add_recipe -- delete_recipe : <<include>>
+add_recipe <-- publish_recipe : <<include>>
+add_recipe <-- edit_recipe : <<include>>
+add_recipe <-- delete_recipe : <<include>>
 @enduml
