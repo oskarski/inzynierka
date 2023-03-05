@@ -2,6 +2,7 @@ import '@fe/styles/globals.css';
 import type { AppProps } from 'next/app';
 import { headTitle } from '@fe/utils';
 import Head from 'next/head';
+import { NavigationBar, TopBar } from '@fe/components';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -14,7 +15,15 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Component {...pageProps} />
+      <div className="h-screen flex flex-col justify-between">
+        <TopBar className="grow-0 pt-4" />
+
+        <div className="grow overflow-auto p-4">
+          <Component {...pageProps} />
+        </div>
+
+        <NavigationBar className="grow-0" />
+      </div>
     </>
   );
 }
