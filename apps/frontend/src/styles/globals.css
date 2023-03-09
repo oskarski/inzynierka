@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+:root:root {
+  --adm-color-primary: #EF4444;
+  --adm-color-success: #00B578;
+  --adm-color-danger: #EF4444;
+
+  --adm-color-white: #ffffff;
+  --adm-color-text: #111827;
+  --adm-color-text-secondary: #666666;
+  --adm-color-weak: #999999;
+  --adm-color-background: #ffffff;
+
+  --adm-font-size-main: 1rem;
+}
+
 .anticon {
   display: block;
 }
