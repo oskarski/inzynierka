@@ -6,17 +6,27 @@ object Recipe  {
     | cuisine_type_id | uuid | **FK** |
 }
 
+object RecipeInstructionStep {
+    <#F1F1F1,#F1F1F1>|= |= |= |
+    | id | uuid | **PK** |
+    | instruction | varchar(100) |
+    | timer | integer |
+    | recipie_id | uuid | **FK** |
+}
+
 note top of RecipeInstructionStep
     Not sure if we need this table. Perhaps
     `Recipie` entity should store instructions
     as JSON?
 end note
 
-object RecipeInstructionStep {
-    <#F1F1F1,#F1F1F1>|= |= |= |
-    | id | uuid | **PK** |
-    | instruction | varchar(100) |
-    | timer | integer |
+object Ingredient {
+  <#F1F1F1,#F1F1F1>|= |= |= |
+    | id |  uuid | **PK** |
+    | name | varchar(20) |
+    | quantity | integer |
+    | unit | varchar(20) |
+    | food_item_id | uuid| **FK** |
     | recipie_id | uuid | **FK** |
 }
 
@@ -31,21 +41,17 @@ note bottom of Ingredient
     or thai basil aren't.
 end note
 
-object Ingredient {
-  <#F1F1F1,#F1F1F1>|= |= |= |
-    | id |  uuid | **PK** |
-    | name | varchar(20) |
-    | quantity | integer |
-    | unit | varchar(20) |
-    | food_item_id | uuid| **FK** |
-    | recipie_id | uuid | **FK** |
-}
-
 object FoodItem {
   <#F1F1F1,#F1F1F1>|= |= |= |
     | id |  uuid | **PK** |
     | name | varchar(20) |
     | food_item_category_id | uuid | **FK** |
+}
+
+object FoodItemCategory {
+  <#F1F1F1,#F1F1F1>|= |= |= |
+    | id |  uuid | **PK** |
+    | name | varchar(20) |
 }
 
 note right of FoodItemCategory
@@ -54,8 +60,8 @@ note right of FoodItemCategory
     as column?
 end note
 
-object FoodItemCategory {
-  <#F1F1F1,#F1F1F1>|= |= |= |
+object CuisineType {
+    <#F1F1F1,#F1F1F1>|= |= |= |
     | id |  uuid | **PK** |
     | name | varchar(20) |
 }
@@ -66,12 +72,6 @@ note top of CuisineType
     as column? Or maybe it should be defined
     as `RecipeCategory`?
 end note
-
-object CuisineType {
-    <#F1F1F1,#F1F1F1>|= |= |= |
-    | id |  uuid | **PK** |
-    | name | varchar(20) |
-}
 
 object RecipeCategory {
     <#F1F1F1,#F1F1F1>|= |= |= |
