@@ -7,7 +7,7 @@ import {
   StarFilled,
   TeamOutlined,
 } from '@ant-design/icons';
-import { RecipeCategoryTag } from '@fe/recipesCategories';
+import { RecipeCategoryTag } from '@fe/recipes-categories';
 import { ProgressCircle } from 'antd-mobile';
 
 interface RecipeCardProps {}
