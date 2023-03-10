@@ -69,6 +69,7 @@ export const RecipeCard = ({}: RecipeCardProps) => {
 
           <div>
             <ProgressCircle
+              className="text-xs"
               percent={recipe.coverage}
               style={{ '--size': '2.5rem', '--fill-color': '#00B578' }}
             >
@@ -80,7 +81,7 @@ export const RecipeCard = ({}: RecipeCardProps) => {
         <p className="text-sm text-secondary mb-2">{recipe.description}</p>
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center text-secondary space-x-6">
+          <div className="flex items-center text-sm text-secondary space-x-6">
             <div className="flex items-center">
               <StarFilled className="text-base leading-none text-yellow-400 mr-2" />
               {recipe.review}
