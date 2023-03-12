@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { headTitle } from '@fe/utils';
-import { RecipeCategoryCard } from '@fe/recipes-categories';
+import { RecipesCategoriesListing } from '@fe/recipes-categories';
 import { SectionTitle } from '@fe/components';
 
 export default function CategoriesPage() {
@@ -13,11 +13,9 @@ export default function CategoriesPage() {
       <main>
         <SectionTitle className="mb-6">Kategorie</SectionTitle>
 
-        <RecipeCategoryCard className="mb-4" />
-
-        <RecipeCategoryCard className="mb-4" />
-
-        <RecipeCategoryCard className="mb-4" />
+        <RecipesCategoriesListing>
+          <RecipesCategoriesListing.CardList />
+        </RecipesCategoriesListing>
       </main>
     </>
   );
