@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import classNames from 'classnames';
+import { routes } from '@fe/utils';
 
 interface RecipeCategoryCardProps {
   className?: string;
@@ -11,7 +12,7 @@ export const RecipeCategoryCard = ({ className }: RecipeCategoryCardProps) => {
 
   return (
     <Link
-      href="/recipes"
+      href={routes.recipes()}
       className={classNames(
         'flex rounded-3xl overflow-hidden shadow-md aspect-image items-center justify-center relative',
         className

@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
+import { routes } from '@fe/utils';
 
 interface NavigationBarProps {
   className?: string;
@@ -15,13 +16,14 @@ interface NavigationBarProps {
 
 export const NavigationBar = ({ className }: NavigationBarProps) => {
   const router = useRouter();
+  const searchKey = 'search';
 
   return (
     <TabBar
       activeKey={router.route}
       className={classNames('border-t sm:hidden py-2', className)}
       onChange={(key) => {
-        if (key === 'search') {
+        if (key === searchKey) {
           // TODO Open search modal
           return;
         }
@@ -29,19 +31,27 @@ export const NavigationBar = ({ className }: NavigationBarProps) => {
         router.push(key);
       }}
     >
-      <TabBar.Item key="/" title="Start" icon={<HomeOutlined />} />
-
-      <TabBar.Item key="/recipes" title="Przepisy" icon={<ReadOutlined />} />
-
-      <TabBar.Item key="search" title="Szukaj" icon={<SearchOutlined />} />
+      <TabBar.Item key={routes.home()} title="Start" icon={<HomeOutlined />} />
 
       <TabBar.Item
-        key="/shopping-list"
+        key={routes.recipes()}
+        title="Przepisy"
+        icon={<ReadOutlined />}
+      />
+
+      <TabBar.Item key={searchKey} title="Szukaj" icon={<SearchOutlined />} />
+
+      <TabBar.Item
+        key={routes.shoppingList()}
         title="Zakupy"
         icon={<ShoppingOutlined />}
       />
 
-      <TabBar.Item key="/favourite" title="Ulubione" icon={<HeartOutlined />} />
+      <TabBar.Item
+        key={routes.favourite()}
+        title="Ulubione"
+        icon={<HeartOutlined />}
+      />
     </TabBar>
   );
 };

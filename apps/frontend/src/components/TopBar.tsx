@@ -1,6 +1,7 @@
 import { Avatar, NavBar } from 'antd-mobile';
 import classNames from 'classnames';
 import Link from 'next/link';
+import { routes } from '@fe/utils';
 
 interface TopBarProps {
   className?: string;
@@ -12,8 +13,7 @@ export const TopBar = ({ className }: TopBarProps) => {
       <NavBar
         backArrow={false}
         back={null}
-        // TODO Replace with home page url
-        left={<Link href="/">AppName</Link>}
+        left={<Link href={routes.home()}>AppName</Link>}
         right={
           // TODO Replace with current user avatar
           <Avatar
