@@ -16,6 +16,9 @@ module.exports = {
         secondary: '#666666',
         success: '#00B578',
       },
+      opacity: {
+        55: '.55',
+      },
     },
   },
   plugins: [],
