@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import appConfig from './config/app.config';
 import dbConfig from './config/db.config';
+import { RecipeCategoriesModule } from './recipe-categories';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import dbConfig from './config/db.config';
       }),
       inject: [ConfigService],
     }),
+    RecipeCategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
