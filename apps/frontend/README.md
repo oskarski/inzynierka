@@ -2,6 +2,8 @@
 
 ```bash
 $ yarn install
+$ cp .env.sample .env.development
+# fill out the .env.development file
 ```
 
 ## Development
