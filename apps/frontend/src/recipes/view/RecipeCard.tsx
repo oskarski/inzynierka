@@ -9,10 +9,13 @@ import {
 } from '@ant-design/icons';
 import { RecipeCategoryTag } from '@fe/recipes-categories';
 import { ProgressCircle } from 'antd-mobile';
+import classNames from 'classnames';
 
-interface RecipeCardProps {}
+interface RecipeCardProps {
+  className?: string;
+}
 
-export const RecipeCard = ({}: RecipeCardProps) => {
+export const RecipeCard = ({ className }: RecipeCardProps) => {
   // TODO Make it a prop
   const recipe = {
     id: '1',
@@ -42,7 +45,9 @@ export const RecipeCard = ({}: RecipeCardProps) => {
   const favourites = ['12'];
 
   return (
-    <div className="rounded-3xl overflow-hidden shadow-md">
+    <div
+      className={classNames('rounded-3xl overflow-hidden shadow-md', className)}
+    >
       {recipe.imageUrl && (
         <div className="relative aspect-image">
           <Image
