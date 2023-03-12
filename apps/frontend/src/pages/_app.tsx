@@ -5,6 +5,7 @@ import Head from 'next/head';
 import { NavigationBar, TopBar } from '@fe/components';
 import { Roboto } from 'next/font/google';
 import classNames from 'classnames';
+import { AppProvider } from '@fe/AppProvider';
 
 const roboto = Roboto({
   weight: ['400', '500', '700'],
@@ -31,15 +32,17 @@ export default function App({ Component, pageProps }: AppProps) {
         </style>
       </Head>
 
-      <div className={classNames('h-screen flex flex-col justify-between')}>
-        <TopBar className="grow-0 pt-4" />
+      <AppProvider>
+        <div className={classNames('h-screen flex flex-col justify-between')}>
+          <TopBar className="grow-0 pt-4" />
 
-        <div className="grow overflow-auto p-4">
-          <Component {...pageProps} />
+          <div className="grow overflow-auto p-4">
+            <Component {...pageProps} />
+          </div>
+
+          <NavigationBar className="grow-0" />
         </div>
-
-        <NavigationBar className="grow-0" />
-      </div>
+      </AppProvider>
     </>
   );
 }
