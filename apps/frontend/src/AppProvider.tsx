@@ -1,30 +1,13 @@
-import React, { PropsWithChildren, useMemo } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { env, HttpClient } from '@fe/utils';
-import {
-  RecipesCategoriesProvider,
-  RecipesCategoriesApi,
-} from '@fe/recipes-categories';
+import React, { PropsWithChildren } from 'react';
+import { ApiProvider, IApi } from '@fe/api';
 
-const queryClient = new QueryClient();
+interface AppProviderProps {
+  api?: IApi;
+}
 
-export const AppProvider = ({ children }: PropsWithChildren<{}>) => {
-  const httpClient = useMemo(() => new HttpClient(env().apiUrl), []);
-
-  const api = useMemo(
-    () => ({
-      recipesCategoriesApi: new RecipesCategoriesApi(httpClient),
-    }),
-    [httpClient]
-  );
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <RecipesCategoriesProvider
-        recipesCategoriesApi={api.recipesCategoriesApi}
-      >
-        {children}
-      </RecipesCategoriesProvider>
-    </QueryClientProvider>
-  );
+export const AppProvider = ({
+  api,
+  children,
+}: PropsWithChildren<AppProviderProps>) => {
+  return <ApiProvider api={api}>{children}</ApiProvider>;
 };
