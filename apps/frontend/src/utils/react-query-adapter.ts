@@ -1,4 +1,12 @@
-import { useQuery, QueryKey, QueryFunction, UseQueryResult } from 'react-query';
+import {
+  useQuery,
+  useMutation,
+  QueryKey,
+  QueryFunction,
+  UseQueryResult,
+  MutationFunction,
+  UseMutateFunction,
+} from 'react-query';
 
 export function useAdaptedQuery<ReturnType>(
   queryKey: QueryKey,
@@ -31,4 +39,20 @@ export function useAdaptedQuery<ReturnType>(
     queryResult.error,
     queryResult,
   ] as [ReturnType, false, null, UseQueryResult<ReturnType, Error>];
+}
+
+export function useAdaptedMutation<PayloadType = unknown, ArgumentsType = void>(
+  mutationFn: MutationFunction<PayloadType, ArgumentsType>
+): [
+  UseMutateFunction<PayloadType, Error, ArgumentsType>,
+  boolean,
+  Error | null
+] {
+  const { mutate, isLoading, error } = useMutation<
+    PayloadType,
+    Error,
+    ArgumentsType
+  >(mutationFn);
+
+  return [mutate, isLoading, error];
 }
