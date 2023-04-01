@@ -7,13 +7,18 @@ export interface ISignUpDto {
   readonly lastName: string;
 }
 
+export interface IConfirmSignUpDto {
+  readonly email: string;
+  readonly code: string;
+}
+
 export interface IIamApi {
   signUp(dto: ISignUpDto): Promise<void>;
+
+  confirmSignUp(dto: IConfirmSignUpDto): Promise<void>;
 }
 
 export class IamApi implements IIamApi {
-  constructor() {}
-
   async signUp(dto: ISignUpDto): Promise<void> {
     await Auth.signUp({
       username: dto.email,
@@ -23,5 +28,9 @@ export class IamApi implements IIamApi {
         family_name: dto.lastName,
       },
     });
+  }
+
+  async confirmSignUp(dto: IConfirmSignUpDto): Promise<void> {
+    await Auth.confirmSignUp(dto.email, dto.code);
   }
 }

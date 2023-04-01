@@ -1,10 +1,24 @@
 import { useRouter } from 'next/router';
+import { useCallback } from 'react';
 
 export const useRouting = () => {
   const router = useRouter();
 
+  const getQueryParam = useCallback(
+    (queryName: string) => {
+      const queryParam = router.query[queryName];
+
+      if (!queryParam) return null;
+      if (Array.isArray(queryParam)) return null;
+
+      return decodeURI(queryParam);
+    },
+    [router.query]
+  );
+
   return {
     redirectTo: router.push,
+    getQueryParam,
   };
 };
 
@@ -21,5 +35,6 @@ export const routes = {
 
   signUp: () => '/sign-up',
 
-  signUpConfirm: () => '/sign-up/confirm',
+  signUpConfirm: (email: string) =>
+    `/sign-up/confirm?email=${encodeURI(email)}`,
 };
