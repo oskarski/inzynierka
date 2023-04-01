@@ -41,16 +41,20 @@ export function useAdaptedQuery<ReturnType>(
   ] as [ReturnType, false, null, UseQueryResult<ReturnType, Error>];
 }
 
-export function useAdaptedMutation<PayloadType = unknown, ArgumentsType = void>(
+export function useAdaptedMutation<
+  PayloadType = unknown,
+  ArgumentsType = void,
+  ErrorType = Error
+>(
   mutationFn: MutationFunction<PayloadType, ArgumentsType>
 ): [
-  UseMutateFunction<PayloadType, Error, ArgumentsType>,
+  UseMutateFunction<PayloadType, ErrorType, ArgumentsType>,
   boolean,
-  Error | null
+  ErrorType | null
 ] {
   const { mutate, isLoading, error } = useMutation<
     PayloadType,
-    Error,
+    ErrorType,
     ArgumentsType
   >(mutationFn);
 
