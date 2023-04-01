@@ -7,20 +7,19 @@ import {
   HeartOutlined,
 } from '@ant-design/icons';
 import classNames from 'classnames';
-import { useRouter } from 'next/router';
-import { routes } from '@fe/utils';
+import { routes, useRouting } from '@fe/utils';
 
 interface NavigationBarProps {
   className?: string;
 }
 
 export const NavigationBar = ({ className }: NavigationBarProps) => {
-  const router = useRouter();
+  const { currentRoute, redirectTo } = useRouting();
   const searchKey = 'search';
 
   return (
     <TabBar
-      activeKey={router.route}
+      activeKey={currentRoute}
       className={classNames('border-t sm:hidden py-2', className)}
       onChange={(key) => {
         if (key === searchKey) {
@@ -28,7 +27,7 @@ export const NavigationBar = ({ className }: NavigationBarProps) => {
           return;
         }
 
-        router.push(key);
+        redirectTo(key);
       }}
     >
       <TabBar.Item key={routes.home()} title="Start" icon={<HomeOutlined />} />

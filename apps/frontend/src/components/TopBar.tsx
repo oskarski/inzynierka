@@ -1,7 +1,9 @@
-import { Avatar, NavBar } from 'antd-mobile';
+import { ActionSheet, Avatar, NavBar } from 'antd-mobile';
 import classNames from 'classnames';
 import Link from 'next/link';
 import { routes } from '@fe/utils';
+import React, { useState } from 'react';
+import { useIam } from '@fe/iam';
 
 interface TopBarProps {
   className?: string;
@@ -14,15 +16,46 @@ export const TopBar = ({ className }: TopBarProps) => {
         backArrow={false}
         back={null}
         left={<Link href={routes.home()}>AppName</Link>}
-        right={
-          // TODO Replace with current user avatar
-          <Avatar
-            src="https://images.unsplash.com/photo-1548532928-b34e3be62fc6?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
-            className="ml-auto"
-            style={{ '--size': '48px', '--border-radius': '100%' }}
-          />
-        }
+        right={<ProfileAvatar />}
       />
     </div>
   );
 };
+
+function ProfileAvatar() {
+  const [menuOpened, toggleMenuOpened] = useState(false);
+
+  const { signOut, signedInUser } = useIam();
+
+  if (!signedInUser) return null;
+
+  return (
+    <>
+      <button
+        type="button"
+        className="inline-block"
+        onClick={() => toggleMenuOpened(true)}
+      >
+        {/*TODO Replace with current user avatar*/}
+        <Avatar
+          src="https://images.unsplash.com/photo-1548532928-b34e3be62fc6?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
+          className="ml-auto"
+          style={{ '--size': '48px', '--border-radius': '100%' }}
+        />
+      </button>
+
+      <ActionSheet
+        visible={menuOpened}
+        onClose={() => toggleMenuOpened(false)}
+        closeOnAction={true}
+        actions={[
+          {
+            key: 'sign-out',
+            text: 'Wyloguj',
+            onClick: signOut,
+          },
+        ]}
+      />
+    </>
+  );
+}
