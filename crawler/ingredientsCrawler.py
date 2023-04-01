@@ -38,7 +38,7 @@ for link in links:
         if ul is not None:
             ingredients_list = ul.find_all('li')
             for ingredient in ingredients_list:
-                name_and_amount = re.split(' - | –  | :', ingredient.text.strip(), maxsplit=1)
+                name_and_amount = re.split('[-–:]', ingredient.text.strip(), maxsplit=1)
                 name = name_and_amount[0]
                 amount = name_and_amount[1] if len(name_and_amount) > 1 else ''
                 ingredient_data = (recipe_id, name, amount)
