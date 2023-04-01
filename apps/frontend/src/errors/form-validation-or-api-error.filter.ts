@@ -2,7 +2,8 @@ import { ZodError } from 'zod';
 import { ApiError, FormValidationError } from './errors';
 
 export const catchFormValidationOrApiError = (error: Error) => {
-  if (error instanceof ZodError) throw new FormValidationError(error);
+  if (error instanceof ZodError)
+    return Promise.reject(new FormValidationError(error));
 
-  throw new ApiError(error.message);
+  return Promise.reject(new ApiError(error.message));
 };

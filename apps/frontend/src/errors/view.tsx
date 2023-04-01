@@ -2,20 +2,24 @@ import { HTMLAttributes } from 'react';
 import { FormValidationError, FormValidationOrApiError } from './errors';
 import classNames from 'classnames';
 
-function ErrorMessage(props: HTMLAttributes<HTMLSpanElement>) {
+interface ErrorMessageProps extends HTMLAttributes<HTMLSpanElement> {
+  block?: boolean;
+}
+
+function ErrorMessage({ block, ...props }: ErrorMessageProps) {
   return (
     <span
       {...props}
       className={classNames(
-        'inline-block text-red-700 text-sm',
+        'text-red-700 text-sm',
+        { 'inline-block': !block, block: block },
         props.className
       )}
     />
   );
 }
 
-interface FormValidationErrorMessageProps
-  extends HTMLAttributes<HTMLSpanElement> {
+interface FormValidationErrorMessageProps extends ErrorMessageProps {
   error: FormValidationOrApiError | null;
   name: string;
 }
@@ -27,11 +31,14 @@ export function FormValidationErrorMessage({
 }: FormValidationErrorMessageProps) {
   if (!error || !(error instanceof FormValidationError)) return null;
 
-  return <ErrorMessage {...props}>{error.errorsMap[name]}</ErrorMessage>;
+  return (
+    <ErrorMessage {...props} data-testid={`error-msg-${name}`}>
+      {error.errorsMap[name]}
+    </ErrorMessage>
+  );
 }
 
-interface FormValidationSummaryErrorMessageProps
-  extends HTMLAttributes<HTMLSpanElement> {
+interface FormValidationSummaryErrorMessageProps extends ErrorMessageProps {
   error: FormValidationOrApiError | null;
 }
 
@@ -44,7 +51,7 @@ export function FormValidationSummaryErrorMessage({
   return <ErrorMessage {...props}>Formularz zawiera błędy</ErrorMessage>;
 }
 
-interface ApiErrorMessageProps extends HTMLAttributes<HTMLSpanElement> {
+interface ApiErrorMessageProps extends ErrorMessageProps {
   error: FormValidationOrApiError | null;
 }
 

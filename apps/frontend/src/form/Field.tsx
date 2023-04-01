@@ -16,14 +16,17 @@ export const TextField = ({
   ...props
 }: TextFieldProps) => {
   return (
-    <Form.Item {...props}>
-      <Input id={`${props.name}`} type={type} className="border-b" />
+    <>
+      <Form.Item {...props}>
+        <Input id={`${props.name}`} type={type} className="border-b" />
+      </Form.Item>
 
       <FormValidationErrorMessage
         error={error}
         name={`${props.name}`}
-        className="mt-2"
+        block={true}
+        className="pl-4 -mt-2 relative"
       />
-    </Form.Item>
+    </>
   );
 };
