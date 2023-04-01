@@ -43,16 +43,20 @@ export const useConfirmSignUp = (
   );
 };
 
-export const useSignIn = () => {
+export const useSignIn = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
   const { iamApi } = useIam();
 
   return useAdaptedMutation<
     ISignedInUserDto,
     ISignInDto,
     FormValidationOrApiError
-  >((formValues) =>
-    SignInFormSchema.parseAsync(formValues)
-      .then((dto) => iamApi.signIn(dto))
-      .catch(catchFormValidationOrApiError)
+  >(
+    (formValues) =>
+      SignInFormSchema.parseAsync(formValues)
+        .then((dto) => iamApi.signIn(dto))
+        .catch(catchFormValidationOrApiError),
+    {
+      onSuccess,
+    }
   );
 };

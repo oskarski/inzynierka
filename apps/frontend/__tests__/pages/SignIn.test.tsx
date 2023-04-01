@@ -41,5 +41,6 @@ describe(SignInPage.name, () => {
         password: '1111',
       })
     );
+    await testContext.redirectsTo('/');
   });
 });
