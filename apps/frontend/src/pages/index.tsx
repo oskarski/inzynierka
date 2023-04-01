@@ -1,6 +1,10 @@
 import Head from 'next/head';
 import { headTitle, routes } from '@fe/utils';
 import { SectionTitle } from '@fe/components';
+import { GetServerSideProps } from 'next';
+import { SignedInGuard } from '@fe/iam';
+
+export const getServerSideProps: GetServerSideProps = SignedInGuard();
 
 export default function HomePage() {
   return (

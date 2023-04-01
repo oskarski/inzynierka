@@ -1,16 +1,22 @@
 import '@fe/styles/globals.css';
 import type { AppProps } from 'next/app';
-import { headTitle } from '@fe/utils';
+import { env, headTitle } from '@fe/utils';
 import Head from 'next/head';
 import { NavigationBar, TopBar } from '@fe/components';
 import { Roboto } from 'next/font/google';
 import classNames from 'classnames';
 import { AppProvider } from '@fe/AppProvider';
+import { Amplify } from 'aws-amplify';
 
 const roboto = Roboto({
   weight: ['400', '500', '700'],
   subsets: ['latin'],
   variable: '--adm-font-family',
+});
+
+Amplify.configure({
+  Auth: env().cognito,
+  ssr: true,
 });
 
 export default function App({ Component, pageProps }: AppProps) {

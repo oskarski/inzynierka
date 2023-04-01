@@ -21,6 +21,7 @@ export const IamProvider = ({
   useEffect(() => {
     Amplify.configure({
       Auth: env().cognito,
+      ssr: true,
     });
   }, []);
 

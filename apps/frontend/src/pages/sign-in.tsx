@@ -1,6 +1,9 @@
 import Head from 'next/head';
 import { headTitle } from '@fe/utils';
-import { SignInForm } from '@fe/iam';
+import { NotSignedInGuard, SignInForm } from '@fe/iam';
+import { GetServerSideProps } from 'next';
+
+export const getServerSideProps: GetServerSideProps = NotSignedInGuard();
 
 export default function SignInPage() {
   return (

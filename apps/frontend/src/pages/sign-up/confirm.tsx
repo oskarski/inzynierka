@@ -1,6 +1,9 @@
 import Head from 'next/head';
 import { headTitle, useRouting } from '@fe/utils';
-import { SignUpConfirmForm } from '@fe/iam';
+import { NotSignedInGuard, SignUpConfirmForm } from '@fe/iam';
+import { GetServerSideProps } from 'next';
+
+export const getServerSideProps: GetServerSideProps = NotSignedInGuard();
 
 export default function SignUpConfirmPage() {
   const { getQueryParam } = useRouting();
