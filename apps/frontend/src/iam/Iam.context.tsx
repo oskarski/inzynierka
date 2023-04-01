@@ -7,12 +7,14 @@ import React, {
   useEffect,
   useRef,
 } from 'react';
-import { IIamApi } from './api';
+import { IIamApi, ISignedInUserDto, useSignedInUser, useSignOut } from './api';
 import { Amplify } from 'aws-amplify';
+import { ErrorText, Loader } from '@fe/components';
 
 interface IIamContext {
   readonly iamApi: IIamApi;
   readonly signOut: () => void;
+  readonly signedInUser: ISignedInUserDto | null;
 }
 
 const IamContext = createContext<Partial<IIamContext>>({});
@@ -34,15 +36,16 @@ export const IamProvider = ({
     });
   }, []);
 
-  const signOut = useCallback(() => {
-    if (!signOutFormRef.current) return;
+  const signOut = useSignOut(signOutFormRef);
+  const [signedInUser, loading, error] = useSignedInUser(props.iamApi);
 
-    signOutFormRef.current.submit();
-  }, []);
+  if (loading) return <Loader className="my-3" />;
+  if (error) return <ErrorText error={error} />;
 
   const ctx: IIamContext = {
     iamApi: props.iamApi,
     signOut,
+    signedInUser,
   };
 
   return (
@@ -55,10 +58,11 @@ export const IamProvider = ({
 };
 
 export const useIam = (): IIamContext => {
-  const { iamApi, signOut } = useContext(IamContext);
+  const { iamApi, signOut, signedInUser } = useContext(IamContext);
 
   assertIsDefined(iamApi, 'IIamContext.iamApi must be defined!');
   assertIsDefined(signOut, 'IIamContext.signOut must be defined!');
+  assertIsDefined(signedInUser, 'IIamContext.signedInUser must be defined!');
 
-  return { iamApi, signOut };
+  return { iamApi, signOut, signedInUser };
 };

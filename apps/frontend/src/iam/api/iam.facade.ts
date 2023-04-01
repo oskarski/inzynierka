@@ -1,7 +1,8 @@
 import { useIam } from '../Iam.context';
-import { useAdaptedMutation } from '@fe/utils';
+import { useAdaptedMutation, useAdaptedQuery } from '@fe/utils';
 import {
   IConfirmSignUpDto,
+  IIamApi,
   ISignedInUserDto,
   ISignInDto,
   ISignUpDto,
@@ -13,6 +14,11 @@ import {
 import { SignUpFormSchema } from './schema/sign-up.schema';
 import { ConfirmSignUpFormSchema } from './schema/confirm-sign-up.schema';
 import { SignInFormSchema } from './schema/sign-in.schema';
+import { RefObject, useCallback } from 'react';
+import { useQueryClient } from 'react-query';
+import { Auth } from 'aws-amplify';
+
+const SignedInUserQueryKey = ['iamApi', 'signedInUser'];
 
 export const useSignUp = ({
   onSuccess,
@@ -44,6 +50,7 @@ export const useConfirmSignUp = (
 };
 
 export const useSignIn = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
+  const queryClient = useQueryClient();
   const { iamApi } = useIam();
 
   return useAdaptedMutation<
@@ -56,7 +63,30 @@ export const useSignIn = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
         .then((dto) => iamApi.signIn(dto))
         .catch(catchFormValidationOrApiError),
     {
-      onSuccess,
+      onSuccess: (signedInUser) => {
+        queryClient.setQueryData(SignedInUserQueryKey, signedInUser);
+
+        if (onSuccess) onSuccess();
+      },
     }
+  );
+};
+
+export const useSignOut = (signOutFormRef: RefObject<HTMLFormElement>) => {
+  const queryClient = useQueryClient();
+
+  return useCallback(async () => {
+    if (!signOutFormRef.current) return;
+
+    queryClient.clear();
+    queryClient.setQueryData(SignedInUserQueryKey, null);
+    await Auth.signOut();
+    signOutFormRef.current.submit();
+  }, []);
+};
+
+export const useSignedInUser = (iamApi: IIamApi) => {
+  return useAdaptedQuery<ISignedInUserDto | null>(SignedInUserQueryKey, () =>
+    iamApi.signedInUser()
   );
 };

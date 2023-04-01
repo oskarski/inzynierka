@@ -9,4 +9,6 @@ export class IamTestApi implements IIamApi {
   );
 
   signIn = apiMethodMock<IIamApi['signIn']>('IIamApi.signIn');
+
+  signedInUser = apiMethodMock<IIamApi['signedInUser']>('IIamApi.signedInUser');
 }

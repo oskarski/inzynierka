@@ -31,6 +31,8 @@ export interface IIamApi {
   confirmSignUp(dto: IConfirmSignUpDto): Promise<void>;
 
   signIn(dto: ISignInDto): Promise<ISignedInUserDto>;
+
+  signedInUser(): Promise<ISignedInUserDto | null>;
 }
 
 export class IamApi implements IIamApi {
@@ -60,5 +62,22 @@ export class IamApi implements IIamApi {
       firstName: attributes.given_name,
       lastName: attributes.family_name,
     };
+  }
+
+  async signedInUser(): Promise<ISignedInUserDto | null> {
+    try {
+      const loggedInUser = await Auth.currentAuthenticatedUser();
+
+      const attributes = loggedInUser.attributes;
+
+      return {
+        id: attributes.sub,
+        email: attributes.email,
+        firstName: attributes.given_name,
+        lastName: attributes.family_name,
+      };
+    } catch (err) {
+      return null;
+    }
   }
 }

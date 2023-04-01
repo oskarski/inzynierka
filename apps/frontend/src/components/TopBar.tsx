@@ -25,7 +25,9 @@ export const TopBar = ({ className }: TopBarProps) => {
 function ProfileAvatar() {
   const [menuOpened, toggleMenuOpened] = useState(false);
 
-  const { signOut } = useIam();
+  const { signOut, signedInUser } = useIam();
+
+  if (!signedInUser) return null;
 
   return (
     <>
