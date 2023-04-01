@@ -19,6 +19,7 @@ export const useRouting = () => {
   return {
     redirectTo: router.push,
     getQueryParam,
+    currentRoute: router.route,
   };
 };
 
