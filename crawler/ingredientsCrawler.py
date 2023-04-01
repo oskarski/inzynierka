@@ -58,6 +58,9 @@ for link in links:
     # Increment recipe_id for next iteration
     recipe_id +=1
 
+# Create a new table with unique ingredient names
+cursor.execute("CREATE TABLE unique_ingredients AS SELECT DISTINCT regexp_replace(trim(name), '\s{2,}', ' ', 'g') AS name FROM ingredients WHERE name !~ '[0-9]' AND name !~ '[1-9][/][0-9]' AND name !~ '[^\s]*\u00BD[^\s]*';)
+
 # Commit the changes to the database
 conn.commit()
 
