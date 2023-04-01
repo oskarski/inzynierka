@@ -1,4 +1,5 @@
 import { Auth } from 'aws-amplify';
+import { UserId } from '@lib/shared';
 
 export interface ISignUpDto {
   readonly email: string;
@@ -12,10 +13,24 @@ export interface IConfirmSignUpDto {
   readonly code: string;
 }
 
+export interface ISignInDto {
+  readonly email: string;
+  readonly password: string;
+}
+
+export interface ISignedInUserDto {
+  readonly id: UserId;
+  readonly email: string;
+  readonly firstName: string;
+  readonly lastName: string;
+}
+
 export interface IIamApi {
   signUp(dto: ISignUpDto): Promise<void>;
 
   confirmSignUp(dto: IConfirmSignUpDto): Promise<void>;
+
+  signIn(dto: ISignInDto): Promise<ISignedInUserDto>;
 }
 
 export class IamApi implements IIamApi {
@@ -32,5 +47,18 @@ export class IamApi implements IIamApi {
 
   async confirmSignUp(dto: IConfirmSignUpDto): Promise<void> {
     await Auth.confirmSignUp(dto.email, dto.code);
+  }
+
+  async signIn(dto: ISignInDto): Promise<ISignedInUserDto> {
+    const loggedInUser = await Auth.signIn(dto.email, dto.password);
+
+    const attributes = loggedInUser.attributes;
+
+    return {
+      id: attributes.sub,
+      email: attributes.email,
+      firstName: attributes.given_name,
+      lastName: attributes.family_name,
+    };
   }
 }

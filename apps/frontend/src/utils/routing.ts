@@ -37,4 +37,6 @@ export const routes = {
 
   signUpConfirm: (email: string) =>
     `/sign-up/confirm?email=${encodeURI(email)}`,
+
+  signIn: () => '/sign-in',
 };

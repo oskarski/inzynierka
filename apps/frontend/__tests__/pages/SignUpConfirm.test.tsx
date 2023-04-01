@@ -42,5 +42,6 @@ describe(SignUpConfirmPage.name, () => {
         code: '123456',
       })
     );
+    await testContext.redirectsTo('/sign-in');
   });
 });

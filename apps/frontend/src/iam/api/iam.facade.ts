@@ -1,12 +1,18 @@
 import { useIam } from '../Iam.context';
 import { useAdaptedMutation } from '@fe/utils';
-import { IConfirmSignUpDto, ISignUpDto } from './IamApi';
+import {
+  IConfirmSignUpDto,
+  ISignedInUserDto,
+  ISignInDto,
+  ISignUpDto,
+} from './IamApi';
 import {
   catchFormValidationOrApiError,
   FormValidationOrApiError,
 } from '@fe/errors';
 import { SignUpFormSchema } from './schema/sign-up.schema';
 import { ConfirmSignUpFormSchema } from './schema/confirm-sign-up.schema';
+import { SignInFormSchema } from './schema/sign-in.schema';
 
 export const useSignUp = ({
   onSuccess,
@@ -34,5 +40,19 @@ export const useConfirmSignUp = (
         .then((dto) => iamApi.confirmSignUp({ email, ...dto }))
         .catch(catchFormValidationOrApiError),
     { onSuccess }
+  );
+};
+
+export const useSignIn = () => {
+  const { iamApi } = useIam();
+
+  return useAdaptedMutation<
+    ISignedInUserDto,
+    ISignInDto,
+    FormValidationOrApiError
+  >((formValues) =>
+    SignInFormSchema.parseAsync(formValues)
+      .then((dto) => iamApi.signIn(dto))
+      .catch(catchFormValidationOrApiError)
   );
 };
