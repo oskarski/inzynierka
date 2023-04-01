@@ -7,7 +7,7 @@ import {
 import { PropsWithChildren, ReactNode } from 'react';
 
 interface AppFormProps {
-  onSubmit: (values: unknown) => void;
+  onSubmit: (values: any) => void;
   submitBtn: ReactNode;
   error: FormValidationOrApiError | null;
 }

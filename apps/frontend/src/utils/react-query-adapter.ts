@@ -6,6 +6,7 @@ import {
   UseQueryResult,
   MutationFunction,
   UseMutateFunction,
+  UseMutationOptions,
 } from 'react-query';
 
 export function useAdaptedQuery<ReturnType>(
@@ -46,7 +47,8 @@ export function useAdaptedMutation<
   ArgumentsType = void,
   ErrorType = Error
 >(
-  mutationFn: MutationFunction<PayloadType, ArgumentsType>
+  mutationFn: MutationFunction<PayloadType, ArgumentsType>,
+  options?: UseMutationOptions<PayloadType, ErrorType, ArgumentsType>
 ): [
   UseMutateFunction<PayloadType, ErrorType, ArgumentsType>,
   boolean,
@@ -56,7 +58,7 @@ export function useAdaptedMutation<
     PayloadType,
     ErrorType,
     ArgumentsType
-  >(mutationFn);
+  >(mutationFn, options);
 
   return [mutate, isLoading, error];
 }

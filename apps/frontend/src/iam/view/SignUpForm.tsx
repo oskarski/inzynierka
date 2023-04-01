@@ -1,8 +1,13 @@
 import { useSignUp } from '../api';
 import { AppForm, SubmitButton, TextField } from '@fe/form';
+import { routes, useRouting } from '@fe/utils';
 
 export const SignUpForm = () => {
-  const [signUp, loading, error] = useSignUp();
+  const { redirectTo } = useRouting();
+
+  const [signUp, loading, error] = useSignUp({
+    onSuccess: () => redirectTo(routes.signUpConfirm()),
+  });
 
   return (
     <AppForm

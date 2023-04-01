@@ -69,5 +69,6 @@ describe(SignUpPage.name, () => {
         password: '!!!!!aA1',
       })
     );
+    await testContext.redirectsTo('/sign-up/confirm');
   });
 });

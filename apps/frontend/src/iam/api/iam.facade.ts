@@ -7,16 +7,14 @@ import {
 } from '@fe/errors';
 import { SignUpFormSchema } from './schema/sign-up.schema';
 
-export const useSignUp = () => {
+export const useSignUp = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
   const { iamApi } = useIam();
 
-  return useAdaptedMutation<
-    void,
-    unknown | ISignUpDto,
-    FormValidationOrApiError
-  >((formValues) =>
-    SignUpFormSchema.parseAsync(formValues)
-      .then((dto) => iamApi.signUp(dto))
-      .catch(catchFormValidationOrApiError)
+  return useAdaptedMutation<void, ISignUpDto, FormValidationOrApiError>(
+    (formValues) =>
+      SignUpFormSchema.parseAsync(formValues)
+        .then((dto) => iamApi.signUp(dto))
+        .catch(catchFormValidationOrApiError),
+    { onSuccess }
   );
 };
