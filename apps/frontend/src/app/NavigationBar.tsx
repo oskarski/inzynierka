@@ -9,7 +9,8 @@ import {
 import classNames from 'classnames';
 import { routes, useRouting } from '@fe/utils';
 import { useIam } from '@fe/iam';
-import { AppPopup } from '../components/AppPopup';
+import { AppPopup } from '@fe/components';
+import { SearchRecipesByIngredientsPopupContent } from '@fe/recipes';
 
 interface NavigationBarProps {
   className?: string;
@@ -68,7 +69,7 @@ export const NavigationBar = AppPopup.withAppPopup(
           />
         </TabBar>
 
-        <AppPopup.Content>Search modal here ...</AppPopup.Content>
+        <SearchRecipesByIngredientsPopupContent />
       </>
     );
   }
