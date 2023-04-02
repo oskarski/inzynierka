@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons';
 import classNames from 'classnames';
 import { routes, useRouting } from '@fe/utils';
+import { useIam } from '@fe/iam';
 
 interface NavigationBarProps {
   className?: string;
@@ -15,6 +16,10 @@ interface NavigationBarProps {
 
 export const NavigationBar = ({ className }: NavigationBarProps) => {
   const { currentRoute, redirectTo } = useRouting();
+  const { signedInUser } = useIam();
+
+  if (!signedInUser) return null;
+
   const searchKey = 'search';
 
   return (
