@@ -9,7 +9,7 @@ import {
 import classNames from 'classnames';
 import { routes, useRouting } from '@fe/utils';
 import { useIam } from '@fe/iam';
-import { AppPopup } from './AppPopup';
+import { AppPopup } from '../components/AppPopup';
 
 interface NavigationBarProps {
   className?: string;

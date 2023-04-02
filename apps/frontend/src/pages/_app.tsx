@@ -2,7 +2,7 @@ import '@fe/styles/globals.css';
 import type { AppProps } from 'next/app';
 import { env, headTitle } from '@fe/utils';
 import Head from 'next/head';
-import { NavigationBar, TopBar } from '@fe/components';
+import { NavigationBar, TopBar } from '@fe/app';
 import { Roboto } from 'next/font/google';
 import classNames from 'classnames';
 import { AppProvider } from '@fe/AppProvider';
