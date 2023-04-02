@@ -1,9 +1,11 @@
-import { ActionSheet, Avatar, NavBar } from 'antd-mobile';
+import { Avatar, List, NavBar } from 'antd-mobile';
+import { LogoutOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 import Link from 'next/link';
 import { routes } from '@fe/utils';
-import React, { useState } from 'react';
+import React from 'react';
 import { useIam } from '@fe/iam';
+import { AppPopup } from '@fe/components';
 
 interface TopBarProps {
   className?: string;
@@ -23,39 +25,32 @@ export const TopBar = ({ className }: TopBarProps) => {
 };
 
 function ProfileAvatar() {
-  const [menuOpened, toggleMenuOpened] = useState(false);
-
   const { signOut, signedInUser } = useIam();
 
   if (!signedInUser) return null;
 
   return (
-    <>
-      <button
-        type="button"
-        className="inline-block"
-        onClick={() => toggleMenuOpened(true)}
-      >
+    <AppPopup>
+      <AppPopup.TriggerButton className="inline-block">
         {/*TODO Replace with current user avatar*/}
         <Avatar
           src="https://images.unsplash.com/photo-1548532928-b34e3be62fc6?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ"
           className="ml-auto"
           style={{ '--size': '48px', '--border-radius': '100%' }}
         />
-      </button>
+      </AppPopup.TriggerButton>
 
-      <ActionSheet
-        visible={menuOpened}
-        onClose={() => toggleMenuOpened(false)}
-        closeOnAction={true}
-        actions={[
-          {
-            key: 'sign-out',
-            text: 'Wyloguj',
-            onClick: signOut,
-          },
-        ]}
-      />
-    </>
+      <AppPopup.Content>
+        <List>
+          <List.Item
+            prefix={<LogoutOutlined />}
+            onClick={signOut}
+            arrow={false}
+          >
+            Wyloguj
+          </List.Item>
+        </List>
+      </AppPopup.Content>
+    </AppPopup>
   );
 }
