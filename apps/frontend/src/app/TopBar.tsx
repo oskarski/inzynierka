@@ -41,7 +41,9 @@ function ProfileAvatar() {
       </AppPopup.TriggerButton>
 
       <AppPopup.Content>
-        <List>
+        <AppPopup.Title>Menu</AppPopup.Title>
+
+        <List style={{ '--border-top': '0', '--border-bottom': '0' }}>
           <List.Item
             prefix={<LogoutOutlined />}
             onClick={signOut}

@@ -59,6 +59,14 @@ AppPopup.withAppPopup = function withAppPopup<PropsType>(
   );
 };
 
+AppPopup.Title = function Title({ children }: PropsWithChildren<{}>) {
+  return (
+    <h5 className="text-2xl text-default font-medium text-center mb-4">
+      {children}
+    </h5>
+  );
+};
+
 AppPopup.Content = function Content({ children }: PropsWithChildren<{}>) {
   const { opened, close } = useAppPopupContext();
 
@@ -68,7 +76,7 @@ AppPopup.Content = function Content({ children }: PropsWithChildren<{}>) {
       onMaskClick={close}
       bodyClassName="rounded-t-2xl overflow-y-auto"
     >
-      {children}
+      <div className="p-4">{children}</div>
     </Popup>
   );
 };
