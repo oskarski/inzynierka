@@ -4,14 +4,15 @@ import classNames from 'classnames';
 
 interface ErrorMessageProps extends HTMLAttributes<HTMLSpanElement> {
   block?: boolean;
+  size?: 'sm' | 'base';
 }
 
-function ErrorMessage({ block, ...props }: ErrorMessageProps) {
+function ErrorMessage({ block, size = 'sm', ...props }: ErrorMessageProps) {
   return (
     <span
       {...props}
       className={classNames(
-        'text-red-700 text-sm',
+        `text-red-700 text-${size}`,
         { 'inline-block': !block, block: block },
         props.className
       )}

@@ -1,9 +1,10 @@
-import { ErrorText, Loader } from '@fe/components';
+import { Loader } from '@fe/components';
 import React, { createContext, PropsWithChildren, useContext } from 'react';
 import { useListAllRecipesCategories } from '../api';
 import { IRecipeCategoryListItemDto } from '@lib/shared';
 import { assertIsDefined } from '@fe/utils';
 import { RecipeCategoryCard } from './RecipeCategoryCard';
+import { ApiErrorMessage } from '@fe/errors';
 
 interface IRecipesCategoriesListingContext {
   recipesCategories: IRecipeCategoryListItemDto[];
@@ -30,7 +31,7 @@ export const RecipesCategoriesListing = ({
   const [recipesCategories, loading, error] = useListAllRecipesCategories();
 
   if (loading) return <Loader />;
-  if (error) return <ErrorText error={error} />;
+  if (error) return <ApiErrorMessage size="base" error={error} />;
 
   return (
     <RecipesCategoriesListingContext.Provider value={{ recipesCategories }}>

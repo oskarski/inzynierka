@@ -2,14 +2,14 @@ import { assertIsDefined, env } from '@fe/utils';
 import React, {
   createContext,
   PropsWithChildren,
-  useCallback,
   useContext,
   useEffect,
   useRef,
 } from 'react';
 import { IIamApi, ISignedInUserDto, useSignedInUser, useSignOut } from './api';
 import { Amplify } from 'aws-amplify';
-import { ErrorText, Loader } from '@fe/components';
+import { Loader } from '@fe/components';
+import { ApiErrorMessage } from '@fe/errors';
 
 interface IIamContext {
   readonly iamApi: IIamApi;
@@ -40,7 +40,7 @@ export const IamProvider = ({
   const [signedInUser, loading, error] = useSignedInUser(props.iamApi);
 
   if (loading) return <Loader className="my-3" />;
-  if (error) return <ErrorText error={error} />;
+  if (error) return <ApiErrorMessage size="base" error={error} />;
 
   const ctx: IIamContext = {
     iamApi: props.iamApi,
