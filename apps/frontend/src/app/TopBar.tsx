@@ -43,7 +43,7 @@ function ProfileAvatar() {
       <AppPopup.Content>
         <AppPopup.Title>Menu</AppPopup.Title>
 
-        <List style={{ '--border-top': '0', '--border-bottom': '0' }}>
+        <List style={{ '--border-bottom': '0' }}>
           <List.Item
             prefix={<LogoutOutlined />}
             onClick={signOut}

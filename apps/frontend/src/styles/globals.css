@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 :root:root {
-  --adm-color-primary: #EF4444;
-  --adm-color-success: #00B578;
-  --adm-color-danger: #EF4444;
+  --adm-color-primary: #ef4444;
+  --adm-color-success: #00b578;
+  --adm-color-danger: #ef4444;
 
   --adm-color-white: #ffffff;
   --adm-color-text: #111827;
@@ -18,4 +18,8 @@
 
 .anticon {
   display: block;
+}
+
+div.adm-list {
+  --border-top: 0;
 }
