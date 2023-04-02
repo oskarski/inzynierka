@@ -9,7 +9,7 @@ testContext.api.iamApi.signUp.mockResolvedValue();
 
 describe(SignUpPage.name, () => {
   it('allows to sign up', async () => {
-    await testContext.render(<SignUpPage />);
+    await testContext.notSignedIn().render(<SignUpPage />);
 
     const firstNameInput = InputHandle.fromLabel(
       testContext.container,

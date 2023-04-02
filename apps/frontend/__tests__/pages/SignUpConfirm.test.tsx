@@ -11,6 +11,7 @@ describe(SignUpConfirmPage.name, () => {
   it('allows to confirm sign-up', async () => {
     await testContext
       .havingQueryParam('email', 'czIwNTA2QHBqd3N0ay5lZHUucGw=')
+      .notSignedIn()
       .render(<SignUpConfirmPage />);
 
     const codeInput = InputHandle.fromLabel(testContext.container, /^Kod$/);
