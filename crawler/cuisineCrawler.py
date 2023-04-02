@@ -10,24 +10,24 @@ type_list = ['kuchnia-amerykanska','kuchnia-azjatycka','kuchnia-czeska','kuchnia
 db = psycopg2.connect(
     host="localhost",
     port=5432,
-    user="postgres",
-    password="admin",
+    user="root",
+    password="root",
     database="inzynierka"
 )
 cursor = db.cursor()
 
-cursor.execute("CREATE TABLE IF NOT EXISTS recipieCusine (id SERIAL PRIMARY KEY, link VARCHAR(255), cusine VARCHAR(255))")
+cursor.execute("CREATE TABLE IF NOT EXISTS recipeCuisine (id SERIAL PRIMARY KEY, link VARCHAR(255), cuisine VARCHAR(255))")
 
 
 # Loop through each type in the type list
-for recipe_cusine in type_list:
+for recipe_cuisine in type_list:
     # Initialize the page number to 1
     page_num = 1
 
     # Loop through each page of the recipe listings
     while True:
         # Make a request to the URL for this type and page number
-        url = base_url + recipe_cusine + "/" + str(page_num) + "#lista"
+        url = base_url + recipe_cuisine + "/" + str(page_num) + "#lista"
         print(url)
         response = requests.get(url)
 
@@ -40,8 +40,8 @@ for recipe_cusine in type_list:
             link = recipe_box.find('a')['href']
 
             # Save the href to the database
-            sql = "INSERT INTO recipieCusine (link, cusine) VALUES (%s, %s)"
-            val = (link,recipe_cusine)
+            sql = "INSERT INTO recipeCuisine (link, cuisine) VALUES (%s, %s)"
+            val = (link,recipe_cuisine)
             cursor.execute(sql, val)
             db.commit()
 

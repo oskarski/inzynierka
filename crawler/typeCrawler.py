@@ -10,8 +10,8 @@ type_list = ['dania-glowne', 'zupy', 'salatki', 'napoje', 'przetwory', 'sniadani
 conn = psycopg2.connect(
     host="localhost",
     port=5432,
-    user="postgres",
-    password="admin",
+    user="root",
+    password="root",
     database="inzynierka"
 )
 cur = conn.cursor()

@@ -8,8 +8,8 @@ import re
 conn = psycopg2.connect(
     host="localhost",
     port=5432,
-    user="postgres",
-    password="admin",
+    user="root",
+    password="root",
     database="inzynierka"
 )
 
