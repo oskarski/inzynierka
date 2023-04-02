@@ -1,6 +1,7 @@
 import { Popup } from 'antd-mobile';
 import React, {
   createContext,
+  FunctionComponent,
   HTMLAttributes,
   PropsWithChildren,
   useCallback,
@@ -47,6 +48,17 @@ export const AppPopup = ({ children }: PropsWithChildren<{}>) => {
   );
 };
 
+AppPopup.withAppPopup = function withAppPopup<PropsType>(
+  Component: FunctionComponent<PropsType>
+) {
+  return (props: PropsType) => (
+    <AppPopup>
+      {/* @ts-ignore*/}
+      <Component {...props} />
+    </AppPopup>
+  );
+};
+
 AppPopup.Content = function Content({ children }: PropsWithChildren<{}>) {
   const { opened, close } = useAppPopupContext();
 
@@ -67,4 +79,10 @@ AppPopup.TriggerButton = function TriggerButton(
   const { open } = useAppPopupContext();
 
   return <button type="button" {...props} onClick={open} />;
+};
+
+AppPopup.useOpenPopup = function useOpenPopup() {
+  const { open } = useAppPopupContext();
+
+  return open;
 };
