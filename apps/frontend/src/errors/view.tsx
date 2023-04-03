@@ -1,5 +1,9 @@
 import { HTMLAttributes } from 'react';
-import { FormValidationError, FormValidationOrApiError } from './errors';
+import {
+  ApiError,
+  FormValidationError,
+  FormValidationOrApiError,
+} from './errors';
 import classNames from 'classnames';
 
 interface ErrorMessageProps extends HTMLAttributes<HTMLSpanElement> {
@@ -57,7 +61,7 @@ interface ApiErrorMessageProps extends ErrorMessageProps {
 }
 
 export function ApiErrorMessage({ error, ...props }: ApiErrorMessageProps) {
-  if (!error || !(error instanceof ApiErrorMessage)) return null;
+  if (!error || !(error instanceof ApiError)) return null;
 
   return <ErrorMessage {...props}>{error.message}</ErrorMessage>;
 }
