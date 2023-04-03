@@ -4,11 +4,21 @@ import { AppProvider } from '@fe/AppProvider';
 import { TestApi } from './api';
 import * as nextRouter from 'next/router';
 import { SignedInUserDtoBuilder } from '../dto-builders';
+import { QueryClient } from 'react-query';
 
 const useRouterMock = jest.fn();
 
 // @ts-ignore
 nextRouter.useRouter = useRouterMock;
+
+const testAppQueryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      cacheTime: Infinity,
+    },
+  },
+});
 
 export class TestContext {
   private __container: HTMLElement | null = null;
@@ -53,7 +63,7 @@ export class TestContext {
     });
 
     const result = render(
-      <AppProvider api={this.api}>
+      <AppProvider api={this.api} queryClient={testAppQueryClient}>
         {children}
         <div data-testid="test-app" />
       </AppProvider>

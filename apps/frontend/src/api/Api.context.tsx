@@ -7,15 +7,20 @@ import {
 } from '@fe/recipes-categories';
 import { IApi } from './Api.interface';
 import { IamApi, IamProvider } from '@fe/iam';
+import { IngredientsApi, IngredientsProvider } from '@fe/ingredients';
 
-const queryClient = new QueryClient();
+const defaultQueryClient = new QueryClient({
+  defaultOptions: { queries: { retry: 3, refetchOnWindowFocus: false } },
+});
 
 interface ApiProviderProps {
   api?: IApi;
+  queryClient?: QueryClient;
 }
 
 export const ApiProvider = ({
   api,
+  queryClient = defaultQueryClient,
   children,
 }: PropsWithChildren<ApiProviderProps>) => {
   const httpClient = useMemo(() => new HttpClient(env().apiUrl), []);
@@ -25,6 +30,7 @@ export const ApiProvider = ({
       recipesCategoriesApi:
         api?.recipesCategoriesApi || new RecipesCategoriesApi(httpClient),
       iamApi: api?.iamApi || new IamApi(),
+      ingredientsApi: api?.ingredientsApi || new IngredientsApi(httpClient),
     }),
     [httpClient, api]
   );
@@ -35,7 +41,9 @@ export const ApiProvider = ({
         <RecipesCategoriesProvider
           recipesCategoriesApi={httpBasedApi.recipesCategoriesApi}
         >
-          {children}
+          <IngredientsProvider ingredientsApi={httpBasedApi.ingredientsApi}>
+            {children}
+          </IngredientsProvider>
         </RecipesCategoriesProvider>
       </IamProvider>
     </QueryClientProvider>

@@ -13,7 +13,7 @@ export class HttpClient {
     });
   }
 
-  get<ReturnType>(url: string): Promise<ReturnType> {
-    return this.axiosInstance.get(url).then((res) => res.data);
+  get<ReturnType>(url: string, params?: object): Promise<ReturnType> {
+    return this.axiosInstance.get(url, { params }).then((res) => res.data);
   }
 }

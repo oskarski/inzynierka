@@ -1,13 +1,25 @@
-import { AppPopup } from '@fe/components';
+import { AppPopup, Loader } from '@fe/components';
 import { Button, List, SearchBar, Stepper } from 'antd-mobile';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
+import { useListIngredients } from '@fe/ingredients';
+import { debounce } from 'lodash';
+import { IListIngredientsDto } from '@lib/shared';
+import { ApiErrorMessage } from '@fe/errors';
 
 export const SearchRecipesByIngredientsPopupContent = () => {
-  const ingredients = [
-    { id: '1', name: 'Pomidor' },
-    { id: '2', name: 'Papryka' },
-    { id: '3', name: 'Pierś kurczaka' },
-  ];
+  const [queryDto, setQueryDto] = useState<IListIngredientsDto>({ name: '' });
+
+  const [ingredients = [], loading, error, { isFetching }] =
+    useListIngredients(queryDto);
+
+  const debouncedOnSearch = useCallback(
+    debounce(
+      (phrase) => setQueryDto((prev) => ({ ...prev, name: phrase })),
+      350
+    ),
+    []
+  );
+
   const selectedIngredients = [
     { id: '4', name: 'Ryż', quantity: 1, unit: 'szt.' },
     { id: '5', name: 'Cebula', quantity: 1, unit: 'szt.' },
@@ -19,10 +31,18 @@ export const SearchRecipesByIngredientsPopupContent = () => {
     <AppPopup.Content>
       <AppPopup.Title>Jakie masz składniki?</AppPopup.Title>
 
-      <SearchBar placeholder="Szukaj składników" className="mb-3" />
+      <SearchBar
+        placeholder="Szukaj składników"
+        className="mb-3"
+        onChange={debouncedOnSearch}
+      />
 
       <div className="overflow-y-auto">
-        {ingredients.length === 0 && (
+        <ApiErrorMessage error={error} />
+
+        {(loading || isFetching) && <Loader className="my-3" />}
+
+        {!loading && ingredients.length === 0 && (
           <p className="text-sm text-gray-500 text-center mt-3">
             Nie znaleźliśmy pasujacych składników
           </p>

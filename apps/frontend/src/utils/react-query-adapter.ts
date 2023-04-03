@@ -11,12 +11,15 @@ import {
 
 export function useAdaptedQuery<ReturnType>(
   queryKey: QueryKey,
-  fn: QueryFunction<ReturnType>
+  fn: QueryFunction<ReturnType>,
+  options?: {
+    keepPreviousData?: boolean;
+  }
 ):
   | [undefined, true, Error | null, UseQueryResult<ReturnType, Error>]
   | [undefined, false, Error, UseQueryResult<ReturnType, Error>]
   | [ReturnType, false, null, UseQueryResult<ReturnType, Error>] {
-  const queryResult = useQuery<ReturnType, Error>(queryKey, fn);
+  const queryResult = useQuery<ReturnType, Error>(queryKey, fn, options);
 
   if (queryResult.isLoading)
     return [
