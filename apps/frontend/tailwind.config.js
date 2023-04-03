@@ -19,6 +19,9 @@ module.exports = {
       opacity: {
         55: '.55',
       },
+      maxHeight: {
+        '90-screen': '90vh',
+      },
     },
   },
   plugins: [],

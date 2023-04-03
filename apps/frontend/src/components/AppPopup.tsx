@@ -76,7 +76,7 @@ AppPopup.Content = function Content({ children }: PropsWithChildren<{}>) {
       onMaskClick={close}
       bodyClassName="rounded-t-2xl overflow-y-auto"
     >
-      <div className="p-4">{children}</div>
+      <div className="p-4 flex flex-col max-h-90-screen">{children}</div>
     </Popup>
   );
 };
