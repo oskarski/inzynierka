@@ -25,6 +25,11 @@ export interface ISignedInUserDto {
   readonly lastName: string;
 }
 
+export interface IForgotPasswordDto {
+  readonly id?: UserId;
+  readonly email: string;
+}
+
 export interface IIamApi {
   signUp(dto: ISignUpDto): Promise<void>;
 
@@ -33,6 +38,8 @@ export interface IIamApi {
   signIn(dto: ISignInDto): Promise<ISignedInUserDto>;
 
   signedInUser(): Promise<ISignedInUserDto | null>;
+
+  forgotPassword(dto: IForgotPasswordDto): Promise<void>;
 }
 
 export class IamApi implements IIamApi {
@@ -79,5 +86,9 @@ export class IamApi implements IIamApi {
     } catch (err) {
       return null;
     }
+  }
+
+  async forgotPassword(dto: IForgotPasswordDto): Promise<void> {
+    await Auth.forgotPassword(dto.email);
   }
 }

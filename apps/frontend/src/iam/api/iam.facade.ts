@@ -6,6 +6,7 @@ import {
   ISignedInUserDto,
   ISignInDto,
   ISignUpDto,
+  IForgotPasswordDto,
 } from './IamApi';
 import {
   catchFormValidationOrApiError,
@@ -13,12 +14,14 @@ import {
 } from '@fe/errors';
 import { SignUpFormSchema } from './schema/sign-up.schema';
 import { ConfirmSignUpFormSchema } from './schema/confirm-sign-up.schema';
-import { SignInFormSchema } from './schema/sign-in.schema';
+import { SignInFormSchema } from './schema/sign-in.schema'
+import { ForgotPasswordSchema } from './schema/forgot-password.schema';
 import { RefObject, useCallback } from 'react';
 import { useQueryClient } from 'react-query';
 import { Auth } from 'aws-amplify';
 
 const SignedInUserQueryKey = ['iamApi', 'signedInUser'];
+const ForgotPasswordQueryKey = ['iamApi', 'forgotPassword'];
 
 export const useSignUp = ({
   onSuccess,
@@ -88,5 +91,28 @@ export const useSignOut = (signOutFormRef: RefObject<HTMLFormElement>) => {
 export const useSignedInUser = (iamApi: IIamApi) => {
   return useAdaptedQuery<ISignedInUserDto | null>(SignedInUserQueryKey, () =>
     iamApi.signedInUser()
+  );
+};
+
+export const useForgotPassword = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
+  const queryClient = useQueryClient();
+  const { iamApi } = useIam();
+
+  return useAdaptedMutation<
+      void,
+      FormValidationOrApiError
+      >(
+      (formValues) =>
+          ForgotPasswordSchema.parseAsync(formValues)
+              .then((dto) => iamApi.forgotPassword(dto))
+              .catch(catchFormValidationOrApiError),
+      {
+        onSuccess: (response) => {
+
+          queryClient.setQueryData<ISignedInUserDto | null>(SignedInUserQueryKey, null);
+
+          if (onSuccess) onSuccess();
+        },
+      }
   );
 };
