@@ -1,8 +1,10 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { RecipeCategoriesService } from './services';
 import { IRecipeCategoryListItemDto } from '@lib/shared';
+import { PrivateApiGuard } from '../auth';
 
 @Controller('recipe-categories')
+@UseGuards(PrivateApiGuard)
 export class RecipeCategoriesController {
   constructor(
     private readonly recipeCategoriesService: RecipeCategoriesService,

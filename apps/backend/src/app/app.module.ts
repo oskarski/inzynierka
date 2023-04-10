@@ -5,14 +5,16 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import appConfig from './config/app.config';
 import dbConfig from './config/db.config';
+import authConfig from './config/auth.config';
 import { RecipeCategoriesModule } from './recipe-categories';
 import { IngredientsModule } from './ingredients';
+import { AuthModule } from './auth';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, dbConfig],
+      load: [appConfig, dbConfig, authConfig],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -28,6 +30,7 @@ import { IngredientsModule } from './ingredients';
       }),
       inject: [ConfigService],
     }),
+    AuthModule,
     RecipeCategoriesModule,
     IngredientsModule,
   ],

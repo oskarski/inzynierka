@@ -1,7 +1,9 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { IIngredientListItemDto } from '@lib/shared';
+import { PrivateApiGuard } from '../auth';
 
 @Controller('ingredients')
+@UseGuards(PrivateApiGuard)
 export class IngredientsController {
   @Get()
   async listAll(): Promise<IIngredientListItemDto[]> {
