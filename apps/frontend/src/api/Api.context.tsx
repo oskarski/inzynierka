@@ -40,16 +40,14 @@ function PrivateApiProvider({
 }: PropsWithChildren<{
   api?: IApi;
 }>) {
-  const { signedInUser } = useIam();
+  const { signedInUser, refreshSession } = useIam();
 
   const httpBasedApi = useMemo(() => {
     if (!signedInUser) return null;
 
     const httpClient = new HttpClient(env().apiUrl, {
       accessToken: signedInUser.accessToken,
-      onUnauthorized: () => {
-        console.log('REFRESH TOKEN OR LOGOUT');
-      },
+      onUnauthorized: refreshSession,
     });
 
     return {

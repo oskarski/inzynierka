@@ -14,11 +14,12 @@ import {
 } from '@fe/errors';
 import { SignUpFormSchema } from './schema/sign-up.schema';
 import { ConfirmSignUpFormSchema } from './schema/confirm-sign-up.schema';
-import { SignInFormSchema } from './schema/sign-in.schema'
+import { SignInFormSchema } from './schema/sign-in.schema';
 import { ForgotPasswordSchema } from './schema/forgot-password.schema';
 import { RefObject, useCallback } from 'react';
 import { useQueryClient } from 'react-query';
 import { Auth } from 'aws-amplify';
+import { CognitoUserSession } from 'amazon-cognito-identity-js';
 
 const SignedInUserQueryKey = ['iamApi', 'signedInUser'];
 const ForgotPasswordQueryKey = ['iamApi', 'forgotPassword'];
@@ -94,25 +95,54 @@ export const useSignedInUser = (iamApi: IIamApi) => {
   );
 };
 
-export const useForgotPassword = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
+export const useForgotPassword = ({
+  onSuccess,
+}: { onSuccess?: () => void } = {}) => {
   const queryClient = useQueryClient();
   const { iamApi } = useIam();
 
-  return useAdaptedMutation<
-      void,
-      FormValidationOrApiError
-      >(
-      (formValues) =>
-          ForgotPasswordSchema.parseAsync(formValues)
-              .then((dto) => iamApi.forgotPassword(dto))
-              .catch(catchFormValidationOrApiError),
-      {
-        onSuccess: (response) => {
+  return useAdaptedMutation<void, FormValidationOrApiError>(
+    (formValues) =>
+      ForgotPasswordSchema.parseAsync(formValues)
+        .then((dto) => iamApi.forgotPassword(dto))
+        .catch(catchFormValidationOrApiError),
+    {
+      onSuccess: (response) => {
+        queryClient.setQueryData<ISignedInUserDto | null>(
+          SignedInUserQueryKey,
+          null
+        );
 
-          queryClient.setQueryData<ISignedInUserDto | null>(SignedInUserQueryKey, null);
-
-          if (onSuccess) onSuccess();
-        },
-      }
+        if (onSuccess) onSuccess();
+      },
+    }
   );
+};
+
+export const useRefreshSession = (signOut: () => void) => {
+  const queryClient = useQueryClient();
+
+  return useCallback(async () => {
+    const cognitoUser = await Auth.currentAuthenticatedUser();
+    const currentSession = cognitoUser.signInUserSession;
+
+    cognitoUser.refreshSession(
+      currentSession.refreshToken,
+      (error: Error, session: CognitoUserSession) => {
+        // could not refresh session
+        if (error) return signOut();
+
+        const signedInUser =
+          queryClient.getQueryData<ISignedInUserDto>(SignedInUserQueryKey);
+
+        queryClient.setQueryData(SignedInUserQueryKey, {
+          ...signedInUser,
+          accessToken: session.getAccessToken().getJwtToken(),
+        });
+
+        // clear query client, so that it uses new accessToken
+        queryClient.clear();
+      }
+    );
+  }, []);
 };
