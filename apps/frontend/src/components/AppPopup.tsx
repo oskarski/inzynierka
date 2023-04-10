@@ -81,6 +81,17 @@ AppPopup.Content = function Content({ children }: PropsWithChildren<{}>) {
   );
 };
 
+AppPopup.withAppPopupContent = function withAppPopupContent<PropsType>(
+  Component: FunctionComponent<PropsType>
+) {
+  return (props: PropsType) => (
+    <AppPopup.Content>
+      {/* @ts-ignore*/}
+      <Component {...props} />
+    </AppPopup.Content>
+  );
+};
+
 AppPopup.TriggerButton = function TriggerButton(
   props: HTMLAttributes<HTMLButtonElement>
 ) {
