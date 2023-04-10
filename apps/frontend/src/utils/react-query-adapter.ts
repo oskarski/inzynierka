@@ -14,6 +14,7 @@ export function useAdaptedQuery<ReturnType>(
   fn: QueryFunction<ReturnType>,
   options?: {
     keepPreviousData?: boolean;
+    onSuccess?: (data: ReturnType) => void;
   }
 ):
   | [undefined, true, Error | null, UseQueryResult<ReturnType, Error>]
