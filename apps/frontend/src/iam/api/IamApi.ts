@@ -20,6 +20,7 @@ export interface ISignInDto {
 
 export interface ISignedInUserDto {
   readonly id: UserId;
+  readonly accessToken: string;
   readonly email: string;
   readonly firstName: string;
   readonly lastName: string;
@@ -60,11 +61,15 @@ export class IamApi implements IIamApi {
 
   async signIn(dto: ISignInDto): Promise<ISignedInUserDto> {
     const loggedInUser = await Auth.signIn(dto.email, dto.password);
+    const accessToken = loggedInUser.signInUserSession
+      .getAccessToken()
+      .getJwtToken();
 
     const attributes = loggedInUser.attributes;
 
     return {
       id: attributes.sub,
+      accessToken,
       email: attributes.email,
       firstName: attributes.given_name,
       lastName: attributes.family_name,
@@ -76,9 +81,13 @@ export class IamApi implements IIamApi {
       const loggedInUser = await Auth.currentAuthenticatedUser();
 
       const attributes = loggedInUser.attributes;
+      const accessToken = loggedInUser.signInUserSession
+        .getAccessToken()
+        .getJwtToken();
 
       return {
         id: attributes.sub,
+        accessToken,
         email: attributes.email,
         firstName: attributes.given_name,
         lastName: attributes.family_name,
