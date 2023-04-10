@@ -21,7 +21,7 @@ interface IIamContext {
 const IamContext = createContext<Partial<IIamContext>>({});
 
 interface IamProps {
-  readonly iamApi: IIamApi;
+  iamApi: IIamApi;
 }
 
 export const IamProvider = ({
@@ -38,6 +38,7 @@ export const IamProvider = ({
   }, []);
 
   const signOut = useSignOut(signOutFormRef);
+
   const [signedInUser, loading, error] = useSignedInUser(props.iamApi);
 
   if (loading) return <Loader className="my-3" />;

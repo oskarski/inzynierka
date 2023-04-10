@@ -6,7 +6,7 @@ import {
   RecipesCategoriesApi,
 } from '@fe/recipes-categories';
 import { IApi } from './Api.interface';
-import { IamApi, IamProvider } from '@fe/iam';
+import { IamApi, IamProvider, useIam } from '@fe/iam';
 import { IngredientsApi, IngredientsProvider } from '@fe/ingredients';
 
 const defaultQueryClient = new QueryClient({
@@ -23,29 +23,51 @@ export const ApiProvider = ({
   queryClient = defaultQueryClient,
   children,
 }: PropsWithChildren<ApiProviderProps>) => {
-  const httpClient = useMemo(() => new HttpClient(env().apiUrl), []);
-
-  const httpBasedApi = useMemo<IApi>(
-    () => ({
-      recipesCategoriesApi:
-        api?.recipesCategoriesApi || new RecipesCategoriesApi(httpClient),
-      iamApi: api?.iamApi || new IamApi(),
-      ingredientsApi: api?.ingredientsApi || new IngredientsApi(httpClient),
-    }),
-    [httpClient, api]
-  );
+  const iamApi = useMemo(() => api?.iamApi || new IamApi(), [api]);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <IamProvider iamApi={httpBasedApi.iamApi}>
-        <RecipesCategoriesProvider
-          recipesCategoriesApi={httpBasedApi.recipesCategoriesApi}
-        >
-          <IngredientsProvider ingredientsApi={httpBasedApi.ingredientsApi}>
-            {children}
-          </IngredientsProvider>
-        </RecipesCategoriesProvider>
+      <IamProvider iamApi={iamApi}>
+        <PrivateApiProvider api={api}>{children}</PrivateApiProvider>
       </IamProvider>
     </QueryClientProvider>
   );
 };
+
+function PrivateApiProvider({
+  api,
+  children,
+}: PropsWithChildren<{
+  api?: IApi;
+}>) {
+  const { signedInUser } = useIam();
+
+  const httpBasedApi = useMemo(() => {
+    if (!signedInUser) return null;
+
+    const httpClient = new HttpClient(env().apiUrl, {
+      accessToken: signedInUser.accessToken,
+      onUnauthorized: () => {
+        console.log('REFRESH TOKEN OR LOGOUT');
+      },
+    });
+
+    return {
+      recipesCategoriesApi:
+        api?.recipesCategoriesApi || new RecipesCategoriesApi(httpClient),
+      ingredientsApi: api?.ingredientsApi || new IngredientsApi(httpClient),
+    };
+  }, [api, signedInUser]);
+
+  if (!httpBasedApi) return <>{children}</>;
+
+  return (
+    <RecipesCategoriesProvider
+      recipesCategoriesApi={httpBasedApi.recipesCategoriesApi}
+    >
+      <IngredientsProvider ingredientsApi={httpBasedApi.ingredientsApi}>
+        {children}
+      </IngredientsProvider>
+    </RecipesCategoriesProvider>
+  );
+}
