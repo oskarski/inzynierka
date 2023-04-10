@@ -81,12 +81,13 @@ export const SearchRecipesByIngredientsPopupContent =
                     key={ingredient.id}
                     arrow={
                       <>
-                        <div className="flex items-center text-sm mr-3">
-                          <Stepper min={1} defaultValue={1} className="mr-2" />
-                          <select>
-                            <option value="">szt.</option>
-                          </select>
-                        </div>
+                        {/* For now the basic version does not include quantity and unit */}
+                        {/*<div className="flex items-center text-sm mr-3">*/}
+                        {/*  <Stepper min={1} defaultValue={1} className="mr-2" />*/}
+                        {/*  <select>*/}
+                        {/*    <option value="">szt.</option>*/}
+                        {/*  </select>*/}
+                        {/*</div>*/}
 
                         <button className="text-sm text-red-500">Usuń</button>
                       </>
