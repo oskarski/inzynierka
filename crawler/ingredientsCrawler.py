@@ -16,7 +16,7 @@ conn = psycopg2.connect(
 # Create a cursor object
 cursor = conn.cursor()
 
-cursor.execute("CREATE TABLE ingredients (id SERIAL PRIMARY KEY, recipe_id INT, name VARCHAR(255), amount VARCHAR(255), unit VARCHAR(255))")
+cursor.execute("CREATE TABLE IF NOT EXISTS crawler_ingredients (id SERIAL PRIMARY KEY, recipe_id INT, name VARCHAR(255), amount VARCHAR(255), unit VARCHAR(255))")
 
 cursor.execute("SELECT link FROM recipes")
 links = cursor.fetchall()
@@ -29,7 +29,7 @@ for link in links:
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    sql_insert_ingredient = "INSERT INTO ingredients (recipe_id, name, amount, unit) VALUES (%s, %s, %s, %s)"
+    sql_insert_ingredient = "INSERT INTO crawler_ingredients (recipe_id, name, amount, unit) VALUES (%s, %s, %s, %s)"
 
     # Extract ingredients and insert into database
     skladniki_div = soup.find('div', class_='skladniki')
@@ -65,7 +65,8 @@ for link in links:
     recipe_id +=1
 
 # Create a new table with unique ingredient names
-cursor.execute("CREATE TABLE unique_ingredients AS SELECT DISTINCT regexp_replace(trim(name), '\s{2,}', ' ', 'g') AS name FROM ingredients WHERE name !~ '[0-9]' AND name !~ '[1-9][/][0-9]' AND name !~ '[^\s]*\u00BD[^\s]*';")
+# Table created in backend app code
+cursor.execute("INSERT INTO ingredients (name) SELECT DISTINCT regexp_replace(trim(name), '\s{2,}', ' ', 'g') AS name FROM crawler_ingredients WHERE name !~ '[0-9]' AND name !~ '[1-9][/][0-9]' AND name !~ '[^\s]*\u00BD[^\s]*';")
 
 # Commit the changes to the database
 conn.commit()
