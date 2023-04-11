@@ -18,8 +18,6 @@ import { SignInFormSchema } from './schema/sign-in.schema';
 import { ForgotPasswordSchema } from './schema/forgot-password.schema';
 import { RefObject, useCallback } from 'react';
 import { useQueryClient } from 'react-query';
-import { Auth } from 'aws-amplify';
-import { CognitoUserSession } from 'amazon-cognito-identity-js';
 
 const SignedInUserQueryKey = ['iamApi', 'signedInUser'];
 const ForgotPasswordQueryKey = ['iamApi', 'forgotPassword'];
@@ -76,7 +74,10 @@ export const useSignIn = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
   );
 };
 
-export const useSignOut = (signOutFormRef: RefObject<HTMLFormElement>) => {
+export const useSignOut = (
+  iamApi: IIamApi,
+  signOutFormRef: RefObject<HTMLFormElement>
+) => {
   const queryClient = useQueryClient();
 
   return useCallback(async () => {
@@ -84,7 +85,7 @@ export const useSignOut = (signOutFormRef: RefObject<HTMLFormElement>) => {
 
     queryClient.clear();
     queryClient.setQueryData(SignedInUserQueryKey, null);
-    await Auth.signOut();
+
     signOutFormRef.current.submit();
   }, []);
 };
@@ -119,30 +120,25 @@ export const useForgotPassword = ({
   );
 };
 
-export const useRefreshSession = (signOut: () => void) => {
+export const useRefreshSession = (iamApi: IIamApi, signOut: () => void) => {
   const queryClient = useQueryClient();
 
   return useCallback(async () => {
-    const cognitoUser = await Auth.currentAuthenticatedUser();
-    const currentSession = cognitoUser.signInUserSession;
+    try {
+      const accessToken = await iamApi.refreshSession();
 
-    cognitoUser.refreshSession(
-      currentSession.refreshToken,
-      (error: Error, session: CognitoUserSession) => {
-        // could not refresh session
-        if (error) return signOut();
+      const signedInUser =
+        queryClient.getQueryData<ISignedInUserDto>(SignedInUserQueryKey);
 
-        const signedInUser =
-          queryClient.getQueryData<ISignedInUserDto>(SignedInUserQueryKey);
+      queryClient.setQueryData(SignedInUserQueryKey, {
+        ...signedInUser,
+        accessToken,
+      });
 
-        queryClient.setQueryData(SignedInUserQueryKey, {
-          ...signedInUser,
-          accessToken: session.getAccessToken().getJwtToken(),
-        });
-
-        // clear query client, so that it uses new accessToken
-        queryClient.clear();
-      }
-    );
+      // clear query client, so that it uses new accessToken
+      queryClient.clear();
+    } catch (err) {
+      signOut();
+    }
   }, []);
 };

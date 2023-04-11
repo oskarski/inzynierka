@@ -1,5 +1,7 @@
-import { Auth } from 'aws-amplify';
+import { Amplify, Auth } from 'aws-amplify';
 import { UserId } from '@lib/shared';
+import { CognitoUserSession } from 'amazon-cognito-identity-js';
+import { env } from '@fe/utils';
 
 export interface ISignUpDto {
   readonly email: string;
@@ -32,18 +34,31 @@ export interface IForgotPasswordDto {
 }
 
 export interface IIamApi {
+  configure(): void;
+
   signUp(dto: ISignUpDto): Promise<void>;
 
   confirmSignUp(dto: IConfirmSignUpDto): Promise<void>;
 
   signIn(dto: ISignInDto): Promise<ISignedInUserDto>;
 
+  signOut(): Promise<void>;
+
   signedInUser(): Promise<ISignedInUserDto | null>;
 
   forgotPassword(dto: IForgotPasswordDto): Promise<void>;
+
+  refreshSession(): Promise<string>;
 }
 
 export class IamApi implements IIamApi {
+  configure(): void {
+    Amplify.configure({
+      Auth: env().cognito,
+      ssr: true,
+    });
+  }
+
   async signUp(dto: ISignUpDto): Promise<void> {
     await Auth.signUp({
       username: dto.email,
@@ -76,6 +91,10 @@ export class IamApi implements IIamApi {
     };
   }
 
+  async signOut(): Promise<void> {
+    await Auth.signOut();
+  }
+
   async signedInUser(): Promise<ISignedInUserDto | null> {
     try {
       const loggedInUser = await Auth.currentAuthenticatedUser();
@@ -99,5 +118,20 @@ export class IamApi implements IIamApi {
 
   async forgotPassword(dto: IForgotPasswordDto): Promise<void> {
     await Auth.forgotPassword(dto.email);
+  }
+
+  async refreshSession(): Promise<string> {
+    const cognitoUser = await Auth.currentAuthenticatedUser();
+    const currentSession = cognitoUser.signInUserSession;
+
+    return cognitoUser.refreshSession(
+      currentSession.refreshToken,
+      (error: Error, session: CognitoUserSession) => {
+        // could not refresh session
+        if (error) return Promise.reject(error);
+
+        return Promise.resolve(session.getAccessToken().getJwtToken());
+      }
+    );
   }
 }

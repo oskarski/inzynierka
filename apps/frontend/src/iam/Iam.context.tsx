@@ -1,4 +1,4 @@
-import { assertIsDefined, env } from '@fe/utils';
+import { assertIsDefined } from '@fe/utils';
 import React, {
   createContext,
   PropsWithChildren,
@@ -14,7 +14,6 @@ import {
   useSignedInUser,
   useSignOut,
 } from './api';
-import { Amplify } from 'aws-amplify';
 import { Loader } from '@fe/components';
 import { ApiErrorMessage } from '@fe/errors';
 
@@ -39,14 +38,11 @@ export const IamProvider = ({
   const signOutFormRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    Amplify.configure({
-      Auth: env().cognito,
-      ssr: true,
-    });
+    props.iamApi.configure();
   }, []);
 
-  const signOut = useSignOut(signOutFormRef);
-  const refreshSession = useRefreshSession(signOut);
+  const signOut = useSignOut(props.iamApi, signOutFormRef);
+  const refreshSession = useRefreshSession(props.iamApi, signOut);
 
   const [signedInUser, loading, error] = useSignedInUser(props.iamApi);
 
