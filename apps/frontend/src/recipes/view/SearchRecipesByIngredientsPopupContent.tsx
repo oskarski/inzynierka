@@ -1,37 +1,56 @@
 import { AppPopup, Loader } from '@fe/components';
-import { Button, List, SearchBar, Stepper } from 'antd-mobile';
+import { Button, List, SearchBar } from 'antd-mobile';
 import React, { useCallback, useState } from 'react';
 import { useListIngredients } from '@fe/ingredients';
 import { debounce } from 'lodash';
 import { IListIngredientsDto } from '@lib/shared';
 import { ApiErrorMessage } from '@fe/errors';
+import { useRecipesFilters } from '../RecipesFilters.context';
+import { routes, useRouting } from '@fe/utils';
+
+const useSearchIngredients = () => {
+  const [queryDto, setQueryDto] = useState<IListIngredientsDto>({ name: '' });
+
+  const [ingredients = [], loading, error, { isFetching }] =
+    useListIngredients(queryDto);
+
+  const debouncedOnSearch = useCallback(
+    debounce(
+      (phrase) => setQueryDto((prev) => ({ ...prev, name: phrase })),
+      350
+    ),
+    []
+  );
+
+  return {
+    ingredients,
+    loading,
+    isFetching,
+    error,
+    onSearch: debouncedOnSearch,
+  };
+};
 
 export const SearchRecipesByIngredientsPopupContent =
   AppPopup.withAppPopupContent(() => {
-    const [queryDto, setQueryDto] = useState<IListIngredientsDto>({ name: '' });
+    const { redirectTo } = useRouting();
 
-    const [ingredients = [], loading, error, { isFetching }] =
-      useListIngredients(queryDto);
+    const { ingredients, loading, isFetching, error, onSearch } =
+      useSearchIngredients();
 
-    const debouncedOnSearch = useCallback(
-      debounce(
-        (phrase) => setQueryDto((prev) => ({ ...prev, name: phrase })),
-        350
-      ),
-      []
-    );
+    const {
+      selectedIngredients,
+      selectIngredient,
+      unselectIngredient,
+      isIngredientSelected,
+    } = useRecipesFilters();
 
-    const selectedIngredients = [
-      { id: '4', name: 'Ryż', quantity: 1, unit: 'szt.' },
-      { id: '5', name: 'Cebula', quantity: 1, unit: 'szt.' },
-      { id: '6', name: 'Czosnek', quantity: 1, unit: 'szt.' },
-      {
-        id: '7',
-        name: 'Ananas w plastrach z puszki',
-        quantity: 1,
-        unit: 'szt.',
-      },
-    ];
+    const closePopup = AppPopup.useClosePopup();
+
+    const onSubmit = () => {
+      closePopup();
+      redirectTo(routes.recipes());
+    };
 
     return (
       <>
@@ -40,7 +59,7 @@ export const SearchRecipesByIngredientsPopupContent =
         <SearchBar
           placeholder="Szukaj składników"
           className="mb-3"
-          onChange={debouncedOnSearch}
+          onChange={onSearch}
         />
 
         <div className="overflow-y-auto">
@@ -60,7 +79,16 @@ export const SearchRecipesByIngredientsPopupContent =
                 <List.Item
                   key={ingredient.id}
                   arrow={
-                    <button className="text-sm text-secondary">Dodaj</button>
+                    isIngredientSelected(ingredient.id) ? (
+                      <span className="text-sm text-success">Dodano</span>
+                    ) : (
+                      <button
+                        className="text-sm text-secondary"
+                        onClick={() => selectIngredient(ingredient)}
+                      >
+                        Dodaj
+                      </button>
+                    )
                   }
                 >
                   {ingredient.name}
@@ -89,7 +117,12 @@ export const SearchRecipesByIngredientsPopupContent =
                         {/*  </select>*/}
                         {/*</div>*/}
 
-                        <button className="text-sm text-red-500">Usuń</button>
+                        <button
+                          className="text-sm text-red-500"
+                          onClick={() => unselectIngredient(ingredient.id)}
+                        >
+                          Usuń
+                        </button>
                       </>
                     }
                   >
@@ -102,7 +135,7 @@ export const SearchRecipesByIngredientsPopupContent =
         </div>
 
         <div className="pt-4">
-          <Button block={true} color="primary">
+          <Button block={true} color="primary" onClick={onSubmit}>
             Szukamy!
           </Button>
         </div>

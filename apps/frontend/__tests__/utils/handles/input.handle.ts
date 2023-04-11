@@ -2,6 +2,7 @@ import {
   findByTestId,
   findByText,
   getByLabelText,
+  getByPlaceholderText,
   Matcher,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -14,6 +15,18 @@ export class InputHandle {
 
   static fromLabel(container: HTMLElement, label: Matcher): InputHandle {
     const inputElement = getByLabelText<HTMLInputElement>(container, label);
+
+    return new InputHandle(inputElement, container);
+  }
+
+  static fromPlaceholder(
+    container: HTMLElement,
+    placeholder: Matcher
+  ): InputHandle {
+    const inputElement = getByPlaceholderText<HTMLInputElement>(
+      container,
+      placeholder
+    );
 
     return new InputHandle(inputElement, container);
   }

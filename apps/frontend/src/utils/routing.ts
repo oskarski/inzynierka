@@ -16,8 +16,15 @@ export const useRouting = () => {
     [router.query]
   );
 
+  const redirectTo = useCallback(
+    async (url: string) => {
+      if (router.route !== url) await router.push(url);
+    },
+    [router.route]
+  );
+
   return {
-    redirectTo: router.push,
+    redirectTo,
     getQueryParam,
     currentRoute: router.route,
   };

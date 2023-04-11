@@ -5,6 +5,7 @@ import { TestApi } from './api';
 import * as nextRouter from 'next/router';
 import { SignedInUserDtoBuilder } from '../dto-builders';
 import { QueryClient } from 'react-query';
+import { AppPopup } from '@fe/components';
 
 const useRouterMock = jest.fn();
 
@@ -73,6 +74,14 @@ export class TestContext {
 
     // Wait for async stuff
     await findByTestId(this.container, /^test-app$/);
+
+    return this;
+  }
+
+  async renderPopup(children: ReactNode): Promise<TestContext> {
+    await this.render(<AppPopup defaultOpened={true}>{children}</AppPopup>);
+
+    this.__container = document.body;
 
     return this;
   }

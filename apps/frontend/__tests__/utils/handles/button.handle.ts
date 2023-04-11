@@ -10,4 +10,8 @@ export class ButtonHandle {
   async submitForm(): Promise<void> {
     fireEvent.submit(this.buttonElement);
   }
+
+  click(): void {
+    fireEvent.click(this.buttonElement);
+  }
 }

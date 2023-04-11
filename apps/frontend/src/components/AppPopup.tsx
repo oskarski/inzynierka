@@ -28,8 +28,15 @@ const useAppPopupContext = (): IAppPopupContext => {
   return { opened, open, close };
 };
 
-export const AppPopup = ({ children }: PropsWithChildren<{}>) => {
-  const [opened, toggleMenuOpened] = useState(false);
+interface AppPopupProps {
+  defaultOpened?: boolean;
+}
+
+export const AppPopup = ({
+  defaultOpened = false,
+  children,
+}: PropsWithChildren<AppPopupProps>) => {
+  const [opened, toggleMenuOpened] = useState(defaultOpened);
 
   const open = useCallback(() => toggleMenuOpened(true), []);
 
@@ -104,4 +111,10 @@ AppPopup.useOpenPopup = function useOpenPopup() {
   const { open } = useAppPopupContext();
 
   return open;
+};
+
+AppPopup.useClosePopup = function useClosePopup() {
+  const { close } = useAppPopupContext();
+
+  return close;
 };
