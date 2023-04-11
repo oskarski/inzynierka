@@ -1,16 +1,18 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { IIngredientListItemDto } from '@lib/shared';
 import { PrivateApiGuard } from '../auth';
+import { IngredientsService } from './services';
+import { ListIngredientsDto } from './dtos';
 
 @Controller('ingredients')
-@UseGuards(PrivateApiGuard)
+// @UseGuards(PrivateApiGuard)
 export class IngredientsController {
+  constructor(private readonly ingredientsService: IngredientsService) {}
+
   @Get()
-  async listAll(): Promise<IIngredientListItemDto[]> {
-    return [
-      { id: '1', name: 'Pomidor' },
-      { id: '2', name: 'Papryka' },
-      { id: '3', name: 'Pierś kurczaka' },
-    ] as IIngredientListItemDto[];
+  async listAll(
+    @Query() searchDto: ListIngredientsDto,
+  ): Promise<IIngredientListItemDto[]> {
+    return this.ingredientsService.findIngredients(searchDto);
   }
 }
