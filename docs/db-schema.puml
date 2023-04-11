@@ -20,7 +20,7 @@ note top of RecipeInstructionStep
     as JSON?
 end note
 
-object Ingredient {
+object RecipeIngredient {
   <#F1F1F1,#F1F1F1>|= |= |= |
     | id |  uuid | **PK** |
     | name | varchar(20) |
@@ -30,7 +30,7 @@ object Ingredient {
     | recipie_id | uuid | **FK** |
 }
 
-note bottom of Ingredient
+note bottom of RecipeIngredient
     Perhaps we should mark some
     ingredients as "special" and
     "common" to show that they are
@@ -41,22 +41,22 @@ note bottom of Ingredient
     or thai basil aren't.
 end note
 
-object FoodItem {
+object Ingredient {
   <#F1F1F1,#F1F1F1>|= |= |= |
     | id |  uuid | **PK** |
     | name | varchar(20) |
     | food_item_category_id | uuid | **FK** |
 }
 
-object FoodItemCategory {
+object IngredientCategory {
   <#F1F1F1,#F1F1F1>|= |= |= |
     | id |  uuid | **PK** |
     | name | varchar(20) |
 }
 
-note right of FoodItemCategory
+note right of IngredientCategory
     Not sure if we need this table. Perhaps
-    `FoodItem` entity should store category
+    `Ingredient` entity should store category
     as column?
 end note
 
@@ -114,10 +114,10 @@ object ShoppingList {
     | completed | boolean | |
 }
 
-Recipe -down-{ Ingredient
+Recipe -down-{ RecipeIngredient
 RecipeInstructionStep }-- Recipe
-Ingredient }-right- FoodItem
-FoodItem }-- FoodItemCategory
+RecipeIngredient }-right- Ingredient
+Ingredient }-- IngredientCategory
 Recipe }-up- CuisineType
 Recipe -left-{ Recipe_RecipeCategory
 Recipe_RecipeCategory }-up- RecipeCategory
@@ -126,5 +126,5 @@ UserFavouriteRecipe }-right- User
 Recipe -up-{ Review
 Review }-down- User
 User -- ShoppingList
-ShoppingList -left-{ FoodItem
+ShoppingList -left-{ Ingredient
 @enduml
