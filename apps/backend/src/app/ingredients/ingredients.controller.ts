@@ -5,7 +5,7 @@ import { IngredientsService } from './services';
 import { ListIngredientsDto } from './dtos';
 
 @Controller('ingredients')
-// @UseGuards(PrivateApiGuard)
+@UseGuards(PrivateApiGuard)
 export class IngredientsController {
   constructor(private readonly ingredientsService: IngredientsService) {}
 
