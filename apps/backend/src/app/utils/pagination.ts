@@ -13,4 +13,8 @@ export class Pagination {
   static firstPage(perPage: number): Pagination {
     return new Pagination(0, perPage);
   }
+
+  static page(page: number, perPage: number): Pagination {
+    return new Pagination(page, perPage);
+  }
 }

@@ -42,11 +42,19 @@ describe(RecipesController.name, () => {
 
   describe('findRecipesPaginated()', () => {
     it('returns paginated recipes', async () => {
-      const { data: recipes, total } =
-        await testCtx.controllers.recipeController.findRecipesPaginated();
+      const firstPage =
+        await testCtx.controllers.recipeController.findRecipesPaginated({
+          page: 0,
+          perPage: 2,
+        });
+      const secondPage =
+        await testCtx.controllers.recipeController.findRecipesPaginated({
+          page: 1,
+          perPage: 2,
+        });
 
-      expect(total).toBe(3);
-      expect(recipes).toEqual([
+      expect(firstPage.total).toBe(3);
+      expect(firstPage.data).toEqual([
         expect.objectContaining({
           name: 'Pizza margarita',
           description: 'Królowa gatunku, czyli margherita!',
@@ -59,6 +67,10 @@ describe(RecipesController.name, () => {
           preparationTime: 300,
           portions: 1,
         }),
+      ]);
+
+      expect(secondPage.total).toBe(3);
+      expect(secondPage.data).toEqual([
         expect.objectContaining({
           name: 'Hot Dog',
           description: 'Bardzo dobry!',
