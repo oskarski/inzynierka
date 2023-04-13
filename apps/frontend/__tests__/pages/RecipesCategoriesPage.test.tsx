@@ -15,7 +15,7 @@ testContext.api.recipesCategoriesApi.listAllCategories.mockResolvedValue([
 ]);
 
 describe(CategoriesPage.name, () => {
-  it('renders a heading', async () => {
+  it('renders categories', async () => {
     await testContext.signedIn().render(<CategoriesPage />);
 
     await findByText(testContext.container, /^Lekkie i Fit$/);
