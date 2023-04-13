@@ -10,14 +10,16 @@ import {
 import { RecipeCategoryTag } from '@fe/recipes-categories';
 import { ProgressCircle } from 'antd-mobile';
 import classNames from 'classnames';
+import { IRecipeListItem } from '@fe/recipes';
 
 interface RecipeCardProps {
+  recipe: IRecipeListItem;
   className?: string;
 }
 
-export const RecipeCard = ({ className }: RecipeCardProps) => {
-  // TODO Make it a prop
-  const recipe = {
+export const RecipeCard = ({ recipe, className }: RecipeCardProps) => {
+  // TODO Make it a prop -> Leaving it until all the data comes from API
+  const dummyRecipe = {
     id: '1',
     name: 'Pizza margherita',
     description:
@@ -48,54 +50,57 @@ export const RecipeCard = ({ className }: RecipeCardProps) => {
     <div
       className={classNames('rounded-3xl overflow-hidden shadow-md', className)}
     >
-      {recipe.imageUrl && (
-        <div className="relative aspect-image">
-          <Image
-            src={recipe.imageUrl}
-            alt={`${recipe.name} - Zdjęcie`}
-            fill={true}
-          />
-        </div>
-      )}
+      {/* TODO Add images to recipes */}
+      {/*{recipe.imageUrl && (*/}
+      {/*  <div className="relative aspect-image">*/}
+      {/*    <Image*/}
+      {/*      src={recipe.imageUrl}*/}
+      {/*      alt={`${recipe.name} - Zdjęcie`}*/}
+      {/*      fill={true}*/}
+      {/*    />*/}
+      {/*  </div>*/}
+      {/*)}*/}
 
       <div className="p-4">
         <div className="flex justify-between">
           <div>
-            <div className="flex items-center space-x-2 mb-2">
-              {recipe.categories.map((category) => (
-                <RecipeCategoryTag key={category.id}>
-                  {category.name}
-                </RecipeCategoryTag>
-              ))}
-            </div>
+            {/* TODO Add categories to recipe */}
+            {/*<div className="flex items-center space-x-2 mb-2">*/}
+            {/*  {recipe.categories.map((category) => (*/}
+            {/*    <RecipeCategoryTag key={category.id}>*/}
+            {/*      {category.name}*/}
+            {/*    </RecipeCategoryTag>*/}
+            {/*  ))}*/}
+            {/*</div>*/}
 
             <h3 className="text-xl text-default mb-2">{recipe.name}</h3>
           </div>
 
-          <div>
-            <ProgressCircle
-              className="text-xs"
-              percent={recipe.coverage}
-              style={{ '--size': '2.5rem', '--fill-color': '#00B578' }}
-            >
-              {recipe.coverage}%
-            </ProgressCircle>
-          </div>
+          {/* TODO Add recipe coverage to recipe */}
+          {/*<div>*/}
+          {/*  <ProgressCircle*/}
+          {/*    className="text-xs"*/}
+          {/*    percent={recipe.coverage}*/}
+          {/*    style={{ '--size': '2.5rem', '--fill-color': '#00B578' }}*/}
+          {/*  >*/}
+          {/*    {recipe.coverage}%*/}
+          {/*  </ProgressCircle>*/}
+          {/*</div>*/}
         </div>
 
         <p className="text-sm text-secondary mb-2">{recipe.description}</p>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center text-sm text-secondary space-x-6">
-            <div className="flex items-center">
-              <StarFilled className="text-base leading-none text-yellow-400 mr-2" />
-              {recipe.review}
-            </div>
+            {/* TODO Add recipe reviews */}
+            {/*<div className="flex items-center">*/}
+            {/*  <StarFilled className="text-base leading-none text-yellow-400 mr-2" />*/}
+            {/*  {recipe.review}*/}
+            {/*</div>*/}
 
             <div className="flex items-center">
               <ClockCircleOutlined className="text-base leading-none mr-2" />
-              {/* TODO Format preparation time*/}
-              {recipe.preparationTime}
+              {recipe.formattedPreparationTime}
             </div>
 
             <div className="flex items-center">
@@ -104,15 +109,16 @@ export const RecipeCard = ({ className }: RecipeCardProps) => {
             </div>
           </div>
 
-          {favourites.includes(recipe.id) ? (
-            <button className="text-2xl leading-none text-red-500">
-              <HeartFilled />
-            </button>
-          ) : (
-            <button className="text-2xl leading-none text-red-500">
-              <HeartOutlined />
-            </button>
-          )}
+          {/* TODO Add favourite logic */}
+          {/*{favourites.includes(recipe.id) ? (*/}
+          {/*  <button className="text-2xl leading-none text-red-500">*/}
+          {/*    <HeartFilled />*/}
+          {/*  </button>*/}
+          {/*) : (*/}
+          {/*  <button className="text-2xl leading-none text-red-500">*/}
+          {/*    <HeartOutlined />*/}
+          {/*  </button>*/}
+          {/*)}*/}
         </div>
       </div>
     </div>

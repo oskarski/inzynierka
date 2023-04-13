@@ -1,9 +1,9 @@
 import Head from 'next/head';
 import { headTitle } from '@fe/utils';
 import { SectionTitle } from '@fe/components';
-import { RecipeCard } from '@fe/recipes';
 import { GetServerSideProps } from 'next';
 import { SignedInGuard } from '@fe/iam';
+import { RecipesListing } from '@fe/recipes';
 
 export const getServerSideProps: GetServerSideProps = SignedInGuard();
 
@@ -17,11 +17,9 @@ export default function RecipesPage() {
       <main>
         <SectionTitle className="mb-6">Pasujące przepisy</SectionTitle>
 
-        <RecipeCard className="mb-6" />
-
-        <RecipeCard className="mb-6" />
-
-        <RecipeCard className="mb-6" />
+        <RecipesListing>
+          <RecipesListing.CardList />
+        </RecipesListing>
       </main>
     </>
   );
