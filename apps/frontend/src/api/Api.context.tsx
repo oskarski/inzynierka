@@ -8,6 +8,7 @@ import {
 import { IApi } from './Api.interface';
 import { IamApi, IamProvider, useIam } from '@fe/iam';
 import { IngredientsApi, IngredientsProvider } from '@fe/ingredients';
+import { RecipesApi, RecipesApiProvider } from '@fe/recipes';
 
 const defaultQueryClient = new QueryClient({
   defaultOptions: { queries: { retry: 3, refetchOnWindowFocus: false } },
@@ -54,6 +55,7 @@ function PrivateApiProvider({
       recipesCategoriesApi:
         api?.recipesCategoriesApi || new RecipesCategoriesApi(httpClient),
       ingredientsApi: api?.ingredientsApi || new IngredientsApi(httpClient),
+      recipesApi: api?.recipesApi || new RecipesApi(httpClient),
     };
   }, [api, signedInUser]);
 
@@ -64,7 +66,9 @@ function PrivateApiProvider({
       recipesCategoriesApi={httpBasedApi.recipesCategoriesApi}
     >
       <IngredientsProvider ingredientsApi={httpBasedApi.ingredientsApi}>
-        {children}
+        <RecipesApiProvider recipesApi={httpBasedApi.recipesApi}>
+          {children}
+        </RecipesApiProvider>
       </IngredientsProvider>
     </RecipesCategoriesProvider>
   );

@@ -16,6 +16,10 @@ export class IamTestApi implements IIamApi {
 
   signedInUser = apiMethodMock<IIamApi['signedInUser']>('IIamApi.signedInUser');
 
+  forgotPassword = apiMethodMock<IIamApi['forgotPassword']>(
+    'IIamApi.forgotPassword'
+  );
+
   refreshSession = apiMethodMock<IIamApi['refreshSession']>(
     'IIamApi.refreshSession'
   );
