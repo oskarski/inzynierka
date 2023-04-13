@@ -5,6 +5,9 @@ import { Ingredient } from '../../app/ingredients/entities';
 import { IngredientsModule } from '../../app/ingredients';
 import { IngredientsController } from '../../app/ingredients/ingredients.controller';
 import { Repository } from 'typeorm';
+import { Recipe } from '../../app/recipes/entities';
+import { RecipesController } from '../../app/recipes/recipes.controller';
+import { RecipesModule } from '../../app/recipes';
 
 export class TestContext {
   private __moduleFixture: TestingModule | undefined;
@@ -33,12 +36,13 @@ export class TestContext {
             username: 'root',
             password: 'root',
             database: 'inzynierka_test',
-            entities: [Ingredient],
+            entities: [Ingredient, Recipe],
             synchronize: true,
             migrationsRun: true,
             migrations: [__dirname + '/../migrations/*.ts'],
           }),
           IngredientsModule,
+          RecipesModule,
         ],
       }).compile();
 
@@ -63,6 +67,8 @@ export class TestContext {
       ingredientController: this.moduleFixture.get<IngredientsController>(
         IngredientsController,
       ),
+      recipeController:
+        this.moduleFixture.get<RecipesController>(RecipesController),
     };
   }
 
@@ -70,6 +76,9 @@ export class TestContext {
     return {
       ingredientRepository: this.moduleFixture.get<Repository<Ingredient>>(
         getRepositoryToken(Ingredient),
+      ),
+      recipeRepository: this.moduleFixture.get<Repository<Recipe>>(
+        getRepositoryToken(Recipe),
       ),
     };
   }

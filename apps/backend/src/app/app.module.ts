@@ -9,6 +9,7 @@ import authConfig from './config/auth.config';
 import { RecipeCategoriesModule } from './recipe-categories';
 import { IngredientsModule } from './ingredients';
 import { AuthModule } from './auth';
+import { RecipesModule } from './recipes';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { AuthModule } from './auth';
     AuthModule,
     RecipeCategoriesModule,
     IngredientsModule,
+    RecipesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
