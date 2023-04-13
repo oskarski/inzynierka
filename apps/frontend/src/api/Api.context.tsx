@@ -7,7 +7,7 @@ import {
 } from '@fe/recipes-categories';
 import { IApi } from './Api.interface';
 import { IamApi, IamProvider, useIam } from '@fe/iam';
-import { IngredientsApi, IngredientsProvider } from '@fe/ingredients';
+import { IngredientsApi, IngredientsApiProvider } from '@fe/ingredients';
 import { RecipesApi, RecipesApiProvider } from '@fe/recipes';
 
 const defaultQueryClient = new QueryClient({
@@ -65,11 +65,11 @@ function PrivateApiProvider({
     <RecipesCategoriesProvider
       recipesCategoriesApi={httpBasedApi.recipesCategoriesApi}
     >
-      <IngredientsProvider ingredientsApi={httpBasedApi.ingredientsApi}>
+      <IngredientsApiProvider ingredientsApi={httpBasedApi.ingredientsApi}>
         <RecipesApiProvider recipesApi={httpBasedApi.recipesApi}>
           {children}
         </RecipesApiProvider>
-      </IngredientsProvider>
+      </IngredientsApiProvider>
     </RecipesCategoriesProvider>
   );
 }
