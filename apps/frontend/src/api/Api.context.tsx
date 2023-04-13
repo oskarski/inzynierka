@@ -2,7 +2,7 @@ import React, { PropsWithChildren, useMemo } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { env, HttpClient } from '@fe/utils';
 import {
-  RecipesCategoriesProvider,
+  RecipesCategoriesApiProvider,
   RecipesCategoriesApi,
 } from '@fe/recipes-categories';
 import { IApi } from './Api.interface';
@@ -62,7 +62,7 @@ function PrivateApiProvider({
   if (!httpBasedApi) return <>{children}</>;
 
   return (
-    <RecipesCategoriesProvider
+    <RecipesCategoriesApiProvider
       recipesCategoriesApi={httpBasedApi.recipesCategoriesApi}
     >
       <IngredientsApiProvider ingredientsApi={httpBasedApi.ingredientsApi}>
@@ -70,6 +70,6 @@ function PrivateApiProvider({
           {children}
         </RecipesApiProvider>
       </IngredientsApiProvider>
-    </RecipesCategoriesProvider>
+    </RecipesCategoriesApiProvider>
   );
 }
