@@ -1,4 +1,4 @@
-import { useRecipesApi } from './Recipes.context';
+import { useRecipesApi } from './RecipesApi.context';
 import { useAdaptedQuery } from '@fe/utils';
 import { IRecipeListItemDto, IPaginated } from '@lib/shared';
 
