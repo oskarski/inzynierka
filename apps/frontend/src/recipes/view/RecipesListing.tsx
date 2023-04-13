@@ -1,6 +1,6 @@
 import { Loader } from '@fe/components';
 import React, { createContext, PropsWithChildren, useContext } from 'react';
-import { IRecipeListItem, useFindRecipesPaginated } from '../api';
+import { IRecipeListItem, useListPaginatedRecipes } from '../api';
 import { assertIsDefined } from '@fe/utils';
 import { RecipeCard } from './RecipeCard';
 import { ApiErrorMessage } from '@fe/errors';
@@ -22,7 +22,7 @@ const useRecipesListing = (): IRecipesListingContext => {
 };
 
 export const RecipesListing = ({ children }: PropsWithChildren<{}>) => {
-  const [paginatedRecipes, loading, error] = useFindRecipesPaginated(0);
+  const [paginatedRecipes, loading, error] = useListPaginatedRecipes(0);
 
   if (loading) return <Loader />;
   if (error) return <ApiErrorMessage size="base" error={error} />;

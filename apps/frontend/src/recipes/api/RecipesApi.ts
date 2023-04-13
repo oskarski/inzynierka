@@ -6,7 +6,7 @@ import {
 import { HttpClient } from '@fe/utils';
 
 export interface IRecipesApi {
-  findRecipesPaginated(
+  listPaginatedRecipes(
     dto: IListRecipesQueryDto
   ): Promise<IPaginated<IRecipeListItemDto>>;
 }
@@ -16,7 +16,7 @@ export class RecipesApi implements IRecipesApi {
 
   constructor(private readonly httpClient: HttpClient) {}
 
-  findRecipesPaginated(
+  listPaginatedRecipes(
     dto: IListRecipesQueryDto
   ): Promise<IPaginated<IRecipeListItemDto>> {
     return this.httpClient.get<IPaginated<IRecipeListItemDto>>(
