@@ -9,18 +9,23 @@ import {
   UseMutationOptions,
 } from 'react-query';
 
-export function useAdaptedQuery<ReturnType>(
+export function useAdaptedQuery<ApiReturnType, ReturnType = ApiReturnType>(
   queryKey: QueryKey,
-  fn: QueryFunction<ReturnType>,
+  fn: QueryFunction<ApiReturnType>,
   options?: {
     keepPreviousData?: boolean;
     onSuccess?: (data: ReturnType) => void;
+    select?: (data: ApiReturnType) => ReturnType;
   }
 ):
   | [undefined, true, Error | null, UseQueryResult<ReturnType, Error>]
   | [undefined, false, Error, UseQueryResult<ReturnType, Error>]
   | [ReturnType, false, null, UseQueryResult<ReturnType, Error>] {
-  const queryResult = useQuery<ReturnType, Error>(queryKey, fn, options);
+  const queryResult = useQuery<ApiReturnType, Error, ReturnType>(
+    queryKey,
+    fn,
+    options
+  );
 
   if (queryResult.isLoading)
     return [
