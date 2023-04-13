@@ -1,18 +1,17 @@
 import { useRecipesApi } from './RecipesApi.context';
-import { useAdaptedQuery, PaginationSelector } from '@fe/utils';
-import { IRecipeListItemDto, IPaginated } from '@lib/shared';
+import { PaginationSelector, usePaginatedQuery } from '@fe/utils';
+import { IRecipeListItemDto } from '@lib/shared';
 import { RecipeListItemSelector } from './selectors';
 import { IRecipeListItem } from '@fe/recipes';
 
-export const useListPaginatedRecipes = (page: number) => {
+export const useListPaginatedRecipes = () => {
   const { recipesApi } = useRecipesApi();
 
-  return useAdaptedQuery<
-    IPaginated<IRecipeListItemDto>,
-    IPaginated<IRecipeListItem>
-  >(
-    ['recipesApi', 'listPaginatedRecipes', page],
-    () => recipesApi.listPaginatedRecipes({ page, perPage: 20 }),
+  return usePaginatedQuery<IRecipeListItemDto, IRecipeListItem>(
+    ['recipesApi', 'listPaginatedRecipes'],
+    ({ pageParam = 0 }) =>
+      recipesApi.listPaginatedRecipes({ page: pageParam, perPage: 20 }),
+    20,
     {
       select: PaginationSelector(RecipeListItemSelector),
     }

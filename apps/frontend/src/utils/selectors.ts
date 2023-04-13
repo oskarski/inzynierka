@@ -1,12 +1,23 @@
 import { IPaginated } from '@lib/shared';
+import { InfiniteData } from 'react-query';
 
 export function PaginationSelector<Dto, Model>(
   ListItemSelector: (dto: Dto) => Model
-): (paginationDto: IPaginated<Dto>) => IPaginated<Model> {
-  return function (paginationDto: IPaginated<Dto>) {
+): (
+  infinitePagination: InfiniteData<IPaginated<Dto>>
+) => InfiniteData<IPaginated<Model>> {
+  return function (infinitePagination: InfiniteData<IPaginated<Dto>>) {
+    infinitePagination.pages.map((page) => ({
+      total: page.total,
+      data: page.data.map(ListItemSelector),
+    }));
+
     return {
-      total: paginationDto.total,
-      data: paginationDto.data.map(ListItemSelector),
+      ...infinitePagination,
+      pages: infinitePagination.pages.map((page) => ({
+        total: page.total,
+        data: page.data.map(ListItemSelector),
+      })),
     };
   };
 }
