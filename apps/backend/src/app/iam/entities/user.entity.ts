@@ -3,6 +3,7 @@ import { UserId } from '@lib/shared';
 
 export enum UserStatus {
   notConfirmed = 'not_confirmed',
+  confirmed = 'confirmed',
 }
 
 @Entity('users')
