@@ -1,8 +1,11 @@
 @startuml
 object Recipe  {
     <#F1F1F1,#F1F1F1>|= |= |= |
-    | id |  uuid | **PK** |
-    | name | varchar(20) |
+    | *id |  uuid | **PK** |
+    | *name | varchar(20) |
+    | *description | varchar |
+    | *preparation_time | integer |
+    | *portions | integer |
     | cuisine_type_id | uuid | **FK** |
 }
 
@@ -43,8 +46,8 @@ end note
 
 object Ingredient {
   <#F1F1F1,#F1F1F1>|= |= |= |
-    | id |  uuid | **PK** |
-    | name | varchar(20) |
+    | *id |  uuid | **PK** |
+    | *name | varchar(20) |
     | food_item_category_id | uuid | **FK** |
 }
 
