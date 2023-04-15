@@ -1,4 +1,5 @@
-import { Amplify, Auth } from 'aws-amplify';
+import Auth from '@aws-amplify/auth';
+import { Amplify } from '@aws-amplify/core';
 import { IConfirmSignUpDto, ISignUpDto, UserId } from '@lib/shared';
 import { CognitoUserSession } from 'amazon-cognito-identity-js';
 import { env, HttpClient } from '@fe/utils';

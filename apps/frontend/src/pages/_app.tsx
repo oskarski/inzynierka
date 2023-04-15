@@ -1,4 +1,5 @@
 import '@fe/styles/globals.css';
+import 'antd-mobile/es/global/global.css';
 import type { AppProps } from 'next/app';
 import { env, headTitle } from '@fe/utils';
 import Head from 'next/head';
