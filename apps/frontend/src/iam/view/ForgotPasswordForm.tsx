@@ -1,21 +1,22 @@
 import { useForgotPassword } from '../api';
 import { AppForm, SubmitButton, TextField } from '@fe/form';
-import { routes, useRouting } from '@fe/utils';
 
-export const ForgotPasswordForm = () => {
-    const { redirectTo } = useRouting();
+interface ForgotPasswordFormProps {
+  onSuccess: (email: string) => void;
+}
 
-    const [forgotPassword, loading, error] = useForgotPassword({
-        onSuccess: () => redirectTo(routes.home()),
-    });
+export const ForgotPasswordForm = ({ onSuccess }: ForgotPasswordFormProps) => {
+  const [forgotPassword, loading, error] = useForgotPassword({
+    onSuccess: (formValues) => onSuccess(formValues.email),
+  });
 
-    return (
-        <AppForm
-            onSubmit={forgotPassword}
-            error={error}
-            submitBtn={<SubmitButton loading={loading}>Resetuj hasło</SubmitButton>}
-        >
-            <TextField name="email" label="Email" error={error} />
-        </AppForm>
-    );
+  return (
+    <AppForm
+      onSubmit={forgotPassword}
+      error={error}
+      submitBtn={<SubmitButton loading={loading}>Resetuj hasło</SubmitButton>}
+    >
+      <TextField name="email" label="Email" error={error} />
+    </AppForm>
+  );
 };
