@@ -1,14 +1,7 @@
 import { Amplify, Auth } from 'aws-amplify';
-import { UserId } from '@lib/shared';
+import { ISignUpDto, UserId } from '@lib/shared';
 import { CognitoUserSession } from 'amazon-cognito-identity-js';
 import { env } from '@fe/utils';
-
-export interface ISignUpDto {
-  readonly email: string;
-  readonly password: string;
-  readonly firstName: string;
-  readonly lastName: string;
-}
 
 export interface IConfirmSignUpDto {
   readonly email: string;

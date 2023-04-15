@@ -5,9 +5,9 @@ import {
   IIamApi,
   ISignedInUserDto,
   ISignInDto,
-  ISignUpDto,
   IForgotPasswordDto,
 } from './IamApi';
+import { ISignUpDto } from '@lib/shared';
 import {
   catchFormValidationOrApiError,
   FormValidationOrApiError,
