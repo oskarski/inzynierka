@@ -90,7 +90,7 @@ object Recipe_RecipeCategory {
 
 object User {
     <#F1F1F1,#F1F1F1>|= |= |= |
-    | id |  uuid | **PK** |
+    | *id |  uuid | **PK** |
 }
 
 object UserFavouriteRecipe {
