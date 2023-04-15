@@ -10,6 +10,7 @@ import { RecipeCategoriesModule } from './recipe-categories';
 import { IngredientsModule } from './ingredients';
 import { AuthModule } from './auth';
 import { RecipesModule } from './recipes';
+import { IamModule } from './iam';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { RecipesModule } from './recipes';
     RecipeCategoriesModule,
     IngredientsModule,
     RecipesModule,
+    IamModule,
   ],
   controllers: [AppController],
   providers: [AppService],

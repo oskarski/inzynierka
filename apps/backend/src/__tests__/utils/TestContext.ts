@@ -8,10 +8,17 @@ import { Repository } from 'typeorm';
 import { Recipe } from '../../app/recipes/entities';
 import { RecipesController } from '../../app/recipes/recipes.controller';
 import { RecipesModule } from '../../app/recipes';
+import { IamController } from '../../app/iam/iam.controller';
+import { User } from '../../app/iam/entities';
+import { IamModule } from '../../app/iam';
+import { CognitoAdapter } from '../../app/iam/cognito.adapter';
+import { CognitoTestAdapter } from './CognitoTestAdapter';
 
 export class TestContext {
   private __moduleFixture: TestingModule | undefined;
   private __app: INestApplication | undefined;
+
+  readonly cognitoAdapter = new CognitoTestAdapter();
 
   private get moduleFixture(): TestingModule {
     if (!this.__moduleFixture) throw new Error('Call "startAppBeforeAll()"!');
@@ -36,15 +43,19 @@ export class TestContext {
             username: 'root',
             password: 'root',
             database: 'inzynierka_test',
-            entities: [Ingredient, Recipe],
+            entities: [Ingredient, Recipe, User],
             synchronize: true,
             migrationsRun: true,
             migrations: [__dirname + '/../migrations/*.ts'],
           }),
           IngredientsModule,
           RecipesModule,
+          IamModule,
         ],
-      }).compile();
+      })
+        .overrideProvider(CognitoAdapter)
+        .useValue(this.cognitoAdapter)
+        .compile();
 
       this.__app = this.moduleFixture.createNestApplication();
 
@@ -69,6 +80,7 @@ export class TestContext {
       ),
       recipeController:
         this.moduleFixture.get<RecipesController>(RecipesController),
+      iamController: this.moduleFixture.get<IamController>(IamController),
     };
   }
 
@@ -79,6 +91,9 @@ export class TestContext {
       ),
       recipeRepository: this.moduleFixture.get<Repository<Recipe>>(
         getRepositoryToken(Recipe),
+      ),
+      userRepository: this.moduleFixture.get<Repository<User>>(
+        getRepositoryToken(User),
       ),
     };
   }

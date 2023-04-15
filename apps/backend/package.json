@@ -27,6 +27,7 @@
     "migration:revert": "typeorm-ts-node-commonjs -d typeorm.config.ts migration:revert"
   },
   "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.312.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
