@@ -1,12 +1,7 @@
 import { useIam } from '../Iam.context';
 import { useAdaptedMutation, useAdaptedQuery } from '@fe/utils';
-import {
-  IConfirmSignUpDto,
-  IIamApi,
-  ISignedInUserDto,
-  ISignInDto,
-} from './IamApi';
-import { ISignUpDto } from '@lib/shared';
+import { IIamApi, ISignedInUserDto, ISignInDto } from './IamApi';
+import { ISignUpDto, IConfirmSignUpDto } from '@lib/shared';
 import {
   catchFormValidationOrApiError,
   FormValidationOrApiError,

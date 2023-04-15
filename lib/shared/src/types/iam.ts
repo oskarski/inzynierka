@@ -6,3 +6,8 @@ export interface ISignUpDto {
   readonly firstName: string;
   readonly lastName: string;
 }
+
+export interface IConfirmSignUpDto {
+  readonly email: string;
+  readonly code: string;
+}
