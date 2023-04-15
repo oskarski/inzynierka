@@ -2,10 +2,15 @@ import '@testing-library/jest-dom';
 import SignUpPage from '@fe/pages/sign-up';
 import { ButtonHandle, InputHandle, TestContext } from '../utils';
 import { waitFor } from '@testing-library/react';
+import { Id, UserId } from '@lib/shared';
 
 const testContext = new TestContext();
 
-testContext.api.iamApi.signUp.mockResolvedValue();
+beforeEach(() => {
+  testContext.api.iamApi.signUp.mockResolvedValue(
+    Id<UserId>('db9a4db9-d0c6-44f6-9890-a7396369fdfd')
+  );
+});
 
 describe(SignUpPage.name, () => {
   it('allows to sign up', async () => {
@@ -70,7 +75,7 @@ describe(SignUpPage.name, () => {
       })
     );
     await testContext.redirectsTo(
-      '/sign-up/confirm?email=czIwNTA2QHBqd3N0ay5lZHUucGw='
+      '/sign-up/db9a4db9-d0c6-44f6-9890-a7396369fdfd/confirm?email=czIwNTA2QHBqd3N0ay5lZHUucGw='
     );
   });
 });

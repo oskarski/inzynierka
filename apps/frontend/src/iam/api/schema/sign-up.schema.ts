@@ -20,3 +20,5 @@ export const SignUpFormSchema = z.object({
     .string({ required_error: validationMessages.required })
     .nonempty(validationMessages.required),
 });
+
+export type SignUpFormValue = z.infer<typeof SignUpFormSchema>;

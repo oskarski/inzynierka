@@ -1,7 +1,7 @@
 import { Amplify, Auth } from 'aws-amplify';
 import { IConfirmSignUpDto, ISignUpDto, UserId } from '@lib/shared';
 import { CognitoUserSession } from 'amazon-cognito-identity-js';
-import { env } from '@fe/utils';
+import { env, HttpClient } from '@fe/utils';
 
 export interface ISignInDto {
   readonly email: string;
@@ -24,9 +24,9 @@ export interface IForgotPasswordDto {
 export interface IIamApi {
   configure(): void;
 
-  signUp(dto: ISignUpDto): Promise<void>;
+  signUp(dto: ISignUpDto): Promise<UserId>;
 
-  confirmSignUp(dto: IConfirmSignUpDto): Promise<void>;
+  confirmSignUp(userId: UserId, dto: IConfirmSignUpDto): Promise<void>;
 
   signIn(dto: ISignInDto): Promise<ISignedInUserDto>;
 
@@ -40,6 +40,10 @@ export interface IIamApi {
 }
 
 export class IamApi implements IIamApi {
+  private readonly baseUrl = '/iam';
+
+  constructor(private readonly httpClient: HttpClient) {}
+
   configure(): void {
     Amplify.configure({
       Auth: env().cognito,
@@ -47,19 +51,18 @@ export class IamApi implements IIamApi {
     });
   }
 
-  async signUp(dto: ISignUpDto): Promise<void> {
-    await Auth.signUp({
-      username: dto.email,
-      password: dto.password,
-      attributes: {
-        given_name: dto.firstName,
-        family_name: dto.lastName,
-      },
-    });
+  async signUp(dto: ISignUpDto): Promise<UserId> {
+    return this.httpClient.post<ISignUpDto, UserId>(
+      `${this.baseUrl}/sign-up`,
+      dto
+    );
   }
 
-  async confirmSignUp(dto: IConfirmSignUpDto): Promise<void> {
-    await Auth.confirmSignUp(dto.email, dto.code);
+  async confirmSignUp(userId: UserId, dto: IConfirmSignUpDto): Promise<void> {
+    return this.httpClient.post<IConfirmSignUpDto, void>(
+      `${this.baseUrl}/sign-up/${userId}/confirm`,
+      dto
+    );
   }
 
   async signIn(dto: ISignInDto): Promise<ISignedInUserDto> {

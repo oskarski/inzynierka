@@ -6,13 +6,25 @@ interface HttpClientOptions {
 }
 
 export class HttpClient {
-  private readonly axiosInstance: AxiosInstance;
+  private constructor(private readonly axiosInstance: AxiosInstance) {}
 
-  constructor(
+  static publicHttpClient(baseUrl: string): HttpClient {
+    const axiosInstance = axios.create({
+      baseURL: baseUrl,
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
+
+    return new HttpClient(axiosInstance);
+  }
+
+  static privateHttpClient(
     baseUrl: string,
-    { accessToken, onUnauthorized }: HttpClientOptions
-  ) {
-    this.axiosInstance = axios.create({
+    { accessToken, onUnauthorized }: Required<HttpClientOptions>
+  ): HttpClient {
+    const axiosInstance = axios.create({
       baseURL: baseUrl,
       headers: {
         'Content-Type': 'application/json',
@@ -21,7 +33,7 @@ export class HttpClient {
       },
     });
 
-    this.axiosInstance.interceptors.response.use(
+    axiosInstance.interceptors.response.use(
       (res) => res,
       (error) => {
         if (error.response.status === 401) {
@@ -32,9 +44,17 @@ export class HttpClient {
         return error;
       }
     );
+
+    return new HttpClient(axiosInstance);
   }
 
   get<ReturnType>(url: string, params?: object): Promise<ReturnType> {
     return this.axiosInstance.get(url, { params }).then((res) => res.data);
+  }
+
+  post<DataType, ReturnType>(url: string, data: DataType): Promise<ReturnType> {
+    return this.axiosInstance
+      .post<ReturnType>(url, data)
+      .then((res) => res.data);
   }
 }

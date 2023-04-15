@@ -6,7 +6,8 @@ export const SignUpForm = () => {
   const { redirectTo } = useRouting();
 
   const [signUp, loading, error] = useSignUp({
-    onSuccess: (email) => redirectTo(routes.signUpConfirm(btoa(email))),
+    onSuccess: (userId, { email }) =>
+      redirectTo(routes.signUpConfirm(userId, btoa(email))),
   });
 
   return (

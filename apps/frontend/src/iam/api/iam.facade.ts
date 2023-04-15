@@ -1,12 +1,12 @@
 import { useIam } from '../Iam.context';
 import { useAdaptedMutation, useAdaptedQuery } from '@fe/utils';
 import { IIamApi, ISignedInUserDto, ISignInDto } from './IamApi';
-import { ISignUpDto, IConfirmSignUpDto } from '@lib/shared';
+import { ISignUpDto, IConfirmSignUpDto, UserId } from '@lib/shared';
 import {
   catchFormValidationOrApiError,
   FormValidationOrApiError,
 } from '@fe/errors';
-import { SignUpFormSchema } from './schema/sign-up.schema';
+import { SignUpFormSchema, SignUpFormValue } from './schema/sign-up.schema';
 import { ConfirmSignUpFormSchema } from './schema/confirm-sign-up.schema';
 import { SignInFormSchema } from './schema/sign-in.schema';
 import {
@@ -20,28 +20,33 @@ const SignedInUserQueryKey = ['iamApi', 'signedInUser'];
 
 export const useSignUp = ({
   onSuccess,
-}: { onSuccess?: (email: string) => void } = {}) => {
+}: {
+  onSuccess: (userId: UserId, formValues: SignUpFormValue) => void;
+}) => {
   const { iamApi } = useIam();
 
-  return useAdaptedMutation<void, ISignUpDto, FormValidationOrApiError>(
+  return useAdaptedMutation<UserId, ISignUpDto, FormValidationOrApiError>(
     (formValues) =>
       SignUpFormSchema.parseAsync(formValues)
         .then((dto) => iamApi.signUp(dto))
         .catch(catchFormValidationOrApiError),
-    { onSuccess: (_, formValues) => onSuccess && onSuccess(formValues.email) }
+    {
+      onSuccess: (userId, formValues) => onSuccess(userId, formValues),
+    }
   );
 };
 
 export const useConfirmSignUp = (
+  userId: UserId,
   email: string,
-  { onSuccess }: { onSuccess?: () => void } = {}
+  { onSuccess }: { onSuccess: () => void }
 ) => {
   const { iamApi } = useIam();
 
   return useAdaptedMutation<void, IConfirmSignUpDto, FormValidationOrApiError>(
     (formValues) =>
       ConfirmSignUpFormSchema.parseAsync(formValues)
-        .then((dto) => iamApi.confirmSignUp({ email, ...dto }))
+        .then((dto) => iamApi.confirmSignUp(userId, { email, ...dto }))
         .catch(catchFormValidationOrApiError),
     { onSuccess }
   );

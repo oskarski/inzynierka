@@ -14,6 +14,8 @@ const defaultQueryClient = new QueryClient({
   defaultOptions: { queries: { retry: 3, refetchOnWindowFocus: false } },
 });
 
+const publicHttpClient = HttpClient.publicHttpClient(env().apiUrl);
+
 interface ApiProviderProps {
   api?: IApi;
   queryClient?: QueryClient;
@@ -24,7 +26,10 @@ export const ApiProvider = ({
   queryClient = defaultQueryClient,
   children,
 }: PropsWithChildren<ApiProviderProps>) => {
-  const iamApi = useMemo(() => api?.iamApi || new IamApi(), [api]);
+  const iamApi = useMemo(
+    () => api?.iamApi || new IamApi(publicHttpClient),
+    [api]
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -46,7 +51,7 @@ function PrivateApiProvider({
   const httpBasedApi = useMemo(() => {
     if (!signedInUser) return null;
 
-    const httpClient = new HttpClient(env().apiUrl, {
+    const httpClient = HttpClient.privateHttpClient(env().apiUrl, {
       accessToken: signedInUser.accessToken,
       onUnauthorized: refreshSession,
     });

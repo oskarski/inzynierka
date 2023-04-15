@@ -5,13 +5,13 @@ export const useRouting = () => {
   const router = useRouter();
 
   const getQueryParam = useCallback(
-    (queryName: string) => {
+    function <T extends string>(queryName: string): T | null {
       const queryParam = router.query[queryName];
 
       if (!queryParam) return null;
       if (Array.isArray(queryParam)) return null;
 
-      return decodeURI(queryParam);
+      return decodeURI(queryParam) as T;
     },
     [router.query]
   );
@@ -43,8 +43,8 @@ export const routes = {
 
   signUp: () => '/sign-up',
 
-  signUpConfirm: (email: string) =>
-    `/sign-up/confirm?email=${encodeURI(email)}`,
+  signUpConfirm: (userId: string, email: string) =>
+    `/sign-up/${userId}/confirm?email=${encodeURI(email)}`,
 
   signIn: () => '/sign-in',
 };
