@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { headTitle } from '@fe/utils';
 import { NotSignedInGuard } from '@fe/iam';
 import { ForgotPasswordForm } from '../iam/view/ForgotPasswordForm';
+import { ForgotPasswordSubmitForm } from '../iam/view/ForgotPasswordSubmitForm';
 import { GetServerSideProps } from 'next';
 import { useState } from 'react';
 
@@ -21,7 +22,9 @@ export default function ForgotPasswordPage() {
           <ForgotPasswordForm onSuccess={(email) => setEmail(email)} />
         )}
 
-        {/*{email && <ForgotPasswordSubmitForm email={email} />}*/}
+        {email && ( // Corrected the curly braces
+          <ForgotPasswordSubmitForm email={email} />
+        )}
       </main>
     </>
   );

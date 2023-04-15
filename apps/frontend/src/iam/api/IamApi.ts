@@ -4,6 +4,12 @@ import { IConfirmSignUpDto, ISignUpDto, UserId } from '@lib/shared';
 import { CognitoUserSession } from 'amazon-cognito-identity-js';
 import { env, HttpClient } from '@fe/utils';
 
+export interface IConfirmForgotPasswordDto {
+  readonly email: string;
+  readonly code: string;
+  readonly password: string;
+}
+
 export interface ISignInDto {
   readonly email: string;
   readonly password: string;
@@ -18,8 +24,12 @@ export interface ISignedInUserDto {
 }
 
 export interface IForgotPasswordDto {
-  readonly id?: UserId;
   readonly email: string;
+}
+
+export interface IForgotPasswordResponseDto {
+  message: string; // The response message indicating the result of the password reset request
+  // You can add any other properties that your backend API returns in the response, such as error codes, etc.
 }
 
 export interface IIamApi {
@@ -36,6 +46,8 @@ export interface IIamApi {
   signedInUser(): Promise<ISignedInUserDto | null>;
 
   forgotPassword(dto: IForgotPasswordDto): Promise<void>;
+
+  confirmForgotPassword(dto: IConfirmForgotPasswordDto): Promise<void>;
 
   refreshSession(): Promise<string>;
 }
@@ -110,6 +122,10 @@ export class IamApi implements IIamApi {
 
   async forgotPassword(dto: IForgotPasswordDto): Promise<void> {
     await Auth.forgotPassword(dto.email);
+  }
+
+  async confirmForgotPassword(dto: IConfirmForgotPasswordDto): Promise<void> {
+    await Auth.forgotPasswordSubmit(dto.email, dto.code, dto.password);
   }
 
   async refreshSession(): Promise<string> {

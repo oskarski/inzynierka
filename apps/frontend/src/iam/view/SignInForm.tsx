@@ -1,6 +1,8 @@
 import { useSignIn } from '../api';
 import { AppForm, SubmitButton, TextField } from '@fe/form';
 import { routes, useRouting } from '@fe/utils';
+import Link from 'next/link';
+
 
 export const SignInForm = () => {
   const { redirectTo } = useRouting();
@@ -18,6 +20,11 @@ export const SignInForm = () => {
       <TextField name="email" label="Email" error={error} />
 
       <TextField type="password" name="password" label="Hasło" error={error} />
+      <div>
+        <Link href="/forgot-password">
+          Zapomniałeś hasła?
+        </Link>
+      </div>
     </AppForm>
   );
 };

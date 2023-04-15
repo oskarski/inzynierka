@@ -6,6 +6,7 @@
     "lib/*"
   ],
   "devDependencies": {
+    "@types/nodemailer": "^6.4.7",
     "lerna": "^6.5.1"
   }
 }

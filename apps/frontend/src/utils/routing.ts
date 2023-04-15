@@ -47,4 +47,9 @@ export const routes = {
     `/sign-up/${userId}/confirm?email=${encodeURI(email)}`,
 
   signIn: () => '/sign-in',
+
+  forgotPassword: () => '/forgot-password',
+
+  forgotPasswordConfirm: (email: string) =>
+    `/forgot-password/confirm?email=${encodeURI(email)}`,
 };
