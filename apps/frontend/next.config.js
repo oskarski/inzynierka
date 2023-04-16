@@ -13,6 +13,9 @@ const nextConfig = {
     '@ant-design/icons': {
       transform: '@ant-design/icons/{{ member }}',
     },
+    lodash: {
+      transform: 'lodash/{{ member }}',
+    },
   },
   experimental: {
     forceSwcTransforms: true,
