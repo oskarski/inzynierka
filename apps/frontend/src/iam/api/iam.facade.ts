@@ -1,6 +1,11 @@
 import { useIam } from '../Iam.context';
 import { useAdaptedMutation, useAdaptedQuery } from '@fe/utils';
-import { IIamApi, ISignedInUserDto, ISignInDto,IConfirmForgotPasswordDto } from './IamApi';
+import {
+  IIamApi,
+  ISignedInUserDto,
+  ISignInDto,
+  IConfirmForgotPasswordDto,
+} from './IamApi';
 import { ISignUpDto, IConfirmSignUpDto, UserId } from '@lib/shared';
 import {
   catchFormValidationOrApiError,
@@ -15,7 +20,7 @@ import {
 } from './schema/forgot-password.schema';
 import { RefObject, useCallback } from 'react';
 import { useQueryClient } from 'react-query';
-import { ConfirmForgotPasswordFormSchema } from '@fe/iam/api/schema/confirm-forgot-password.schema';
+import { ConfirmForgotPasswordFormSchema } from './schema/confirm-forgot-password.schema';
 
 const SignedInUserQueryKey = ['iamApi', 'signedInUser'];
 

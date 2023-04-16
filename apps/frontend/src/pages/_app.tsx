@@ -7,7 +7,7 @@ import { NavigationBar, TopBar } from '@fe/app';
 import { Roboto } from 'next/font/google';
 import classNames from 'classnames';
 import { AppProvider } from '@fe/AppProvider';
-import { Amplify } from 'aws-amplify';
+import { Amplify } from '@aws-amplify/core';
 
 const roboto = Roboto({
   weight: ['400', '500', '700'],
