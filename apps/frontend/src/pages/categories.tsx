@@ -3,7 +3,7 @@ import { headTitle } from '@fe/utils';
 import { RecipesCategoriesListing } from '@fe/recipes-categories';
 import { SectionTitle } from '@fe/components';
 import { GetServerSideProps } from 'next';
-import { SignedInGuard } from '@fe/iam';
+import { SignedInGuard } from '@fe/server/server-guards';
 
 export const getServerSideProps: GetServerSideProps = SignedInGuard();
 

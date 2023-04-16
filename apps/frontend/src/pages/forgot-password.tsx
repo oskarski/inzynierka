@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { headTitle } from '@fe/utils';
-import { NotSignedInGuard } from '@fe/iam';
+import { NotSignedInGuard } from '@fe/server/server-guards';
 import { ForgotPasswordForm } from '../iam/view/ForgotPasswordForm';
 import { ForgotPasswordSubmitForm } from '../iam/view/ForgotPasswordSubmitForm';
 import { GetServerSideProps } from 'next';

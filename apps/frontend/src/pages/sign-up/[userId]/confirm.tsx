@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { headTitle, useRouting } from '@fe/utils';
-import { NotSignedInGuard, SignUpConfirmForm } from '@fe/iam';
+import { SignUpConfirmForm } from '@fe/iam';
+import { NotSignedInGuard } from '@fe/server/server-guards';
 import { GetServerSideProps } from 'next';
 import { UserId } from '@lib/shared';
 
