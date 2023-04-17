@@ -1,8 +1,7 @@
 import { Auth } from '@aws-amplify/auth';
-import { Amplify } from '@aws-amplify/core';
 import { IConfirmSignUpDto, ISignUpDto, UserId } from '@lib/shared';
 import { CognitoUserSession } from 'amazon-cognito-identity-js';
-import { env, HttpClient } from '@fe/utils';
+import { HttpClient } from '@fe/utils';
 
 export interface IConfirmForgotPasswordDto {
   readonly email: string;
@@ -33,8 +32,6 @@ export interface IForgotPasswordResponseDto {
 }
 
 export interface IIamApi {
-  configure(): void;
-
   signUp(dto: ISignUpDto): Promise<UserId>;
 
   confirmSignUp(userId: UserId, dto: IConfirmSignUpDto): Promise<void>;
@@ -56,13 +53,6 @@ export class IamApi implements IIamApi {
   private readonly baseUrl = '/iam';
 
   constructor(private readonly httpClient: HttpClient) {}
-
-  configure(): void {
-    Amplify.configure({
-      Auth: env().cognito,
-      ssr: true,
-    });
-  }
 
   async signUp(dto: ISignUpDto): Promise<UserId> {
     return this.httpClient.post<ISignUpDto, UserId>(

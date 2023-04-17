@@ -3,7 +3,6 @@ import React, {
   createContext,
   PropsWithChildren,
   useContext,
-  useEffect,
   useRef,
 } from 'react';
 import {
@@ -36,10 +35,6 @@ export const IamProvider = ({
   ...props
 }: PropsWithChildren<IamProps>) => {
   const signOutFormRef = useRef<HTMLFormElement>(null);
-
-  useEffect(() => {
-    props.iamApi.configure();
-  }, []);
 
   const signOut = useSignOut(props.iamApi, signOutFormRef);
   const refreshSession = useRefreshSession(props.iamApi, signOut);
