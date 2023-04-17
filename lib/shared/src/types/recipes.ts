@@ -1,3 +1,5 @@
+import { RecipeCategoryId } from './recipe-categories';
+
 export type RecipeId = string & { readonly __type: unique symbol };
 
 export interface IListRecipesQueryDto {
@@ -11,4 +13,5 @@ export interface IRecipeListItemDto {
   readonly description: string;
   readonly preparationTime: number;
   readonly portions: number;
+  readonly categoryIds: RecipeCategoryId[];
 }

@@ -11,13 +11,19 @@ import { RecipeCategoryTag } from '@fe/recipes-categories';
 import { ProgressCircle } from 'antd-mobile';
 import classNames from 'classnames';
 import { IRecipeListItem } from '../api';
+import { IRecipeCategoryListItemDto } from '@lib/shared';
 
 interface RecipeCardProps {
   recipe: IRecipeListItem;
+  categories: IRecipeCategoryListItemDto[];
   className?: string;
 }
 
-export const RecipeCard = ({ recipe, className }: RecipeCardProps) => {
+export const RecipeCard = ({
+  recipe,
+  categories,
+  className,
+}: RecipeCardProps) => {
   // TODO Make it a prop -> Leaving it until all the data comes from API
   const dummyRecipe = {
     id: '1',
@@ -64,14 +70,13 @@ export const RecipeCard = ({ recipe, className }: RecipeCardProps) => {
       <div className="p-4">
         <div className="flex justify-between">
           <div>
-            {/* TODO Add categories to recipe */}
-            {/*<div className="flex items-center space-x-2 mb-2">*/}
-            {/*  {recipe.categories.map((category) => (*/}
-            {/*    <RecipeCategoryTag key={category.id}>*/}
-            {/*      {category.name}*/}
-            {/*    </RecipeCategoryTag>*/}
-            {/*  ))}*/}
-            {/*</div>*/}
+            <div className="flex items-center space-x-2 mb-2">
+              {categories.map((category) => (
+                <RecipeCategoryTag key={category.id}>
+                  {category.name}
+                </RecipeCategoryTag>
+              ))}
+            </div>
 
             <h3 className="text-xl text-default mb-2">{recipe.name}</h3>
           </div>

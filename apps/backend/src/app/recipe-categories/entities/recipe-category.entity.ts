@@ -1,9 +1,9 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { RecipeCategoryId } from '@lib/shared';
 
 @Entity()
 export class RecipeCategory {
-  @PrimaryColumn('uuid')
+  @PrimaryGeneratedColumn('uuid')
   id: RecipeCategoryId;
 
   @Column()

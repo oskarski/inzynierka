@@ -1,5 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { RecipeId } from '@lib/shared';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  RelationId,
+} from 'typeorm';
+import { RecipeCategoryId, RecipeId } from '@lib/shared';
+import { RecipeCategory } from '../../recipe-categories/entities';
 
 @Entity('recipes')
 export class Recipe {
@@ -17,4 +25,11 @@ export class Recipe {
 
   @Column({ type: 'int' })
   portions: number;
+
+  @ManyToMany(() => RecipeCategory)
+  @JoinTable({ name: 'recipes_recipes_categories' })
+  categories: RecipeCategory[];
+
+  @RelationId((recipe: Recipe) => recipe.categories)
+  categoryIds: RecipeCategoryId[];
 }
