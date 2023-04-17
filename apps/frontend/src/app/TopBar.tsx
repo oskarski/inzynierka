@@ -11,7 +11,7 @@ interface TopBarProps {
   className?: string;
 }
 
-export const TopBar = ({ className }: TopBarProps) => {
+const TopBar = ({ className }: TopBarProps) => {
   return (
     <div className={classNames('py-2', className)}>
       <NavBar
@@ -23,6 +23,8 @@ export const TopBar = ({ className }: TopBarProps) => {
     </div>
   );
 };
+
+export default TopBar;
 
 function ProfileAvatar() {
   const { signOut, signedInUser } = useIam();

@@ -16,7 +16,7 @@ interface NavigationBarProps {
   className?: string;
 }
 
-export const NavigationBar = AppPopup.withAppPopup(
+const NavigationBar = AppPopup.withAppPopup(
   ({ className }: NavigationBarProps) => {
     const { currentRoute, redirectTo } = useRouting();
     const { signedInUser } = useIam();
@@ -74,3 +74,5 @@ export const NavigationBar = AppPopup.withAppPopup(
     );
   }
 );
+
+export default NavigationBar;

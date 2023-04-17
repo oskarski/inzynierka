@@ -3,11 +3,11 @@ import 'antd-mobile/es/global/global.css';
 import type { AppProps } from 'next/app';
 import { env, headTitle } from '@fe/utils';
 import Head from 'next/head';
-import { NavigationBar, TopBar } from '@fe/app';
 import { Roboto } from 'next/font/google';
 import classNames from 'classnames';
 import { AppProvider } from '@fe/AppProvider';
 import { Amplify } from '@aws-amplify/core';
+import dynamic from 'next/dynamic';
 
 const roboto = Roboto({
   weight: ['400', '500', '700'],
@@ -19,6 +19,9 @@ Amplify.configure({
   Auth: env().cognito,
   ssr: true,
 });
+
+const NavigationBar = dynamic(() => import('@fe/app/NavigationBar'));
+const TopBar = dynamic(() => import('@fe/app/TopBar'));
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
