@@ -78,8 +78,8 @@ end note
 
 object RecipeCategory {
     <#F1F1F1,#F1F1F1>|= |= |= |
-    | id |  uuid | **PK** |
-    | name | varchar(20) |
+    | *id |  uuid | **PK** |
+    | *name | varchar(20) |
 }
 
 object Recipe_RecipeCategory {
