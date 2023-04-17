@@ -8,7 +8,7 @@ async function bootstrap() {
 
   const config = appConfig();
 
-  app.enableCors({ origin: config.allowedOrigins });
+  app.enableCors({ origin: config.allowedOrigins.split(',') });
 
   app.useGlobalPipes(
     new ValidationPipe({
