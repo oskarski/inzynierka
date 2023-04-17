@@ -1,7 +1,6 @@
-import { useIam } from '../Iam.context';
+import { useIamApi } from './IamApi.context';
 import { useAdaptedMutation, useAdaptedQuery } from '@fe/utils';
 import {
-  IIamApi,
   ISignedInUserDto,
   ISignInDto,
   IConfirmForgotPasswordDto,
@@ -29,7 +28,7 @@ export const useSignUp = ({
 }: {
   onSuccess: (userId: UserId, formValues: SignUpFormValue) => void;
 }) => {
-  const { iamApi } = useIam();
+  const { iamApi } = useIamApi();
 
   return useAdaptedMutation<UserId, ISignUpDto, FormValidationOrApiError>(
     (formValues) =>
@@ -47,7 +46,7 @@ export const useConfirmSignUp = (
   email: string,
   { onSuccess }: { onSuccess: () => void }
 ) => {
-  const { iamApi } = useIam();
+  const { iamApi } = useIamApi();
 
   return useAdaptedMutation<void, IConfirmSignUpDto, FormValidationOrApiError>(
     (formValues) =>
@@ -60,7 +59,7 @@ export const useConfirmSignUp = (
 
 export const useSignIn = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
   const queryClient = useQueryClient();
-  const { iamApi } = useIam();
+  const { iamApi } = useIamApi();
 
   return useAdaptedMutation<
     ISignedInUserDto,
@@ -81,11 +80,9 @@ export const useSignIn = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
   );
 };
 
-export const useSignOut = (
-  iamApi: IIamApi,
-  signOutFormRef: RefObject<HTMLFormElement>
-) => {
+export const useSignOut = (signOutFormRef: RefObject<HTMLFormElement>) => {
   const queryClient = useQueryClient();
+  const { iamApi } = useIamApi();
 
   return useCallback(async () => {
     if (!signOutFormRef.current) return;
@@ -98,7 +95,9 @@ export const useSignOut = (
   }, []);
 };
 
-export const useSignedInUser = (iamApi: IIamApi) => {
+export const useSignedInUser = () => {
+  const { iamApi } = useIamApi();
+
   return useAdaptedQuery<ISignedInUserDto | null>(SignedInUserQueryKey, () =>
     iamApi.signedInUser()
   );
@@ -109,7 +108,7 @@ export const useForgotPassword = ({
 }: {
   onSuccess: (formValues: ForgotPasswordFormValues) => void;
 }) => {
-  const { iamApi } = useIam();
+  const { iamApi } = useIamApi();
 
   return useAdaptedMutation<
     void,
@@ -130,7 +129,7 @@ export const useConfirmForgotPassword = (
   email: string,
   { onSuccess }: { onSuccess?: () => void } = {}
 ) => {
-  const { iamApi } = useIam();
+  const { iamApi } = useIamApi();
 
   return useAdaptedMutation<
     void,
@@ -145,8 +144,9 @@ export const useConfirmForgotPassword = (
   );
 };
 
-export const useRefreshSession = (iamApi: IIamApi, signOut: () => void) => {
+export const useRefreshSession = (signOut: () => void) => {
   const queryClient = useQueryClient();
+  const { iamApi } = useIamApi();
 
   return useCallback(async () => {
     try {

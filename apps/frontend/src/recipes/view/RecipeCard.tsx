@@ -10,7 +10,7 @@ import {
 import { RecipeCategoryTag } from '@fe/recipes-categories';
 import { ProgressCircle } from 'antd-mobile';
 import classNames from 'classnames';
-import { IRecipeListItem } from '@fe/recipes';
+import { IRecipeListItem } from '../api';
 
 interface RecipeCardProps {
   recipe: IRecipeListItem;

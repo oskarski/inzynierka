@@ -2,7 +2,7 @@ import { useRecipesApi } from './RecipesApi.context';
 import { PaginationSelector, usePaginatedQuery } from '@fe/utils';
 import { IRecipeListItemDto } from '@lib/shared';
 import { RecipeListItemSelector } from './selectors';
-import { IRecipeListItem } from '@fe/recipes';
+import { IRecipeListItem } from './types';
 
 export const useListPaginatedRecipes = () => {
   const { recipesApi } = useRecipesApi();

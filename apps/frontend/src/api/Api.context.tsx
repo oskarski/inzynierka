@@ -6,7 +6,7 @@ import {
   RecipesCategoriesApi,
 } from '@fe/recipes-categories';
 import { IApi } from './Api.interface';
-import { IamApi, IamProvider, useIam } from '@fe/iam';
+import { IamApi, IamApiProvider, IamProvider, useIam } from '@fe/iam';
 import { IngredientsApi, IngredientsApiProvider } from '@fe/ingredients';
 import { RecipesApi, RecipesApiProvider } from '@fe/recipes';
 
@@ -33,9 +33,11 @@ export const ApiProvider = ({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <IamProvider iamApi={iamApi}>
-        <PrivateApiProvider api={api}>{children}</PrivateApiProvider>
-      </IamProvider>
+      <IamApiProvider iamApi={iamApi}>
+        <IamProvider>
+          <PrivateApiProvider api={api}>{children}</PrivateApiProvider>
+        </IamProvider>
+      </IamApiProvider>
     </QueryClientProvider>
   );
 };

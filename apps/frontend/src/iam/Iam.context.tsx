@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 import {
   IForgotPasswordDto,
-  IIamApi,
   ISignedInUserDto,
   useRefreshSession,
   useSignedInUser,
@@ -17,7 +16,6 @@ import { Loader } from '@fe/components';
 import { ApiErrorMessage } from '@fe/errors';
 
 interface IIamContext {
-  readonly iamApi: IIamApi;
   readonly signOut: () => void;
   readonly refreshSession: () => void;
   readonly signedInUser: ISignedInUserDto | null;
@@ -26,26 +24,20 @@ interface IIamContext {
 
 const IamContext = createContext<Partial<IIamContext>>({});
 
-interface IamProps {
-  iamApi: IIamApi;
-}
+interface IamProps {}
 
-export const IamProvider = ({
-  children,
-  ...props
-}: PropsWithChildren<IamProps>) => {
+export const IamProvider = ({ children }: PropsWithChildren<IamProps>) => {
   const signOutFormRef = useRef<HTMLFormElement>(null);
 
-  const signOut = useSignOut(props.iamApi, signOutFormRef);
-  const refreshSession = useRefreshSession(props.iamApi, signOut);
+  const signOut = useSignOut(signOutFormRef);
+  const refreshSession = useRefreshSession(signOut);
 
-  const [signedInUser, loading, error] = useSignedInUser(props.iamApi);
+  const [signedInUser, loading, error] = useSignedInUser();
 
   if (loading) return <Loader className="my-3" />;
   if (error) return <ApiErrorMessage size="base" error={error} />;
 
   const ctx: IIamContext = {
-    iamApi: props.iamApi,
     signOut,
     refreshSession,
     signedInUser,
@@ -62,10 +54,9 @@ export const IamProvider = ({
 };
 
 export const useIam = (): IIamContext => {
-  const { iamApi, signOut, refreshSession, signedInUser, forgotPassword } =
+  const { signOut, refreshSession, signedInUser, forgotPassword } =
     useContext(IamContext);
 
-  assertIsDefined(iamApi, 'IIamContext.iamApi must be defined!');
   assertIsDefined(signOut, 'IIamContext.signOut must be defined!');
   assertIsDefined(
     refreshSession,
@@ -77,5 +68,5 @@ export const useIam = (): IIamContext => {
     'IIamContext.forgotPassword must be defined!'
   );
 
-  return { iamApi, signOut, refreshSession, signedInUser, forgotPassword };
+  return { signOut, refreshSession, signedInUser, forgotPassword };
 };
