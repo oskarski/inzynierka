@@ -6,7 +6,13 @@ import {
   RecipesCategoriesApi,
 } from '@fe/recipes-categories';
 import { IApi } from './Api.interface';
-import { IamApi, IamApiProvider, IamProvider, useIam } from '@fe/iam';
+import {
+  IamApi,
+  IamApiProvider,
+  useRefreshSession,
+  useSignedInUser,
+  useSignOut,
+} from '@fe/iam';
 import { IngredientsApi, IngredientsApiProvider } from '@fe/ingredients';
 import { RecipesApi, RecipesApiProvider } from '@fe/recipes';
 
@@ -34,9 +40,7 @@ export const ApiProvider = ({
   return (
     <QueryClientProvider client={queryClient}>
       <IamApiProvider iamApi={iamApi}>
-        <IamProvider>
-          <PrivateApiProvider api={api}>{children}</PrivateApiProvider>
-        </IamProvider>
+        <PrivateApiProvider api={api}>{children}</PrivateApiProvider>
       </IamApiProvider>
     </QueryClientProvider>
   );
@@ -48,7 +52,9 @@ function PrivateApiProvider({
 }: PropsWithChildren<{
   api?: IApi;
 }>) {
-  const { signedInUser, refreshSession } = useIam();
+  const [signedInUser] = useSignedInUser();
+  const signOut = useSignOut();
+  const refreshSession = useRefreshSession(signOut);
 
   const httpBasedApi = useMemo(() => {
     if (!signedInUser) return null;

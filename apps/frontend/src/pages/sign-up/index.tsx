@@ -1,14 +1,10 @@
 import Head from 'next/head';
 import { headTitle } from '@fe/utils';
-import { SignUpForm } from '@fe/iam';
-import { NotSignedInGuard } from '@fe/server/server-guards';
-import { GetServerSideProps } from 'next';
-
-export const getServerSideProps: GetServerSideProps = NotSignedInGuard();
+import { ClientNotSignedInGuard, SignUpForm } from '@fe/iam';
 
 export default function SignUpPage() {
   return (
-    <>
+    <ClientNotSignedInGuard>
       <Head>
         <title>{headTitle('Rejestracja')}</title>
       </Head>
@@ -16,6 +12,6 @@ export default function SignUpPage() {
       <main>
         <SignUpForm />
       </main>
-    </>
+    </ClientNotSignedInGuard>
   );
 }

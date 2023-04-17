@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import { routes } from '@fe/utils';
 import React from 'react';
-import { useIam } from '@fe/iam';
+import { useSignedInUser, useSignOut } from '@fe/iam';
 import { AppPopup } from '@fe/components';
 
 interface TopBarProps {
@@ -27,7 +27,8 @@ const TopBar = ({ className }: TopBarProps) => {
 export default TopBar;
 
 function ProfileAvatar() {
-  const { signOut, signedInUser } = useIam();
+  const [signedInUser] = useSignedInUser();
+  const signOut = useSignOut();
 
   if (!signedInUser) return null;
 

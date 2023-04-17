@@ -1,11 +1,7 @@
 import Head from 'next/head';
 import { headTitle, useRouting } from '@fe/utils';
-import { SignUpConfirmForm } from '@fe/iam';
-import { NotSignedInGuard } from '@fe/server/server-guards';
-import { GetServerSideProps } from 'next';
+import { ClientNotSignedInGuard, SignUpConfirmForm } from '@fe/iam';
 import { UserId } from '@lib/shared';
-
-export const getServerSideProps: GetServerSideProps = NotSignedInGuard();
 
 export default function SignUpConfirmPage() {
   const { getQueryParam } = useRouting();
@@ -14,7 +10,7 @@ export default function SignUpConfirmPage() {
   const emailQueryParam = getQueryParam('email');
 
   return (
-    <>
+    <ClientNotSignedInGuard>
       <Head>
         <title>{headTitle('Potwierdź Rejestrację')}</title>
       </Head>
@@ -27,6 +23,6 @@ export default function SignUpConfirmPage() {
           />
         )}
       </main>
-    </>
+    </ClientNotSignedInGuard>
   );
 }

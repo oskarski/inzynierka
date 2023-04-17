@@ -2,14 +2,11 @@ import Head from 'next/head';
 import { headTitle } from '@fe/utils';
 import { RecipesCategoriesListing } from '@fe/recipes-categories';
 import { SectionTitle } from '@fe/components';
-import { GetServerSideProps } from 'next';
-import { SignedInGuard } from '@fe/server/server-guards';
-
-export const getServerSideProps: GetServerSideProps = SignedInGuard();
+import { ClientSignedInGuard } from '@fe/iam';
 
 export default function CategoriesPage() {
   return (
-    <>
+    <ClientSignedInGuard>
       <Head>
         <title>{headTitle('Kategorie')}</title>
       </Head>
@@ -21,6 +18,6 @@ export default function CategoriesPage() {
           <RecipesCategoriesListing.CardList />
         </RecipesCategoriesListing>
       </main>
-    </>
+    </ClientSignedInGuard>
   );
 }

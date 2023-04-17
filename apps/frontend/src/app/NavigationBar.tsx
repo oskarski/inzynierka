@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import classNames from 'classnames';
 import { routes, useRouting } from '@fe/utils';
-import { useIam } from '@fe/iam';
+import { useSignedInUser } from '@fe/iam';
 import { AppPopup } from '@fe/components';
 import { SearchRecipesByIngredientsPopupContent } from '@fe/recipes';
 
@@ -19,7 +19,7 @@ interface NavigationBarProps {
 const NavigationBar = AppPopup.withAppPopup(
   ({ className }: NavigationBarProps) => {
     const { currentRoute, redirectTo } = useRouting();
-    const { signedInUser } = useIam();
+    const [signedInUser] = useSignedInUser();
 
     const openSearchPopup = AppPopup.useOpenPopup();
 

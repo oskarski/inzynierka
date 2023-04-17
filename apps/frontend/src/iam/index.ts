@@ -1,3 +1,3 @@
-export * from './Iam.context';
+export * from './AuthGuard';
 export * from './api';
 export * from './view';

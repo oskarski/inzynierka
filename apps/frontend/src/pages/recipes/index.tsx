@@ -1,15 +1,12 @@
 import Head from 'next/head';
 import { headTitle } from '@fe/utils';
 import { SectionTitle } from '@fe/components';
-import { GetServerSideProps } from 'next';
-import { SignedInGuard } from '@fe/server/server-guards';
 import { RecipesListing } from '@fe/recipes';
-
-export const getServerSideProps: GetServerSideProps = SignedInGuard();
+import { ClientSignedInGuard } from '@fe/iam';
 
 export default function RecipesPage() {
   return (
-    <>
+    <ClientSignedInGuard>
       <Head>
         <title>{headTitle('Przepisy')}</title>
       </Head>
@@ -21,6 +18,6 @@ export default function RecipesPage() {
           <RecipesListing.CardList />
         </RecipesListing>
       </main>
-    </>
+    </ClientSignedInGuard>
   );
 }

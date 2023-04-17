@@ -1,14 +1,11 @@
 import Head from 'next/head';
 import { headTitle, routes } from '@fe/utils';
 import { SectionTitle } from '@fe/components';
-import { GetServerSideProps } from 'next';
-import { SignedInGuard } from '@fe/server/server-guards';
-
-export const getServerSideProps: GetServerSideProps = SignedInGuard();
+import { ClientSignedInGuard } from '@fe/iam';
 
 export default function HomePage() {
   return (
-    <>
+    <ClientSignedInGuard>
       <Head>
         <title>{headTitle()}</title>
       </Head>
@@ -22,6 +19,6 @@ export default function HomePage() {
         </SectionTitle>
         <div>POPULAR CATEGORIES WILL BE HERE</div>
       </main>
-    </>
+    </ClientSignedInGuard>
   );
 }

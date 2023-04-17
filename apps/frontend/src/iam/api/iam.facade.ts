@@ -80,18 +80,14 @@ export const useSignIn = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
   );
 };
 
-export const useSignOut = (signOutFormRef: RefObject<HTMLFormElement>) => {
+export const useSignOut = (signOutFormRef?: RefObject<HTMLFormElement>) => {
   const queryClient = useQueryClient();
   const { iamApi } = useIamApi();
 
   return useCallback(async () => {
-    if (!signOutFormRef.current) return;
-
     await iamApi.signOut();
     queryClient.clear();
     queryClient.setQueryData(SignedInUserQueryKey, null);
-
-    signOutFormRef.current.submit();
   }, []);
 };
 

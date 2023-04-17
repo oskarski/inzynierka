@@ -1,14 +1,10 @@
 import Head from 'next/head';
 import { headTitle } from '@fe/utils';
-import { SignInForm } from '@fe/iam';
-import { NotSignedInGuard } from '@fe/server/server-guards';
-import { GetServerSideProps } from 'next';
-
-export const getServerSideProps: GetServerSideProps = NotSignedInGuard();
+import { ClientNotSignedInGuard, SignInForm } from '@fe/iam';
 
 export default function SignInPage() {
   return (
-    <>
+    <ClientNotSignedInGuard>
       <Head>
         <title>{headTitle('Zaloguj się')}</title>
       </Head>
@@ -16,6 +12,6 @@ export default function SignInPage() {
       <main>
         <SignInForm />
       </main>
-    </>
+    </ClientNotSignedInGuard>
   );
 }
