@@ -1,5 +1,5 @@
 import { useIamApi } from './IamApi.context';
-import { useAdaptedMutation, useAdaptedQuery } from '@fe/utils';
+import { routes, useAdaptedMutation, useAdaptedQuery } from '@fe/utils';
 import {
   ISignedInUserDto,
   ISignInDto,
@@ -80,7 +80,7 @@ export const useSignIn = ({ onSuccess }: { onSuccess?: () => void } = {}) => {
   );
 };
 
-export const useSignOut = (signOutFormRef?: RefObject<HTMLFormElement>) => {
+export const useSignOut = () => {
   const queryClient = useQueryClient();
   const { iamApi } = useIamApi();
 
@@ -88,6 +88,13 @@ export const useSignOut = (signOutFormRef?: RefObject<HTMLFormElement>) => {
     await iamApi.signOut();
     queryClient.clear();
     queryClient.setQueryData(SignedInUserQueryKey, null);
+
+    const signOutForm = document.createElement('form');
+
+    signOutForm.setAttribute('method', 'get');
+    signOutForm.setAttribute('action', routes.signIn());
+    document.body.append(signOutForm);
+    signOutForm.submit();
   }, []);
 };
 
