@@ -16,7 +16,7 @@ export const ForgotPasswordForm = ({ onSuccess }: ForgotPasswordFormProps) => {
       error={error}
       submitBtn={<SubmitButton loading={loading}>Resetuj hasło</SubmitButton>}
     >
-      <TextField name="email" label="Email" error={error} />
+      <TextField type="email" name="email" label="Email" error={error} />
     </AppForm>
   );
 };
