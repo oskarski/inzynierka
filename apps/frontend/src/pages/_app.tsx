@@ -45,7 +45,9 @@ export default function App({ Component, pageProps }: AppProps) {
         </style>
       </Head>
 
-      <AppProvider>
+      <AppProvider
+        dehydratedReactQueryState={pageProps.dehydratedReactQueryState}
+      >
         <div className={classNames('h-screen flex flex-col justify-between')}>
           <TopBar className="grow-0 pt-4" />
 

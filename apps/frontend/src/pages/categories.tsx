@@ -1,12 +1,34 @@
 import Head from 'next/head';
-import { headTitle } from '@fe/utils';
-import { RecipesCategoriesListing } from '@fe/recipes-categories';
+import { env, headTitle, HttpClient } from '@fe/utils';
+import {
+  ListAllRecipesCategoriesQueryKey,
+  RecipesCategoriesApi,
+  RecipesCategoriesListing,
+} from '@fe/recipes-categories';
 import { SectionTitle } from '@fe/components';
-import { ClientSignedInGuard } from '@fe/iam';
+import { HydrateReactQueryState } from '../server/server-react-query';
+import { SignedInGuard } from '../server/server-guards';
+import { GetServerSideProps } from 'next/types';
+
+export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
+  SignedInGuard(async (ctx, queryClient, user) => {
+    const recipesCategoriesApi = new RecipesCategoriesApi(
+      HttpClient.privateHttpClient(env().apiUrl, {
+        accessToken: user.accessToken,
+      })
+    );
+
+    await queryClient.prefetchQuery(ListAllRecipesCategoriesQueryKey, () =>
+      recipesCategoriesApi.listAllCategories()
+    );
+
+    return { props: {} };
+  })
+);
 
 export default function CategoriesPage() {
   return (
-    <ClientSignedInGuard>
+    <>
       <Head>
         <title>{headTitle('Kategorie')}</title>
       </Head>
@@ -18,6 +40,6 @@ export default function CategoriesPage() {
           <RecipesCategoriesListing.CardList />
         </RecipesCategoriesListing>
       </main>
-    </ClientSignedInGuard>
+    </>
   );
 }

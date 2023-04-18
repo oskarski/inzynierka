@@ -17,11 +17,11 @@ import {
   ForgotPasswordFormValues,
   ForgotPasswordSchema,
 } from './schema/forgot-password.schema';
-import { RefObject, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useQueryClient } from 'react-query';
 import { ConfirmForgotPasswordFormSchema } from './schema/confirm-forgot-password.schema';
 
-const SignedInUserQueryKey = ['iamApi', 'signedInUser'];
+export const SignedInUserQueryKey = ['iamApi', 'signedInUser'];
 
 export const useSignUp = ({
   onSuccess,

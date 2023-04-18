@@ -6,11 +6,16 @@ import { IRecipeListItem } from './types';
 import { useListAllRecipesCategories } from '@fe/recipes-categories';
 import { useCallback } from 'react';
 
+export const ListPaginatedRecipesQueryKey = [
+  'recipesApi',
+  'listPaginatedRecipes',
+];
+
 export const useListPaginatedRecipes = () => {
   const { recipesApi } = useRecipesApi();
 
   return usePaginatedQuery<IRecipeListItemDto, IRecipeListItem>(
-    ['recipesApi', 'listPaginatedRecipes'],
+    ListPaginatedRecipesQueryKey,
     ({ pageParam = 0 }) =>
       recipesApi.listPaginatedRecipes({ page: pageParam, perPage: 20 }),
     20,

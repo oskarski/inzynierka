@@ -1,7 +1,7 @@
 import { useRecipesCategoriesApi } from './RecipesCategoriesApi.context';
 import { useAdaptedQuery } from '@fe/utils';
 
-const ListAllRecipesCategoriesQueryKey = [
+export const ListAllRecipesCategoriesQueryKey = [
   'recipesCategoriesApi.listAllCategories',
 ];
 

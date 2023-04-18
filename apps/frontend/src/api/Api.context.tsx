@@ -1,5 +1,4 @@
 import React, { PropsWithChildren, useMemo } from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import { env, HttpClient } from '@fe/utils';
 import {
   RecipesCategoriesApiProvider,
@@ -16,20 +15,14 @@ import {
 import { IngredientsApi, IngredientsApiProvider } from '@fe/ingredients';
 import { RecipesApi, RecipesApiProvider } from '@fe/recipes';
 
-const defaultQueryClient = new QueryClient({
-  defaultOptions: { queries: { retry: 3, refetchOnWindowFocus: false } },
-});
-
 const publicHttpClient = HttpClient.publicHttpClient(env().apiUrl);
 
 interface ApiProviderProps {
   api?: IApi;
-  queryClient?: QueryClient;
 }
 
 export const ApiProvider = ({
   api,
-  queryClient = defaultQueryClient,
   children,
 }: PropsWithChildren<ApiProviderProps>) => {
   const iamApi = useMemo(
@@ -38,11 +31,9 @@ export const ApiProvider = ({
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <IamApiProvider iamApi={iamApi}>
-        <PrivateApiProvider api={api}>{children}</PrivateApiProvider>
-      </IamApiProvider>
-    </QueryClientProvider>
+    <IamApiProvider iamApi={iamApi}>
+      <PrivateApiProvider api={api}>{children}</PrivateApiProvider>
+    </IamApiProvider>
   );
 };
 

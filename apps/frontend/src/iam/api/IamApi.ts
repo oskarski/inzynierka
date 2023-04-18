@@ -26,11 +26,6 @@ export interface IForgotPasswordDto {
   readonly email: string;
 }
 
-export interface IForgotPasswordResponseDto {
-  message: string; // The response message indicating the result of the password reset request
-  // You can add any other properties that your backend API returns in the response, such as error codes, etc.
-}
-
 export interface IIamApi {
   signUp(dto: ISignUpDto): Promise<UserId>;
 
@@ -40,7 +35,7 @@ export interface IIamApi {
 
   signOut(): Promise<void>;
 
-  signedInUser(): Promise<ISignedInUserDto | null>;
+  signedInUser($Auth?: typeof Auth): Promise<ISignedInUserDto | null>;
 
   forgotPassword(dto: IForgotPasswordDto): Promise<void>;
 
@@ -89,9 +84,11 @@ export class IamApi implements IIamApi {
     await Auth.signOut();
   }
 
-  async signedInUser(): Promise<ISignedInUserDto | null> {
+  async signedInUser(
+    $Auth: typeof Auth = Auth
+  ): Promise<ISignedInUserDto | null> {
     try {
-      const loggedInUser = await Auth.currentAuthenticatedUser();
+      const loggedInUser = await $Auth.currentAuthenticatedUser();
 
       const attributes = loggedInUser.attributes;
       const accessToken = loggedInUser.signInUserSession

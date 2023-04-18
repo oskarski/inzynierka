@@ -2,11 +2,17 @@ import Head from 'next/head';
 import { headTitle } from '@fe/utils';
 import { SectionTitle } from '@fe/components';
 import { RecipesListing } from '@fe/recipes';
-import { ClientSignedInGuard } from '@fe/iam';
+import { HydrateReactQueryState } from '../../server/server-react-query';
+import { SignedInGuard } from '../../server/server-guards';
+import { GetServerSideProps } from 'next/types';
+
+export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
+  SignedInGuard()
+);
 
 export default function RecipesPage() {
   return (
-    <ClientSignedInGuard>
+    <>
       <Head>
         <title>{headTitle('Przepisy')}</title>
       </Head>
@@ -18,6 +24,6 @@ export default function RecipesPage() {
           <RecipesListing.CardList />
         </RecipesListing>
       </main>
-    </ClientSignedInGuard>
+    </>
   );
 }

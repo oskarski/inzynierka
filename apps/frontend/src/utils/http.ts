@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 
 interface HttpClientOptions {
   accessToken: string;
-  onUnauthorized: () => void;
+  onUnauthorized?: () => void;
 }
 
 export class HttpClient {
@@ -22,7 +22,7 @@ export class HttpClient {
 
   static privateHttpClient(
     baseUrl: string,
-    { accessToken, onUnauthorized }: Required<HttpClientOptions>
+    { accessToken, onUnauthorized }: HttpClientOptions
   ): HttpClient {
     const axiosInstance = axios.create({
       baseURL: baseUrl,
@@ -37,7 +37,7 @@ export class HttpClient {
       (res) => res,
       (error) => {
         if (error.response.status === 401) {
-          onUnauthorized();
+          if (onUnauthorized) onUnauthorized();
           return Promise.reject('Unauthorized!');
         }
 
