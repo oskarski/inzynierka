@@ -28,4 +28,10 @@ export class UserRepository {
       { status: UserStatus.confirmed },
     );
   }
+
+  async findUser(userId: UserId): Promise<User> {
+    return this.repository.findOneBy({
+      id: userId,
+    });
+  }
 }

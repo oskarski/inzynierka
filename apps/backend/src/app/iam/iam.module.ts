@@ -10,5 +10,6 @@ import { CognitoAdapter } from './cognito.adapter';
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [IamController],
   providers: [IamService, UserRepository, CognitoAdapter],
+  exports: [IamService],
 })
 export class IamModule {}

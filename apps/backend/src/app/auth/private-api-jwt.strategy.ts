@@ -1,15 +1,21 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { passportJwtSecret } from 'jwks-rsa';
 import { ConfigService } from '@nestjs/config';
+import { IamService } from '../iam/services';
+import { UserId } from '@lib/shared';
+import { User } from '../iam/entities';
 
 @Injectable()
 export class PrivateApiJwtStrategy extends PassportStrategy(
   Strategy,
   'private-api-jwt',
 ) {
-  constructor(readonly configService: ConfigService) {
+  constructor(
+    readonly configService: ConfigService,
+    private readonly iamService: IamService,
+  ) {
     super({
       secretOrKeyProvider: passportJwtSecret({
         cache: true,
@@ -26,7 +32,17 @@ export class PrivateApiJwtStrategy extends PassportStrategy(
     });
   }
 
-  async validate(payload: unknown) {
-    return payload && payload['sub'];
+  async validate(payload: unknown): Promise<User> {
+    const userId: undefined | UserId = payload && payload['sub'];
+
+    if (!userId) throw new UnauthorizedException();
+
+    const user = await this.iamService.getConfirmedUser(userId);
+
+    if (!user) throw new UnauthorizedException();
+    if (!user.isConfirmed())
+      throw new UnauthorizedException('User is not confirmed!');
+
+    return user;
   }
 }

@@ -32,4 +32,8 @@ export class IamService {
 
     return userId;
   }
+
+  async getConfirmedUser(userId: UserId): Promise<User | null> {
+    return this.usersRepository.findUser(userId);
+  }
 }

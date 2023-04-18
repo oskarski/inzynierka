@@ -22,4 +22,8 @@ export class User {
 
     return user;
   }
+
+  isConfirmed(): boolean {
+    return this.status === UserStatus.confirmed;
+  }
 }
