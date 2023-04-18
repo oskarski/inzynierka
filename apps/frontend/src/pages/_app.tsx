@@ -46,11 +46,7 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
 
       <AppProvider>
-        <div
-          className={classNames('h-screen flex flex-col justify-between')}
-          // Fix for iOS bottom bar hiding navigation bar
-          style={{ height: '-webkit-fill-available' }}
-        >
+        <div className={classNames('h-screen flex flex-col justify-between')}>
           <TopBar className="grow-0 pt-4" />
 
           <div className="grow overflow-auto p-4">
