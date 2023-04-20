@@ -1,16 +1,14 @@
 import React from 'react';
-import Image from 'next/image';
-import {
-  ClockCircleOutlined,
-  StarFilled,
-  TeamOutlined,
-} from '@ant-design/icons';
+import { TeamOutlined } from '@ant-design/icons';
 import { RecipeCategoryTag } from '@fe/recipes-categories';
 import { ProgressCircle } from 'antd-mobile';
 import classNames from 'classnames';
 import { IRecipeListItem } from '../api';
 import { IRecipeCategoryListItemDto } from '@lib/shared';
 import { FavouriteRecipeButton } from './FavouriteRecipeButton';
+import { RecipeRate } from './RecipeRate';
+import { RecipePreparationTime } from './RecipePreparationTime';
+import { RecipeImage } from '@fe/recipes';
 
 interface RecipeCardProps {
   recipe: IRecipeListItem;
@@ -23,47 +21,12 @@ export const RecipeCard = ({
   categories,
   className,
 }: RecipeCardProps) => {
-  // TODO Make it a prop -> Leaving it until all the data comes from API
-  const dummyRecipe = {
-    id: '1',
-    name: 'Pizza margherita',
-    description:
-      'Królowa gatunku, czyli margherita, zachwyca prostotą składników, w których kryje się potęga smaku.',
-    imageUrl: 'http://via.placeholder.com/396x226',
-    review: 4.7,
-    preparationTime: 25,
-    portions: 8,
-    coverage: 87,
-    categories: [
-      {
-        id: 1,
-        name: 'Kuchnia włoska',
-        darkColor: '#CA8A04',
-        lightColor: '#FEF9C3',
-      },
-      {
-        id: 2,
-        name: 'Wegetariańskie',
-        darkColor: '#16A34A',
-        lightColor: '#DCFCE7',
-      },
-    ],
-  };
-
   return (
     <div
       className={classNames('rounded-3xl overflow-hidden shadow-md', className)}
     >
       {/* TODO Add images to recipes */}
-      {/*{recipe.imageUrl && (*/}
-      {/*  <div className="relative aspect-image">*/}
-      {/*    <Image*/}
-      {/*      src={recipe.imageUrl}*/}
-      {/*      alt={`${recipe.name} - Zdjęcie`}*/}
-      {/*      fill={true}*/}
-      {/*    />*/}
-      {/*  </div>*/}
-      {/*)}*/}
+      {/*{recipe.imageUrl && <RecipeImage imageUrl={recipe.imageUrl} recipeName={recipe.name} />}*/}
 
       <div className="p-4">
         <div className="flex justify-between">
@@ -96,15 +59,11 @@ export const RecipeCard = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center text-sm text-secondary space-x-6">
             {/* TODO Add recipe reviews */}
-            {/*<div className="flex items-center">*/}
-            {/*  <StarFilled className="text-base leading-none text-yellow-400 mr-2" />*/}
-            {/*  {recipe.review}*/}
-            {/*</div>*/}
+            {/*<RecipeRate rate={recipe.rate} />*/}
 
-            <div className="flex items-center">
-              <ClockCircleOutlined className="text-base leading-none mr-2" />
-              {recipe.formattedPreparationTime}
-            </div>
+            <RecipePreparationTime
+              preparationTimeLabel={recipe.formattedPreparationTime}
+            />
 
             <div className="flex items-center">
               <TeamOutlined className="text-base leading-none mr-2" />
