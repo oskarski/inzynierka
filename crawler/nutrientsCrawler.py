@@ -16,9 +16,10 @@ db = psycopg2.connect(
 # Create a cursor object
 cursor = db.cursor()
 
-cursor.execute("CREATE TABLE IF NOT EXISTS nutrients (id SERIAL PRIMARY KEY, recipe_id INT, whole_dish_energy VARCHAR(255), per_serving_energy TEXT, fat VARCHAR(255), carbs VARCHAR(255), fiber VARCHAR(255), protein VARCHAR(255))")
+cursor.execute("DROP TABLE IF EXISTS crawler_nutrients")
+cursor.execute("CREATE TABLE IF NOT EXISTS crawler_nutrients (id SERIAL PRIMARY KEY, recipe_id INT, whole_dish_energy VARCHAR(255), per_serving_energy TEXT, fat VARCHAR(255), carbs VARCHAR(255), fiber VARCHAR(255), protein VARCHAR(255))")
 
-cursor.execute("SELECT link FROM recipes")
+cursor.execute("SELECT link FROM crawler_recipes")
 links = cursor.fetchall()
 
 # Initialize recipe_id
@@ -48,13 +49,13 @@ for link in links:
     # Insert the nutrient data into the SQL database
     if whole_dish_energy is None:
         with db.cursor() as cursor:
-            sql = f"INSERT INTO nutrients (recipe_id, whole_dish_energy, per_serving_energy, fat, carbs, fiber, protein) \
+            sql = f"INSERT INTO crawler_nutrients (recipe_id, whole_dish_energy, per_serving_energy, fat, carbs, fiber, protein) \
                 VALUES ('{recipe_id}', '-', '-', '-', '-', '-', '-')"
             cursor.execute(sql)
             db.commit()
     else:
         with db.cursor() as cursor:
-            sql = f"INSERT INTO nutrients (recipe_id, whole_dish_energy, per_serving_energy, fat, carbs, fiber, protein) \
+            sql = f"INSERT INTO crawler_nutrients (recipe_id, whole_dish_energy, per_serving_energy, fat, carbs, fiber, protein) \
                 VALUES ('{recipe_id}', '{whole_dish_energy}', '{per_serving_energy}', '{fat}', '{carbs}', '{fiber}', '{protein}')"
             cursor.execute(sql)
             db.commit()

@@ -13,7 +13,7 @@ recipes_url = f"{base_url}/przepisy/"
 recipes = []
 
 n = 1
-while n<=50:
+while n<=10:  # for first 10 pages -
     try:
         response = requests.get(f"{recipes_url}{n}#lista", headers=headers)
         soup = BeautifulSoup(response.content, "html.parser")
@@ -84,10 +84,10 @@ if recipes:
     cursor = db.cursor()
 
     # Create a table to store the data
-    cursor.execute("CREATE TABLE IF NOT EXISTS recipes (id SERIAL PRIMARY KEY, title VARCHAR(255), description TEXT, link VARCHAR(255), image VARCHAR(255), difficulty VARCHAR(255), time VARCHAR(255), size VARCHAR(255), wege VARCHAR(255))")
-    # Insert the data into the table
+    cursor.execute("DROP TABLE IF EXISTS crawler_recipes")
+    cursor.execute("CREATE TABLE crawler_recipes (id SERIAL PRIMARY KEY, title VARCHAR(255), description TEXT, link VARCHAR(255), image VARCHAR(255), difficulty VARCHAR(255), time VARCHAR(255), size VARCHAR(255), wege VARCHAR(255))")    # Insert the data into the table
     for recipe in recipes:
-        query = "INSERT INTO recipes (title, description, link, image, difficulty, time, size, wege) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        query = "INSERT INTO crawler_recipes (title, description, link, image, difficulty, time, size, wege) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
         values = (recipe['title'], recipe['description'], recipe['link'], recipe['image'], recipe['difficulty'], recipe['time'], recipe['size'], recipe['wege'])
         cursor.execute(query, values)
     # Commit the changes to the database

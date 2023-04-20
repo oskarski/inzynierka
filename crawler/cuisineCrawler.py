@@ -16,7 +16,8 @@ db = psycopg2.connect(
 )
 cursor = db.cursor()
 
-cursor.execute("CREATE TABLE IF NOT EXISTS recipeCuisine (id SERIAL PRIMARY KEY, link VARCHAR(255), cuisine VARCHAR(255))")
+cursor.execute("DROP TABLE IF EXISTS crawler_recipeCuisine")
+cursor.execute("CREATE TABLE IF NOT EXISTS crawler_recipeCuisine (id SERIAL PRIMARY KEY, link VARCHAR(255), cuisine VARCHAR(255))")
 
 
 # Loop through each type in the type list
@@ -40,7 +41,7 @@ for recipe_cuisine in type_list:
             link = recipe_box.find('a')['href']
 
             # Save the href to the database
-            sql = "INSERT INTO recipeCuisine (link, cuisine) VALUES (%s, %s)"
+            sql = "INSERT INTO crawler_recipeCuisine (link, cuisine) VALUES (%s, %s)"
             val = (link,recipe_cuisine)
             cursor.execute(sql, val)
             db.commit()

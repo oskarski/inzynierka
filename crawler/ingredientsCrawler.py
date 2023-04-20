@@ -16,9 +16,10 @@ conn = psycopg2.connect(
 # Create a cursor object
 cursor = conn.cursor()
 
+cursor.execute("DROP TABLE IF EXISTS crawler_ingredients")
 cursor.execute("CREATE TABLE IF NOT EXISTS crawler_ingredients (id SERIAL PRIMARY KEY, recipe_id INT, name VARCHAR(255), amount VARCHAR(255), unit VARCHAR(255))")
 
-cursor.execute("SELECT link FROM recipes")
+cursor.execute("SELECT link FROM crawler_recipes")
 links = cursor.fetchall()
 
 # Initialize recipe_id
