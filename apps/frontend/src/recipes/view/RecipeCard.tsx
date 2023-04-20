@@ -2,8 +2,6 @@ import React from 'react';
 import Image from 'next/image';
 import {
   ClockCircleOutlined,
-  HeartOutlined,
-  HeartFilled,
   StarFilled,
   TeamOutlined,
 } from '@ant-design/icons';
@@ -12,6 +10,7 @@ import { ProgressCircle } from 'antd-mobile';
 import classNames from 'classnames';
 import { IRecipeListItem } from '../api';
 import { IRecipeCategoryListItemDto } from '@lib/shared';
+import { FavouriteRecipeButton } from './FavouriteRecipeButton';
 
 interface RecipeCardProps {
   recipe: IRecipeListItem;
@@ -50,7 +49,6 @@ export const RecipeCard = ({
       },
     ],
   };
-  const favourites = ['12'];
 
   return (
     <div
@@ -115,15 +113,7 @@ export const RecipeCard = ({
           </div>
 
           {/* TODO Add favourite logic */}
-          {/*{favourites.includes(recipe.id) ? (*/}
-          {/*  <button className="text-2xl leading-none text-red-500">*/}
-          {/*    <HeartFilled />*/}
-          {/*  </button>*/}
-          {/*) : (*/}
-          {/*  <button className="text-2xl leading-none text-red-500">*/}
-          {/*    <HeartOutlined />*/}
-          {/*  </button>*/}
-          {/*)}*/}
+          {/*<FavouriteRecipeButton recipeId={recipe.id} />*/}
         </div>
       </div>
     </div>
