@@ -20,8 +20,8 @@ Amplify.configure({
   ssr: true,
 });
 
-const NavigationBar = dynamic(() => import('@fe/app/NavigationBar'));
-const TopBar = dynamic(() => import('@fe/app/TopBar'));
+const NavigationBar = dynamic(() => import('@fe/application/NavigationBar'));
+const TopBar = dynamic(() => import('@fe/application/TopBar'));
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
