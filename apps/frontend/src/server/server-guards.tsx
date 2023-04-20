@@ -18,7 +18,7 @@ export const SignedInGuard = (
     return new IamApi(HttpClient.publicHttpClient(''))
       .signedInUser(Auth)
       .then(async (user) => {
-        if (!user) return Promise.reject();
+        if (!user) return Promise.reject('User is not defined!');
 
         queryClient.setQueryData(SignedInUserQueryKey, user);
 
