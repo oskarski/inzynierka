@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
+import { RecipeId } from '@lib/shared';
 
 export const useRouting = () => {
   const router = useRouter();
@@ -34,6 +35,8 @@ export const routes = {
   home: () => '/',
 
   recipes: () => '/recipes',
+
+  recipeDetails: (recipeId: RecipeId) => `/recipes/${recipeId}`,
 
   shoppingList: () => '/shopping-list',
 
