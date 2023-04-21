@@ -19,7 +19,7 @@ cursor = conn.cursor()
 # Create the recipedescription table if it does not exist
 
 cursor.execute("DROP TABLE IF EXISTS crawler_recipeInstruction")
-cursor.execute("CREATE TABLE IF NOT EXISTS crawler_recipeInstruction (id SERIAL PRIMARY KEY, link VARCHAR(255), jsonDescription TEXT)")
+cursor.execute("CREATE TABLE IF NOT EXISTS crawler_recipeInstruction (id SERIAL PRIMARY KEY, link VARCHAR(255), jsonDescription jsonb)")
 
 # Select all recipe links from the recipes table
 cursor.execute("SELECT link FROM crawler_recipes")
@@ -47,13 +47,13 @@ for link in links:
             elif tag.name == 'h2' and 'KROK' in tag.text:
 
                 step_desc = tag.find_next_sibling('p').text
-                steps.append({'KROK ' + str(step_num): step_desc})
+                steps.append(step_desc)
 
                 step_num+=1
 
         result.update({'Kroki': steps})
 
-        json_output = json.dumps(result, ensure_ascii=False, indent=4)
+        json_output = json.dumps(steps, ensure_ascii=False, indent=4)
         insert_query = "INSERT INTO crawler_recipeInstruction (link, jsonDescription) VALUES (%s, %s)"
         insert_values = (link[0], json_output)
         cursor.execute(insert_query, insert_values)
