@@ -47,7 +47,7 @@ for link in links:
             elif tag.name == 'h2' and 'KROK' in tag.text:
 
                 step_desc = tag.find_next_sibling('p').text
-                steps.append(step_desc)
+                steps.append({'step': step_desc})
 
                 step_num+=1
 
