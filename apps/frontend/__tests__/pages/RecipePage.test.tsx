@@ -40,7 +40,7 @@ describe(RecipeDetailsPage.name, () => {
   it('renders recipes', async () => {
     await testContext
       .signedIn()
-      .render(
+      .renderPrivatePage(
         <RecipeDetailsPage
           recipeId={Id('8a1b797a-f436-496e-82e1-faae34af0b2d')}
         />

@@ -56,7 +56,7 @@ testContext.api.recipesApi.listPaginatedRecipes.mockResolvedValue({
 
 describe(RecipesPage.name, () => {
   it('renders recipes', async () => {
-    await testContext.signedIn().render(<RecipesPage />);
+    await testContext.signedIn().renderPrivatePage(<RecipesPage />);
 
     await findByText(testContext.container, /^Pizza margarita$/);
     await findAllByText(testContext.container, /^Obiad$/);

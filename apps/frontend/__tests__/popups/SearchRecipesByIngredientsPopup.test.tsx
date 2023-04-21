@@ -19,7 +19,7 @@ describe(SearchRecipesByIngredientsPopupContent.name, () => {
 
     await testContext
       .signedIn()
-      .renderPopup(<SearchRecipesByIngredientsPopupContent />)
+      .renderPrivatePopup(<SearchRecipesByIngredientsPopupContent />)
       .then(() => findAllByText(testContext.container, /^Dodaj$/));
 
     expect(testContext.container.textContent).toMatchInlineSnapshot(

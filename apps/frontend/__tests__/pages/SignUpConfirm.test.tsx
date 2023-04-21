@@ -13,7 +13,7 @@ describe(SignUpConfirmPage.name, () => {
       .havingQueryParam('email', 'czIwNTA2QHBqd3N0ay5lZHUucGw=')
       .havingQueryParam('userId', '477dc4d5-a01d-41a3-bc41-43dcd1adb969')
       .notSignedIn()
-      .render(<SignUpConfirmPage />);
+      .renderPublicPage(<SignUpConfirmPage />);
 
     const codeInput = InputHandle.fromLabel(testContext.container, /^Kod$/);
     const submitBtn = ButtonHandle.fromText(

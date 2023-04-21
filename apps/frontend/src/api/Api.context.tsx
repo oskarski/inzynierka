@@ -14,15 +14,18 @@ import {
 } from '@fe/iam';
 import { IngredientsApi, IngredientsApiProvider } from '@fe/ingredients';
 import { RecipesApi, RecipesApiProvider } from '@fe/recipes';
+import { useRouter } from 'next/router';
 
 const publicHttpClient = HttpClient.publicHttpClient(env().apiUrl);
 
 interface ApiProviderProps {
   api?: IApi;
+  isPublicPage: boolean;
 }
 
 export const ApiProvider = ({
   api,
+  isPublicPage,
   children,
 }: PropsWithChildren<ApiProviderProps>) => {
   const iamApi = useMemo(
@@ -32,16 +35,20 @@ export const ApiProvider = ({
 
   return (
     <IamApiProvider iamApi={iamApi}>
-      <PrivateApiProvider api={api}>{children}</PrivateApiProvider>
+      <PrivateApiProvider api={api} passThrough={isPublicPage}>
+        {children}
+      </PrivateApiProvider>
     </IamApiProvider>
   );
 };
 
 function PrivateApiProvider({
   api,
+  passThrough,
   children,
 }: PropsWithChildren<{
   api?: IApi;
+  passThrough: boolean;
 }>) {
   const [signedInUser] = useSignedInUser();
   const signOut = useSignOut();
@@ -63,7 +70,7 @@ function PrivateApiProvider({
     };
   }, [api, signedInUser]);
 
-  if (!httpBasedApi) return <>{children}</>;
+  if (!httpBasedApi) return passThrough ? <>{children}</> : null;
 
   return (
     <RecipesCategoriesApiProvider

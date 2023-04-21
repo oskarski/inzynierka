@@ -2,6 +2,10 @@ import Head from 'next/head';
 import { headTitle, useRouting } from '@fe/utils';
 import { ClientNotSignedInGuard, SignUpConfirmForm } from '@fe/iam';
 import { UserId } from '@lib/shared';
+import { PublicPage } from '../../../server/server-public-page';
+
+// This needs to be `getServerSideProps` since it has dynamic url -> perhaps we should pass userId in query ...
+export const getServerSideProps = PublicPage();
 
 export default function SignUpConfirmPage() {
   const { getQueryParam } = useRouting();

@@ -12,7 +12,7 @@ testContext.api.iamApi.signIn.mockResolvedValue(
 
 describe(SignInPage.name, () => {
   it('allows to sign in', async () => {
-    await testContext.notSignedIn().render(<SignInPage />);
+    await testContext.notSignedIn().renderPublicPage(<SignInPage />);
 
     const emailInput = InputHandle.fromLabel(testContext.container, /^Email$/);
     const passwordInput = InputHandle.fromLabel(

@@ -47,6 +47,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
       <AppProvider
         dehydratedReactQueryState={pageProps.dehydratedReactQueryState}
+        isPublicPage={!!pageProps.isPublicPage}
       >
         <div className={classNames('h-screen flex flex-col justify-between')}>
           <TopBar className="grow-0 pt-4" />

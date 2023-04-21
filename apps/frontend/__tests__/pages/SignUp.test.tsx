@@ -14,7 +14,7 @@ beforeEach(() => {
 
 describe(SignUpPage.name, () => {
   it('allows to sign up', async () => {
-    await testContext.notSignedIn().render(<SignUpPage />);
+    await testContext.notSignedIn().renderPublicPage(<SignUpPage />);
 
     const firstNameInput = InputHandle.fromLabel(
       testContext.container,

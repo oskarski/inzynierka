@@ -57,14 +57,21 @@ export class TestContext {
     return this;
   }
 
-  async render(children: ReactNode): Promise<TestContext> {
+  private async render(
+    children: ReactNode,
+    { isPublicPage }: { isPublicPage: boolean }
+  ): Promise<TestContext> {
     useRouterMock.mockReturnValue({
       push: this.routePushMock,
       query: this.__routerQuery,
     });
 
     const result = render(
-      <AppProvider api={this.api} queryClient={testAppQueryClient}>
+      <AppProvider
+        api={this.api}
+        queryClient={testAppQueryClient}
+        isPublicPage={isPublicPage}
+      >
         {children}
         <div data-testid="test-app" />
       </AppProvider>
@@ -78,8 +85,18 @@ export class TestContext {
     return this;
   }
 
-  async renderPopup(children: ReactNode): Promise<TestContext> {
-    await this.render(<AppPopup defaultOpened={true}>{children}</AppPopup>);
+  async renderPublicPage(children: ReactNode): Promise<TestContext> {
+    return this.render(children, { isPublicPage: true });
+  }
+
+  async renderPrivatePage(children: ReactNode): Promise<TestContext> {
+    return this.render(children, { isPublicPage: false });
+  }
+
+  async renderPrivatePopup(children: ReactNode): Promise<TestContext> {
+    await this.renderPrivatePage(
+      <AppPopup defaultOpened={true}>{children}</AppPopup>
+    );
 
     this.__container = document.body;
 

@@ -11,17 +11,19 @@ interface AppProviderProps {
   api?: IApi;
   queryClient?: QueryClient;
   dehydratedReactQueryState?: unknown;
+  isPublicPage: boolean;
 }
 
 export const AppProvider = ({
   api,
   dehydratedReactQueryState,
+  isPublicPage,
   children,
 }: PropsWithChildren<AppProviderProps>) => {
   return (
     <QueryClientProvider client={queryClient}>
       <Hydrate state={dehydratedReactQueryState}>
-        <ApiProvider api={api}>
+        <ApiProvider api={api} isPublicPage={isPublicPage}>
           <RecipesFiltersProvider>{children}</RecipesFiltersProvider>
         </ApiProvider>
       </Hydrate>
