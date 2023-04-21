@@ -1,14 +1,24 @@
 import { useRecipesApi } from './RecipesApi.context';
-import { PaginationSelector, usePaginatedQuery } from '@fe/utils';
-import { IRecipeListItemDto } from '@lib/shared';
-import { RecipeListItemSelector } from './selectors';
-import { IRecipeListItem } from './types';
+import {
+  PaginationSelector,
+  useAdaptedQuery,
+  usePaginatedQuery,
+} from '@fe/utils';
+import { IRecipeDto, IRecipeListItemDto, RecipeId } from '@lib/shared';
+import { RecipeDetailsSelector, RecipeListItemSelector } from './selectors';
+import { IRecipe, IRecipeListItem } from './types';
 import { useListAllRecipesCategories } from '@fe/recipes-categories';
 import { useCallback } from 'react';
 
 export const ListPaginatedRecipesQueryKey = [
   'recipesApi',
   'listPaginatedRecipes',
+];
+
+export const GetRecipeDetailsQueryKey = (id: RecipeId) => [
+  'recipesApi',
+  'getRecipeDetails',
+  id,
 ];
 
 export const useListPaginatedRecipes = () => {
@@ -29,7 +39,7 @@ export const useConnectedCategories = () => {
   const [categories] = useListAllRecipesCategories();
 
   return useCallback(
-    (recipe: IRecipeListItem) => {
+    (recipe: IRecipeListItem | IRecipe) => {
       if (!categories) return [];
 
       const recipeCategories = [];
@@ -45,5 +55,17 @@ export const useConnectedCategories = () => {
       return recipeCategories;
     },
     [categories]
+  );
+};
+
+export const useRecipeDetails = (id: RecipeId) => {
+  const { recipesApi } = useRecipesApi();
+
+  return useAdaptedQuery<IRecipeDto, IRecipe>(
+    GetRecipeDetailsQueryKey(id),
+    () => recipesApi.getRecipeDetails(id),
+    {
+      select: RecipeDetailsSelector,
+    }
   );
 };

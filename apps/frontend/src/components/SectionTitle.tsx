@@ -5,18 +5,21 @@ import React, { PropsWithChildren } from 'react';
 
 interface SectionTitleProps {
   href?: string;
+  truncate?: boolean;
   className?: string;
 }
 
 export const SectionTitle = ({
   href,
+  truncate = true,
   className,
   children,
 }: PropsWithChildren<SectionTitleProps>) => {
   return (
     <h2
       className={classNames(
-        'text-3xl font-bold text-default truncate',
+        'text-3xl font-bold text-default',
+        { truncate: truncate },
         className
       )}
     >

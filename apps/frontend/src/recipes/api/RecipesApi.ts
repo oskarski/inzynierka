@@ -2,6 +2,8 @@ import {
   IRecipeListItemDto,
   IListRecipesQueryDto,
   IPaginated,
+  RecipeId,
+  IRecipeDto,
 } from '@lib/shared';
 import { HttpClient } from '@fe/utils';
 
@@ -9,6 +11,8 @@ export interface IRecipesApi {
   listPaginatedRecipes(
     dto: IListRecipesQueryDto
   ): Promise<IPaginated<IRecipeListItemDto>>;
+
+  getRecipeDetails(id: RecipeId): Promise<IRecipeDto>;
 }
 
 export class RecipesApi implements IRecipesApi {
@@ -23,5 +27,9 @@ export class RecipesApi implements IRecipesApi {
       this.baseUrl,
       dto
     );
+  }
+
+  getRecipeDetails(id: RecipeId): Promise<IRecipeDto> {
+    return this.httpClient.get<IRecipeDto>(`${this.baseUrl}/${id}`);
   }
 }
