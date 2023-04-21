@@ -1,5 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { IPaginated, IRecipeListItemDto } from '@lib/shared';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  IPaginated,
+  IRecipeDto,
+  IRecipeListItemDto,
+  RecipeId,
+} from '@lib/shared';
 import { RecipesRepository } from '../repositories';
 import { Pagination } from '../../utils';
 import { ListRecipesQueryDto } from '../dtos';
@@ -19,5 +24,13 @@ export class RecipesService {
       data,
       total,
     };
+  }
+
+  async getRecipe(id: RecipeId): Promise<IRecipeDto> {
+    const recipe = await this.recipesRepository.find(id);
+
+    if (!recipe) throw new NotFoundException();
+
+    return recipe;
   }
 }

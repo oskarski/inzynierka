@@ -1,5 +1,10 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import { IPaginated, IRecipeListItemDto } from '@lib/shared';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import {
+  IPaginated,
+  IRecipeDto,
+  IRecipeListItemDto,
+  RecipeId,
+} from '@lib/shared';
 import { PrivateApiGuard } from '../auth';
 import { RecipesService } from './services';
 import { ListRecipesQueryDto } from './dtos';
@@ -14,5 +19,10 @@ export class RecipesController {
     @Query() queryDto: ListRecipesQueryDto,
   ): Promise<IPaginated<IRecipeListItemDto>> {
     return this.recipesService.findRecipes(queryDto);
+  }
+
+  @Get('/:id')
+  async getRecipeDetails(@Param('id') id: RecipeId): Promise<IRecipeDto> {
+    return this.recipesService.getRecipe(id);
   }
 }

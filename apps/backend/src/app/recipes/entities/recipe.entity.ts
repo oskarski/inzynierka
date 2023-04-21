@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
-import { RecipeCategoryId, RecipeId } from '@lib/shared';
+import { IRecipeInstructionDto, RecipeCategoryId, RecipeId } from '@lib/shared';
 import { RecipeCategory } from '../../recipe-categories/entities';
 
 @Entity('recipes')
@@ -25,6 +25,9 @@ export class Recipe {
 
   @Column({ type: 'int' })
   portions: number;
+
+  @Column({ type: 'jsonb', default: '[]' })
+  instructions: IRecipeInstructionDto[];
 
   @ManyToMany(() => RecipeCategory)
   @JoinTable({ name: 'recipes_recipes_categories' })

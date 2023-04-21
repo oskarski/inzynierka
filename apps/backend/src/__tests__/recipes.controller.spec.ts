@@ -38,13 +38,20 @@ describe(RecipesController.name, () => {
     ]);
 
     const firstRecipe = new Recipe();
+    firstRecipe.id = Id('3fe1b69b-3970-42e7-aa31-982f58472163');
     firstRecipe.name = 'Pizza margarita';
     firstRecipe.description = 'Królowa gatunku, czyli margherita!';
     firstRecipe.preparationTime = 1500;
     firstRecipe.portions = 8;
     firstRecipe.categories = [secondCategory];
+    firstRecipe.instructions = [
+      { step: 'Weź telefon' },
+      { step: 'Zamów pizze' },
+      { step: 'Smacznego!' },
+    ];
 
     const secondRecipe = new Recipe();
+    secondRecipe.id = Id('88271d4c-ed68-446b-a135-e89521b1718e');
     secondRecipe.name = 'Kanapka z szynką';
     secondRecipe.description = 'Klasyka gatunku!';
     secondRecipe.preparationTime = 300;
@@ -52,6 +59,7 @@ describe(RecipesController.name, () => {
     secondRecipe.categories = [thirdCategory];
 
     const thirdRecipe = new Recipe();
+    thirdRecipe.id = Id('e4d81d15-4ad6-4f21-aec1-8a24af414aa4');
     thirdRecipe.name = 'Hot Dog';
     thirdRecipe.description = 'Bardzo dobry!';
     thirdRecipe.preparationTime = 900;
@@ -112,6 +120,29 @@ describe(RecipesController.name, () => {
           ]),
         },
       ]);
+    });
+  });
+
+  describe('getRecipeDetails()', () => {
+    it('returns recipe details', async () => {
+      const foundRecipe =
+        await testCtx.controllers.recipeController.getRecipeDetails(
+          Id('3fe1b69b-3970-42e7-aa31-982f58472163'),
+        );
+
+      expect(foundRecipe).toEqual({
+        id: '3fe1b69b-3970-42e7-aa31-982f58472163',
+        name: 'Pizza margarita',
+        description: 'Królowa gatunku, czyli margherita!',
+        preparationTime: 1500,
+        portions: 8,
+        categoryIds: ['7263df84-ac67-4cdd-8c0c-860caff5fb90'],
+        instructions: [
+          { step: 'Weź telefon' },
+          { step: 'Zamów pizze' },
+          { step: 'Smacznego!' },
+        ],
+      });
     });
   });
 });

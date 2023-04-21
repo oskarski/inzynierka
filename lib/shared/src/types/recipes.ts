@@ -15,3 +15,17 @@ export interface IRecipeListItemDto {
   readonly portions: number;
   readonly categoryIds: RecipeCategoryId[];
 }
+
+export interface IRecipeInstructionDto {
+  readonly step: string;
+}
+
+export interface IRecipeDto {
+  readonly id: RecipeId;
+  readonly name: string;
+  readonly description: string;
+  readonly preparationTime: number;
+  readonly portions: number;
+  readonly categoryIds: RecipeCategoryId[];
+  readonly instructions: IRecipeInstructionDto[];
+}
