@@ -1,6 +1,7 @@
 import { useRecipesApi } from './RecipesApi.context';
 import {
   PaginationSelector,
+  useAdaptedMutation,
   useAdaptedQuery,
   usePaginatedQuery,
 } from '@fe/utils';
@@ -9,6 +10,7 @@ import { RecipeDetailsSelector, RecipeListItemSelector } from './selectors';
 import { IRecipe, IRecipeListItem } from './types';
 import { useListAllRecipesCategories } from '@fe/recipes-categories';
 import { useCallback } from 'react';
+import { ApiError } from '@fe/errors';
 
 export const ListPaginatedRecipesQueryKey = [
   'recipesApi',
@@ -67,5 +69,13 @@ export const useRecipeDetails = (id: RecipeId) => {
     {
       select: RecipeDetailsSelector,
     }
+  );
+};
+
+export const useAddRecipeToFavourites = (id: RecipeId) => {
+  const { recipesApi } = useRecipesApi();
+
+  return useAdaptedMutation<void, void, ApiError>(() =>
+    recipesApi.addRecipeToFavorites(id)
   );
 };

@@ -77,8 +77,7 @@ export const RecipeCard = ({
               </div>
             </div>
 
-            {/* TODO Add favourite logic */}
-            {/*<FavouriteRecipeButton recipeId={recipe.id} />*/}
+            <FavouriteRecipeButton recipeId={recipe.id} />
           </div>
         </div>
       </div>

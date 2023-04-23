@@ -36,7 +36,7 @@ export class HttpClient {
     axiosInstance.interceptors.response.use(
       (res) => res,
       (error) => {
-        if (error.response.status === 401) {
+        if (error.response?.status === 401) {
           if (onUnauthorized) onUnauthorized();
           return Promise.reject('Unauthorized!');
         }

@@ -110,8 +110,7 @@ export default function RecipesPage({ recipeId }: RecipesPageProps) {
                   </div>
                 </div>
 
-                {/* TODO Add favourite button */}
-                {/*<FavouriteRecipeButton recipeId={recipe.id as any} />*/}
+                <FavouriteRecipeButton recipeId={recipe.id} />
               </div>
 
               {/* TODO Add ingredients listing */}

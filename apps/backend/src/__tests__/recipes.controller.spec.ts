@@ -145,4 +145,8 @@ describe(RecipesController.name, () => {
       });
     });
   });
+
+  describe('addRecipeToFavorites()', () => {
+    it.todo('adds recipe to favourites');
+  });
 });

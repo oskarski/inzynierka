@@ -1,8 +1,8 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { UserId } from '@lib/shared';
+import { User } from '../iam/entities';
 
 export const CurrentUser = createParamDecorator(
-  (_data: undefined, ctx: ExecutionContext): UserId => {
+  (_data: undefined, ctx: ExecutionContext): User => {
     const request = ctx.switchToHttp().getRequest();
 
     // This is user returned in PrivateApiJwtStrategy

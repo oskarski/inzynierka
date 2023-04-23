@@ -34,4 +34,17 @@ export class UserRepository {
       id: userId,
     });
   }
+
+  async findUserWithFavouriteRecipes(userId: UserId): Promise<User | null> {
+    return this.repository.findOne({
+      where: { id: userId },
+      relations: {
+        favouriteRecipes: true,
+      },
+    });
+  }
+
+  async save(user: User): Promise<void> {
+    await this.repository.save(user);
+  }
 }

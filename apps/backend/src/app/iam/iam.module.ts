@@ -9,7 +9,7 @@ import { CognitoAdapter } from './cognito.adapter';
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [IamController],
-  providers: [IamService, UserRepository, CognitoAdapter],
-  exports: [IamService],
+  providers: [IamService, UserRepository, CognitoAdapter, User],
+  exports: [IamService, UserRepository],
 })
 export class IamModule {}

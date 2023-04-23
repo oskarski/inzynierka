@@ -13,6 +13,8 @@ export interface IRecipesApi {
   ): Promise<IPaginated<IRecipeListItemDto>>;
 
   getRecipeDetails(id: RecipeId): Promise<IRecipeDto>;
+
+  addRecipeToFavorites(recipeId: RecipeId): Promise<void>;
 }
 
 export class RecipesApi implements IRecipesApi {
@@ -31,5 +33,12 @@ export class RecipesApi implements IRecipesApi {
 
   getRecipeDetails(id: RecipeId): Promise<IRecipeDto> {
     return this.httpClient.get<IRecipeDto>(`${this.baseUrl}/${id}`);
+  }
+
+  async addRecipeToFavorites(recipeId: RecipeId): Promise<void> {
+    await this.httpClient.post<{}, void>(
+      `${this.baseUrl}/${recipeId}/favourite`,
+      {}
+    );
   }
 }
