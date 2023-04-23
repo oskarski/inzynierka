@@ -2,6 +2,7 @@
 
 ```bash
 $ run mainDataCrawler.py python script
+$ run db.py to create project tables
 ```
 
 ## Other scripts
@@ -18,6 +19,7 @@ $ recipeInstructionsCrawler - collects intructions for all recipes in json forma
 ```bash
 
 Main table is recipes. Other tables are connected either through "recipe_id" or "link"
-
+Scripts "crawler" collects raw data from website.
+Script db.py creates tables for project
 ```
 
