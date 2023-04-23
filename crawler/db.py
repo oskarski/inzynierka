@@ -15,9 +15,9 @@ cur = conn.cursor()
 # execute SQL statements to create the new table and populate it
 cur.execute("DROP TABLE IF EXISTS recipes")
 
-cur.execute("CREATE TABLE recipes (id SERIAL PRIMARY KEY, name VARCHAR(255), description TEXT, preparation_time INTEGER, portions INTEGER)")
+cur.execute("CREATE TABLE recipes (id SERIAL PRIMARY KEY, name VARCHAR(255), description TEXT, preparation_time INTEGER, portions INTEGER, instructions JSONB)")
 
-cur.execute("INSERT INTO recipes (name, description, preparation_time, portions) SELECT title, description, (substring(time from 1 for 1)::INTEGER * 3600) + (substring(time from 3)::INTEGER * 60), CAST(size AS INTEGER) FROM crawler_recipes WHERE trim(time) <> '' AND trim(size) <> ''")
+cur.execute("INSERT INTO recipes (name, description, preparation_time, portions, instructions) SELECT title, description, (substring(time from 1 for 1)::INTEGER * 3600) + (substring(time from 3)::INTEGER * 60), CAST(size AS INTEGER), to_json(jsondescription) FROM crawler_recipes INNER JOIN crawler_recipeinstruction ON crawler_recipes.link = crawler_recipeinstruction.link WHERE trim(time) <> '' AND trim(size) <> ''")
 
 # commit the changes to the database and close the cursor and connection
 conn.commit()
