@@ -24,7 +24,7 @@ testContext.api.recipesCategoriesApi.listAllCategories.mockResolvedValue([
     .named('Śniadanie')
     .build(),
 ]);
-testContext.api.recipesApi.listPaginatedRecipes.mockResolvedValue({
+testContext.api.recipesApi.listRecipesPaginated.mockResolvedValue({
   total: 3,
   data: [
     RecipeListItemDtoBuilder.prefilled()

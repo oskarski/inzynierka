@@ -22,7 +22,7 @@ export class RecipesService {
     private readonly usersRepository: UserRepository,
   ) {}
 
-  async findRecipes(
+  async listRecipesPaginated(
     queryDto: ListRecipesQueryDto,
   ): Promise<IPaginated<IRecipeListItemDto>> {
     const [data, total] = await this.recipesRepository.findAll(

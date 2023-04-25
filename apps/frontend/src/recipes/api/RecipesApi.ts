@@ -8,7 +8,7 @@ import {
 import { HttpClient } from '@fe/utils';
 
 export interface IRecipesApi {
-  listPaginatedRecipes(
+  listRecipesPaginated(
     dto: IListRecipesQueryDto
   ): Promise<IPaginated<IRecipeListItemDto>>;
 
@@ -22,7 +22,7 @@ export class RecipesApi implements IRecipesApi {
 
   constructor(private readonly httpClient: HttpClient) {}
 
-  listPaginatedRecipes(
+  listRecipesPaginated(
     dto: IListRecipesQueryDto
   ): Promise<IPaginated<IRecipeListItemDto>> {
     return this.httpClient.get<IPaginated<IRecipeListItemDto>>(
@@ -37,7 +37,7 @@ export class RecipesApi implements IRecipesApi {
 
   async addRecipeToFavorites(recipeId: RecipeId): Promise<void> {
     await this.httpClient.post<{}, void>(
-      `${this.baseUrl}/${recipeId}/favourite`,
+      `${this.baseUrl}/favourite/${recipeId}`,
       {}
     );
   }

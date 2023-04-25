@@ -73,15 +73,15 @@ describe(RecipesController.name, () => {
     ]);
   });
 
-  describe('findRecipesPaginated()', () => {
+  describe('listRecipesPaginated()', () => {
     it('returns paginated recipes', async () => {
       const firstPage =
-        await testCtx.controllers.recipeController.findRecipesPaginated({
+        await testCtx.controllers.recipeController.listRecipesPaginated({
           page: 0,
           perPage: 2,
         });
       const secondPage =
-        await testCtx.controllers.recipeController.findRecipesPaginated({
+        await testCtx.controllers.recipeController.listRecipesPaginated({
           page: 1,
           perPage: 2,
         });

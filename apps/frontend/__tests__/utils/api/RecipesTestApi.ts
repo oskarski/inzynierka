@@ -2,8 +2,8 @@ import { apiMethodMock } from './apiMethodMock';
 import { IRecipesApi } from '@fe/recipes';
 
 export class RecipesTestApi implements IRecipesApi {
-  listPaginatedRecipes = apiMethodMock<IRecipesApi['listPaginatedRecipes']>(
-    'IRecipesApi.listPaginatedRecipes'
+  listRecipesPaginated = apiMethodMock<IRecipesApi['listRecipesPaginated']>(
+    'IRecipesApi.listRecipesPaginated'
   );
 
   getRecipeDetails = apiMethodMock<IRecipesApi['getRecipeDetails']>(

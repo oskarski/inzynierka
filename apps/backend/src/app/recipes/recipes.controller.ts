@@ -16,10 +16,10 @@ export class RecipesController {
   constructor(private readonly recipesService: RecipesService) {}
 
   @Get()
-  async findRecipesPaginated(
+  async listRecipesPaginated(
     @Query() queryDto: ListRecipesQueryDto,
   ): Promise<IPaginated<IRecipeListItemDto>> {
-    return this.recipesService.findRecipes(queryDto);
+    return this.recipesService.listRecipesPaginated(queryDto);
   }
 
   @Get('/:id')
@@ -27,7 +27,7 @@ export class RecipesController {
     return this.recipesService.getRecipe(id);
   }
 
-  @Post('/:id/favourite')
+  @Post('/favourite/:id')
   async addRecipeToFavorites(
     @Param('id') id: RecipeId,
     @CurrentUser() currentUser: User,

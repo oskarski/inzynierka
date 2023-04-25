@@ -14,7 +14,7 @@ import { ApiError } from '@fe/errors';
 
 export const ListPaginatedRecipesQueryKey = [
   'recipesApi',
-  'listPaginatedRecipes',
+  'listRecipesPaginated',
 ];
 
 export const GetRecipeDetailsQueryKey = (id: RecipeId) => [
@@ -29,7 +29,7 @@ export const useListPaginatedRecipes = () => {
   return usePaginatedQuery<IRecipeListItemDto, IRecipeListItem>(
     ListPaginatedRecipesQueryKey,
     ({ pageParam = 0 }) =>
-      recipesApi.listPaginatedRecipes({ page: pageParam, perPage: 20 }),
+      recipesApi.listRecipesPaginated({ page: pageParam, perPage: 20 }),
     20,
     {
       select: PaginationSelector(RecipeListItemSelector),
