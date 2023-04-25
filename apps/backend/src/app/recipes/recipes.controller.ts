@@ -22,16 +22,25 @@ export class RecipesController {
     return this.recipesService.listRecipesPaginated(queryDto);
   }
 
-  @Get('/:id')
-  async getRecipeDetails(@Param('id') id: RecipeId): Promise<IRecipeDto> {
-    return this.recipesService.getRecipe(id);
+  @Get('/favourite')
+  async listFavouriteRecipes(
+    @Param('id') id: RecipeId,
+    @CurrentUser() currentUser: User,
+  ): Promise<IRecipeListItemDto[]> {
+    return this.recipesService.listFavouriteRecipes(currentUser.id);
   }
 
+  // TODO Perhaps move `:id` to dto
   @Post('/favourite/:id')
   async addRecipeToFavorites(
     @Param('id') id: RecipeId,
     @CurrentUser() currentUser: User,
   ): Promise<void> {
     await this.recipesService.addRecipeToFavorites(id, currentUser.id);
+  }
+
+  @Get('/:id')
+  async getRecipeDetails(@Param('id') id: RecipeId): Promise<IRecipeDto> {
+    return this.recipesService.getRecipe(id);
   }
 }

@@ -63,4 +63,8 @@ export class RecipesService {
 
     await this.usersRepository.save(user);
   }
+
+  listFavouriteRecipes(userId: UserId): Promise<IRecipeListItemDto[]> {
+    return this.recipesRepository.findAllFavourite(userId);
+  }
 }

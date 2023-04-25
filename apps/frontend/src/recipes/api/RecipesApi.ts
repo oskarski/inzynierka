@@ -15,6 +15,8 @@ export interface IRecipesApi {
   getRecipeDetails(id: RecipeId): Promise<IRecipeDto>;
 
   addRecipeToFavorites(recipeId: RecipeId): Promise<void>;
+
+  listFavouriteRecipes(): Promise<IRecipeListItemDto[]>;
 }
 
 export class RecipesApi implements IRecipesApi {
@@ -39,6 +41,12 @@ export class RecipesApi implements IRecipesApi {
     await this.httpClient.post<{}, void>(
       `${this.baseUrl}/favourite/${recipeId}`,
       {}
+    );
+  }
+
+  listFavouriteRecipes(): Promise<IRecipeListItemDto[]> {
+    return this.httpClient.get<IRecipeListItemDto[]>(
+      `${this.baseUrl}/favourite`
     );
   }
 }

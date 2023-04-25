@@ -1,5 +1,6 @@
 import { useRecipesApi } from './RecipesApi.context';
 import {
+  ListSelector,
   PaginationSelector,
   useAdaptedMutation,
   useAdaptedQuery,
@@ -77,5 +78,17 @@ export const useAddRecipeToFavourites = (id: RecipeId) => {
 
   return useAdaptedMutation<void, void, ApiError>(() =>
     recipesApi.addRecipeToFavorites(id)
+  );
+};
+
+export const useListFavouriteRecipes = () => {
+  const { recipesApi } = useRecipesApi();
+
+  return useAdaptedQuery<IRecipeListItemDto[], IRecipeListItem[]>(
+    ['recipesApi', 'listFavouriteRecipes'],
+    () => recipesApi.listFavouriteRecipes(),
+    {
+      select: ListSelector(RecipeListItemSelector),
+    }
   );
 };

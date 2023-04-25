@@ -3,7 +3,7 @@ import { Recipe } from '../entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { Pagination } from '../../utils';
-import { RecipeCategoryId, RecipeId } from '@lib/shared';
+import { RecipeCategoryId, RecipeId, UserId } from '@lib/shared';
 
 interface FindAllSelect {
   id: RecipeId;
@@ -45,5 +45,24 @@ export class RecipesRepository {
       .createQueryBuilder()
       .where('id = :id', { id })
       .getOne();
+  }
+
+  findAllFavourite(userId: UserId): Promise<FindAllSelect[]> {
+    return this.repository
+      .createQueryBuilder('recipes')
+      .select([
+        'recipes.id',
+        'recipes.name',
+        'recipes.description',
+        'recipes.preparationTime',
+        'recipes.portions',
+      ])
+      .addSelect('array_agg(category.id)', 'categoryIds')
+      .leftJoin('recipes.categories', 'category')
+      .innerJoin('users_favourite_recipes', 'ufr', 'ufr.recipe_id = recipes.id')
+      .where('ufr.user_id = :userId', { userId })
+      .groupBy('recipes.id')
+      .orderBy('recipes.id')
+      .getMany();
   }
 }

@@ -21,3 +21,11 @@ export function PaginationSelector<Dto, Model>(
     };
   };
 }
+
+export function ListSelector<Dto, Model>(
+  ListItemSelector: (dto: Dto) => Model
+): (dtoList: Dto[]) => Model[] {
+  return function (dtoList) {
+    return dtoList.map(ListItemSelector);
+  };
+}

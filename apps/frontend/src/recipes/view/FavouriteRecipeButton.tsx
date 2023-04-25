@@ -1,7 +1,7 @@
 import { HeartFilled, HeartOutlined } from '@ant-design/icons';
 import React from 'react';
 import { RecipeId } from '@lib/shared';
-import { useAddRecipeToFavourites } from '@fe/recipes';
+import { useAddRecipeToFavourites, useListFavouriteRecipes } from '@fe/recipes';
 
 interface FavouriteRecipeButtonProps {
   recipeId: RecipeId;
@@ -10,9 +10,11 @@ interface FavouriteRecipeButtonProps {
 export const FavouriteRecipeButton = ({
   recipeId,
 }: FavouriteRecipeButtonProps) => {
+  const [favouriteRecipes] = useListFavouriteRecipes();
+
   const [addToFavourite] = useAddRecipeToFavourites(recipeId);
 
-  const favourites = ['12'];
+  if (!favouriteRecipes) return null;
 
   return (
     <button
@@ -24,7 +26,11 @@ export const FavouriteRecipeButton = ({
         addToFavourite();
       }}
     >
-      {favourites.includes(recipeId) ? <HeartFilled /> : <HeartOutlined />}
+      {favouriteRecipes.find((recipe) => recipe.id === recipeId) ? (
+        <HeartFilled />
+      ) : (
+        <HeartOutlined />
+      )}
     </button>
   );
 };

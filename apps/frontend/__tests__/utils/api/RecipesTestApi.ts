@@ -13,4 +13,8 @@ export class RecipesTestApi implements IRecipesApi {
   addRecipeToFavorites = apiMethodMock<IRecipesApi['addRecipeToFavorites']>(
     'IRecipesApi.addRecipeToFavorites'
   );
+
+  listFavouriteRecipes = apiMethodMock<IRecipesApi['listFavouriteRecipes']>(
+    'IRecipesApi.listFavouriteRecipes'
+  );
 }
