@@ -67,4 +67,11 @@ export class RecipesService {
   listFavouriteRecipes(userId: UserId): Promise<IRecipeListItemDto[]> {
     return this.recipesRepository.findAllFavourite(userId);
   }
+
+  async removeRecipeFromFavorites(
+    recipeId: RecipeId,
+    userId: UserId,
+  ): Promise<void> {
+    await this.usersRepository.removeFavouriteRecipe(userId, recipeId);
+  }
 }

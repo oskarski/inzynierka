@@ -17,6 +17,8 @@ export interface IRecipesApi {
   addRecipeToFavorites(recipeId: RecipeId): Promise<void>;
 
   listFavouriteRecipes(): Promise<IRecipeListItemDto[]>;
+
+  removeRecipeFromFavorites(recipeId: RecipeId): Promise<void>;
 }
 
 export class RecipesApi implements IRecipesApi {
@@ -48,5 +50,9 @@ export class RecipesApi implements IRecipesApi {
     return this.httpClient.get<IRecipeListItemDto[]>(
       `${this.baseUrl}/favourite`
     );
+  }
+
+  async removeRecipeFromFavorites(recipeId: RecipeId): Promise<void> {
+    await this.httpClient.delete(`${this.baseUrl}/favourite/${recipeId}`);
   }
 }

@@ -2,7 +2,7 @@ import { Repository } from 'typeorm';
 import { User, UserStatus } from '../entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
-import { UserId } from '@lib/shared';
+import { RecipeId, UserId } from '@lib/shared';
 
 @Injectable()
 export class UserRepository {
@@ -46,5 +46,16 @@ export class UserRepository {
 
   async save(user: User): Promise<void> {
     await this.repository.save(user);
+  }
+
+  async removeFavouriteRecipe(
+    userId: UserId,
+    recipeId: RecipeId,
+  ): Promise<void> {
+    await this.repository
+      .createQueryBuilder('user')
+      .relation(User, 'favouriteRecipes')
+      .of(userId)
+      .remove(recipeId);
   }
 }

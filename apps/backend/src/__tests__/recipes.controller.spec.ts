@@ -153,4 +153,8 @@ describe(RecipesController.name, () => {
   describe('listFavouriteRecipes()', () => {
     it.todo('lists favourite recipes');
   });
+
+  describe('removeRecipeFromFavorites()', () => {
+    it.todo('removes recipe from favourite');
+  });
 });

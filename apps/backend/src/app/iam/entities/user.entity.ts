@@ -59,4 +59,8 @@ export class User {
   addRecipeToFavourites(recipe: Recipe): void {
     this.favouriteRecipes.push(recipe);
   }
+
+  removeRecipeFromFavourites(recipeId: RecipeId): void {
+    this.favouriteRecipes.filter((recipe) => recipe.id !== recipeId);
+  }
 }

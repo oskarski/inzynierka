@@ -17,4 +17,8 @@ export class RecipesTestApi implements IRecipesApi {
   listFavouriteRecipes = apiMethodMock<IRecipesApi['listFavouriteRecipes']>(
     'IRecipesApi.listFavouriteRecipes'
   );
+
+  removeRecipeFromFavorites = apiMethodMock<
+    IRecipesApi['removeRecipeFromFavorites']
+  >('IRecipesApi.removeRecipeFromFavorites');
 }

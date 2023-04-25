@@ -12,6 +12,7 @@ import { IRecipe, IRecipeListItem } from './types';
 import { useListAllRecipesCategories } from '@fe/recipes-categories';
 import { useCallback } from 'react';
 import { ApiError } from '@fe/errors';
+import { useQueryClient } from 'react-query';
 
 export const ListPaginatedRecipesQueryKey = [
   'recipesApi',
@@ -22,6 +23,11 @@ export const GetRecipeDetailsQueryKey = (id: RecipeId) => [
   'recipesApi',
   'getRecipeDetails',
   id,
+];
+
+export const ListFavouriteRecipesQueryKey = [
+  'recipesApi',
+  'listFavouriteRecipes',
 ];
 
 export const useListPaginatedRecipes = () => {
@@ -74,10 +80,16 @@ export const useRecipeDetails = (id: RecipeId) => {
 };
 
 export const useAddRecipeToFavourites = (id: RecipeId) => {
+  const queryClient = useQueryClient();
+
   const { recipesApi } = useRecipesApi();
 
-  return useAdaptedMutation<void, void, ApiError>(() =>
-    recipesApi.addRecipeToFavorites(id)
+  return useAdaptedMutation<void, void, ApiError>(
+    () => recipesApi.addRecipeToFavorites(id),
+    {
+      onSuccess: () =>
+        queryClient.invalidateQueries(ListFavouriteRecipesQueryKey),
+    }
   );
 };
 
@@ -85,10 +97,24 @@ export const useListFavouriteRecipes = () => {
   const { recipesApi } = useRecipesApi();
 
   return useAdaptedQuery<IRecipeListItemDto[], IRecipeListItem[]>(
-    ['recipesApi', 'listFavouriteRecipes'],
+    ListFavouriteRecipesQueryKey,
     () => recipesApi.listFavouriteRecipes(),
     {
       select: ListSelector(RecipeListItemSelector),
+    }
+  );
+};
+
+export const useRemoveRecipeFromFavourites = (id: RecipeId) => {
+  const queryClient = useQueryClient();
+
+  const { recipesApi } = useRecipesApi();
+
+  return useAdaptedMutation<void, void>(
+    () => recipesApi.removeRecipeFromFavorites(id),
+    {
+      onSuccess: () =>
+        queryClient.invalidateQueries(ListFavouriteRecipesQueryKey),
     }
   );
 };

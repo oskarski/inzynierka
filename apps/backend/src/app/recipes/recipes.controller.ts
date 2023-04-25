@@ -1,4 +1,12 @@
-import { Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import {
   IPaginated,
   IRecipeDto,
@@ -37,6 +45,15 @@ export class RecipesController {
     @CurrentUser() currentUser: User,
   ): Promise<void> {
     await this.recipesService.addRecipeToFavorites(id, currentUser.id);
+  }
+
+  // TODO Perhaps move `:id` to dto
+  @Delete('/favourite/:id')
+  async removeRecipeFromFavorites(
+    @Param('id') id: RecipeId,
+    @CurrentUser() currentUser: User,
+  ): Promise<void> {
+    await this.recipesService.removeRecipeFromFavorites(id, currentUser.id);
   }
 
   @Get('/:id')
