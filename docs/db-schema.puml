@@ -12,12 +12,10 @@ object Recipe  {
 
 object RecipeIngredient {
   <#F1F1F1,#F1F1F1>|= |= |= |
-    | id |  uuid | **PK** |
-    | name | varchar(20) |
     | quantity | integer |
     | unit | varchar(20) |
-    | food_item_id | uuid| **FK** |
-    | recipie_id | uuid | **FK** |
+    | food_item_id | uuid| **PK** **FK** |
+    | recipie_id | uuid | **PK** **FK** |
 }
 
 note bottom of RecipeIngredient
