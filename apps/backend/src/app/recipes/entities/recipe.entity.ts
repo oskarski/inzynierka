@@ -3,11 +3,13 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
 import { IRecipeInstructionDto, RecipeCategoryId, RecipeId } from '@lib/shared';
 import { RecipeCategory } from '../../recipe-categories/entities';
+import { RecipeIngredient } from './recipe-ingredient.entity';
 
 @Entity('recipes')
 export class Recipe {
@@ -35,4 +37,10 @@ export class Recipe {
 
   @RelationId((recipe: Recipe) => recipe.categories)
   categoryIds: RecipeCategoryId[];
+
+  @OneToMany(
+    () => RecipeIngredient,
+    (recipeIngredient) => recipeIngredient.recipe,
+  )
+  ingredients: RecipeIngredient[];
 }
