@@ -65,9 +65,6 @@ for link in links:
     # Increment recipe_id for next iteration
     recipe_id +=1
 
-# Create a new table with unique ingredient names
-# Table created in backend app code
-cursor.execute("INSERT INTO ingredients (name) SELECT DISTINCT regexp_replace(trim(name), '\s{2,}', ' ', 'g') AS name FROM crawler_ingredients WHERE name !~ '[0-9]' AND name !~ '[1-9][/][0-9]' AND name !~ '[^\s]*\u00BD[^\s]*';")
 
 # Commit the changes to the database
 conn.commit()
