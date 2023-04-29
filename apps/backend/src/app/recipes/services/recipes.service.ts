@@ -14,11 +14,16 @@ import { RecipesRepository } from '../repositories';
 import { Pagination } from '../../utils';
 import { ListRecipesQueryDto } from '../dtos';
 import { UserRepository } from '../../iam/repositories';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { RecipeDetailsViewEntity } from '../entities/recipe-details.view.entity';
 
 @Injectable()
 export class RecipesService {
   constructor(
     private readonly recipesRepository: RecipesRepository,
+    @InjectRepository(RecipeDetailsViewEntity)
+    private readonly recipeDetailsRepository: Repository<RecipeDetailsViewEntity>,
     private readonly usersRepository: UserRepository,
   ) {}
 
@@ -36,7 +41,7 @@ export class RecipesService {
   }
 
   async getRecipe(id: RecipeId): Promise<IRecipeDto> {
-    const recipe = await this.recipesRepository.findRecipeWithDetail(id);
+    const recipe = await this.recipeDetailsRepository.findOneBy({ id });
 
     if (!recipe) throw new NotFoundException();
 
