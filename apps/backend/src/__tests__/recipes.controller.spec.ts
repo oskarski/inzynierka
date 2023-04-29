@@ -26,6 +26,34 @@ describe(RecipesController.name, () => {
   thirdCategory.id = Id('b7bcb176-3bbc-4ef0-b0cb-5b0ff1332fc7');
   thirdCategory.name = 'Śniadanie';
 
+  const flourIngredient = new Ingredient();
+  flourIngredient.id = Id('c1a03fdc-b158-4768-afc2-dae2fefe6209');
+  flourIngredient.name = 'Mąka';
+  const tomatoSauceIngredient = new Ingredient();
+  tomatoSauceIngredient.id = Id('b7eac4e1-6cfd-458c-a57c-ab35e4b0f6e8');
+  tomatoSauceIngredient.name = 'Sos pomidorowy';
+  const mozzarellaIngredient = new Ingredient();
+  mozzarellaIngredient.id = Id('a0bd90c6-a5a9-4370-b907-faae2b6722cd');
+  mozzarellaIngredient.name = 'Mozzarella';
+  const breadIngredient = new Ingredient();
+  breadIngredient.id = Id('8cd14ef7-2bc4-4584-8470-5e2b9cc7f709');
+  breadIngredient.name = 'Chleb';
+  const hamIngredient = new Ingredient();
+  hamIngredient.id = Id('fd06ead3-0419-4098-b0ba-4075a94e0d3f');
+  hamIngredient.name = 'Szynka';
+  const sausageIngredient = new Ingredient();
+  sausageIngredient.id = Id('9cfaae3d-72c4-41be-8ed4-aeb602674dfc');
+  sausageIngredient.name = 'Parówka';
+  const ketchupIngredient = new Ingredient();
+  ketchupIngredient.id = Id('6f292523-67a9-4d2f-a12f-cfa3b27c72ce');
+  ketchupIngredient.name = 'Ketchup';
+  const mustardIngredient = new Ingredient();
+  mustardIngredient.id = Id('105c97db-8e14-46c1-81cd-cfe3cd35c505');
+  mustardIngredient.name = 'Musztarda';
+  const onionIngredient = new Ingredient();
+  onionIngredient.id = Id('c6114950-f3d1-48b8-b49e-b80b0accc1f0');
+  onionIngredient.name = 'Prażona cebulka';
+
   const deleteTestData = async () => {
     await testCtx.repositories.recipeCategoriesRepository
       .createQueryBuilder()
@@ -43,6 +71,10 @@ describe(RecipesController.name, () => {
       .createQueryBuilder()
       .delete()
       .execute();
+    await testCtx.repositories.ingredientRepository
+      .createQueryBuilder()
+      .delete()
+      .execute();
   };
 
   beforeEach(async () => {
@@ -54,24 +86,16 @@ describe(RecipesController.name, () => {
       thirdCategory,
     ]);
 
-    const firstIngredient = new Ingredient();
-    firstIngredient.id = Id('c1a03fdc-b158-4768-afc2-dae2fefe6209');
-    firstIngredient.name = 'Mąka';
-    const secondIngredient = new Ingredient();
-    secondIngredient.id = Id('b7eac4e1-6cfd-458c-a57c-ab35e4b0f6e8');
-    secondIngredient.name = 'Sos pomidorowy';
-    const thirdIngredient = new Ingredient();
-    thirdIngredient.id = Id('a0bd90c6-a5a9-4370-b907-faae2b6722cd');
-    thirdIngredient.name = 'Mozzarella';
-    const fourthIngredient = new Ingredient();
-    fourthIngredient.id = Id('8cd14ef7-2bc4-4584-8470-5e2b9cc7f709');
-    fourthIngredient.name = 'Pasztet';
-
     await testCtx.repositories.ingredientRepository.save([
-      firstIngredient,
-      secondIngredient,
-      thirdIngredient,
-      fourthIngredient,
+      flourIngredient,
+      tomatoSauceIngredient,
+      mozzarellaIngredient,
+      breadIngredient,
+      hamIngredient,
+      sausageIngredient,
+      ketchupIngredient,
+      mustardIngredient,
+      onionIngredient,
     ]);
 
     const firstRecipe = new Recipe();
@@ -108,24 +132,68 @@ describe(RecipesController.name, () => {
 
     const firstRecipeFirstIngredient = new RecipeIngredient();
     firstRecipeFirstIngredient.recipeId = firstRecipe.id;
-    firstRecipeFirstIngredient.ingredientId = firstIngredient.id;
+    firstRecipeFirstIngredient.ingredientId = flourIngredient.id;
     firstRecipeFirstIngredient.quantity = 320;
     firstRecipeFirstIngredient.unit = 'g';
     const firstRecipeSecondIngredient = new RecipeIngredient();
     firstRecipeSecondIngredient.recipeId = firstRecipe.id;
-    firstRecipeSecondIngredient.ingredientId = secondIngredient.id;
+    firstRecipeSecondIngredient.ingredientId = tomatoSauceIngredient.id;
     firstRecipeSecondIngredient.quantity = 1;
     firstRecipeSecondIngredient.unit = 'szt.';
     const firstRecipeThirdIngredient = new RecipeIngredient();
     firstRecipeThirdIngredient.recipeId = firstRecipe.id;
-    firstRecipeThirdIngredient.ingredientId = thirdIngredient.id;
+    firstRecipeThirdIngredient.ingredientId = mozzarellaIngredient.id;
     firstRecipeThirdIngredient.quantity = 250;
     firstRecipeThirdIngredient.unit = 'g';
+
+    const secondRecipeFirstIngredient = new RecipeIngredient();
+    secondRecipeFirstIngredient.recipeId = secondRecipe.id;
+    secondRecipeFirstIngredient.ingredientId = breadIngredient.id;
+    secondRecipeFirstIngredient.quantity = 2;
+    secondRecipeFirstIngredient.unit = 'kromki';
+    const secondRecipeSecondIngredient = new RecipeIngredient();
+    secondRecipeSecondIngredient.recipeId = secondRecipe.id;
+    secondRecipeSecondIngredient.ingredientId = hamIngredient.id;
+    secondRecipeSecondIngredient.quantity = 2;
+    secondRecipeSecondIngredient.unit = 'plasterki';
+
+    const thirdRecipeFirstIngredient = new RecipeIngredient();
+    thirdRecipeFirstIngredient.recipeId = thirdRecipe.id;
+    thirdRecipeFirstIngredient.ingredientId = breadIngredient.id;
+    thirdRecipeFirstIngredient.quantity = 1;
+    thirdRecipeFirstIngredient.unit = 'szt.';
+    const thirdRecipeSecondIngredient = new RecipeIngredient();
+    thirdRecipeSecondIngredient.recipeId = thirdRecipe.id;
+    thirdRecipeSecondIngredient.ingredientId = sausageIngredient.id;
+    thirdRecipeSecondIngredient.quantity = 1;
+    thirdRecipeSecondIngredient.unit = 'szt.';
+    const thirdRecipeThirdIngredient = new RecipeIngredient();
+    thirdRecipeThirdIngredient.recipeId = thirdRecipe.id;
+    thirdRecipeThirdIngredient.ingredientId = ketchupIngredient.id;
+    thirdRecipeThirdIngredient.quantity = 10;
+    thirdRecipeThirdIngredient.unit = 'g';
+    const thirdRecipeFourthIngredient = new RecipeIngredient();
+    thirdRecipeFourthIngredient.recipeId = thirdRecipe.id;
+    thirdRecipeFourthIngredient.ingredientId = mustardIngredient.id;
+    thirdRecipeFourthIngredient.quantity = 10;
+    thirdRecipeFourthIngredient.unit = 'g';
+    const thirdRecipeFifthIngredient = new RecipeIngredient();
+    thirdRecipeFifthIngredient.recipeId = thirdRecipe.id;
+    thirdRecipeFifthIngredient.ingredientId = onionIngredient.id;
+    thirdRecipeFifthIngredient.quantity = 10;
+    thirdRecipeFifthIngredient.unit = 'g';
 
     await testCtx.repositories.recipeIngredientsRepository.save([
       firstRecipeFirstIngredient,
       firstRecipeSecondIngredient,
       firstRecipeThirdIngredient,
+      secondRecipeFirstIngredient,
+      secondRecipeSecondIngredient,
+      thirdRecipeFirstIngredient,
+      thirdRecipeSecondIngredient,
+      thirdRecipeThirdIngredient,
+      thirdRecipeFourthIngredient,
+      thirdRecipeFifthIngredient,
     ]);
 
     const firstRecipeSecondCategory = new RecipeCategory();
@@ -156,54 +224,95 @@ describe(RecipesController.name, () => {
   });
 
   describe('listRecipesPaginated()', () => {
-    it('returns paginated recipes', async () => {
-      const firstPage =
-        await testCtx.controllers.recipeController.listRecipesPaginated({
-          page: 0,
-          perPage: 2,
-          ingredients: [],
-        });
-      const secondPage =
-        await testCtx.controllers.recipeController.listRecipesPaginated({
-          page: 1,
-          perPage: 2,
-          ingredients: [],
-        });
+    describe('returns paginated recipes', () => {
+      it('empty filters', async () => {
+        const firstPage =
+          await testCtx.controllers.recipeController.listRecipesPaginated({
+            page: 0,
+            perPage: 2,
+            ingredients: [],
+          });
+        const secondPage =
+          await testCtx.controllers.recipeController.listRecipesPaginated({
+            page: 1,
+            perPage: 2,
+            ingredients: [],
+          });
 
-      expect(firstPage.total).toBe(3);
-      expect(firstPage.data).toEqual([
-        {
-          id: expect.any(String),
-          name: 'Pizza margarita',
-          description: 'Królowa gatunku, czyli margherita!',
-          preparationTime: 1500,
-          portions: 8,
-          categoryIds: [secondCategory.id],
-        },
-        {
-          id: expect.any(String),
-          name: 'Kanapka z szynką',
-          description: 'Klasyka gatunku!',
-          preparationTime: 300,
-          portions: 1,
-          categoryIds: [thirdCategory.id],
-        },
-      ]);
+        expect(firstPage.total).toBe(3);
+        expect(firstPage.data).toEqual([
+          {
+            id: expect.any(String),
+            name: 'Pizza margarita',
+            description: 'Królowa gatunku, czyli margherita!',
+            preparationTime: 1500,
+            portions: 8,
+            categoryIds: [secondCategory.id],
+          },
+          {
+            id: expect.any(String),
+            name: 'Kanapka z szynką',
+            description: 'Klasyka gatunku!',
+            preparationTime: 300,
+            portions: 1,
+            categoryIds: [thirdCategory.id],
+          },
+        ]);
 
-      expect(secondPage.total).toBe(3);
-      expect(secondPage.data).toEqual([
-        {
-          id: expect.any(String),
-          name: 'Hot Dog',
-          description: 'Bardzo dobry!',
-          preparationTime: 900,
-          portions: 5,
-          categoryIds: expect.arrayContaining([
-            thirdCategory.id,
-            secondCategory.id,
-          ]),
-        },
-      ]);
+        expect(secondPage.total).toBe(3);
+        expect(secondPage.data).toEqual([
+          {
+            id: expect.any(String),
+            name: 'Hot Dog',
+            description: 'Bardzo dobry!',
+            preparationTime: 900,
+            portions: 5,
+            categoryIds: expect.arrayContaining([
+              thirdCategory.id,
+              secondCategory.id,
+            ]),
+          },
+        ]);
+      });
+
+      it('ingredient filters', async () => {
+        const firstPage =
+          await testCtx.controllers.recipeController.listRecipesPaginated({
+            page: 0,
+            perPage: 2,
+            ingredients: [
+              { id: breadIngredient.id },
+              { id: sausageIngredient.id },
+            ],
+          });
+
+        expect(firstPage.total).toBe(2);
+        expect(firstPage.data).toEqual([
+          // Matches 1/2 = 50% ingredient
+          {
+            id: expect.any(String),
+            name: 'Kanapka z szynką',
+            description: 'Klasyka gatunku!',
+            preparationTime: 300,
+            portions: 1,
+            categoryIds: [thirdCategory.id],
+            ingredientsCoverage: 0.5,
+          },
+          // Matches 2/5 = 40% ingredients
+          {
+            id: expect.any(String),
+            name: 'Hot Dog',
+            description: 'Bardzo dobry!',
+            preparationTime: 900,
+            portions: 5,
+            categoryIds: expect.arrayContaining([
+              thirdCategory.id,
+              secondCategory.id,
+            ]),
+            ingredientsCoverage: 0.4,
+          },
+        ]);
+      });
     });
   });
 

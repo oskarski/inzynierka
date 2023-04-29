@@ -12,6 +12,7 @@ import {
   RecipeState,
   UserId,
 } from '@lib/shared';
+import { ListRecipesQueryDto } from '../dtos';
 
 interface FindAllSelect {
   id: RecipeId;
@@ -228,6 +229,64 @@ export class RecipesRepository {
 
   async findAll(pagination: Pagination): Promise<[FindAllSelect[], number]> {
     const query = this.listRecipesQuery()
+      .offset(pagination.skip)
+      .limit(pagination.take);
+
+    const recipes = await query.getRawMany();
+    const count = await query.getCount();
+
+    return [recipes, count];
+  }
+
+  async findByFilters(
+    queryDto: ListRecipesQueryDto,
+    pagination: Pagination,
+  ): Promise<[FindAllSelect[], number]> {
+    const ingredientIds = queryDto.ingredients.map(
+      (ingredient) => ingredient.id,
+    );
+
+    const query = this.repository
+      .createQueryBuilder('recipes')
+      .select('matching_recipes.ingredients_coverage', 'ingredientsCoverage')
+      .addSelect('matching_recipes.category_ids', 'categoryIds')
+      .addSelect('recipes.id', 'id')
+      .addSelect('recipes.name', 'name')
+      .addSelect('recipes.description', 'description')
+      .addSelect('recipes.portions', 'portions')
+      .addSelect('recipes.preparation_time', 'preparationTime')
+      .innerJoin(
+        (subQuery) =>
+          subQuery
+            .select('ri.recipe_id', 'recipe_id')
+            .addSelect(
+              'max(matching_ingredients.count)::float / count(DISTINCT ri.ingredient_id)',
+              'ingredients_coverage',
+            )
+            .addSelect(
+              'array_remove(array_agg(DISTINCT rc.category_id), NULL)',
+              'category_ids',
+            )
+            .from(RecipeIngredient, 'ri')
+            .innerJoin(
+              (subSubQuery) =>
+                subSubQuery
+                  .select('mi_ri.recipe_id', 'recipe_id')
+                  .addSelect('count(1)', 'count')
+                  .from(RecipeIngredient, 'mi_ri')
+                  .where('ingredient_id IN (:...ingredientIds)', {
+                    ingredientIds,
+                  })
+                  .groupBy('mi_ri.recipe_id'),
+              'matching_ingredients',
+              'ri.recipe_id = matching_ingredients.recipe_id',
+            )
+            .leftJoin(RecipeCategory, 'rc', 'ri.recipe_id = rc.recipe_id')
+            .groupBy('ri.recipe_id'),
+        'matching_recipes',
+        'recipes.id = matching_recipes.recipe_id',
+      )
+      .orderBy('matching_recipes.ingredients_coverage', 'DESC')
       .offset(pagination.skip)
       .limit(pagination.take);
 
