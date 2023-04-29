@@ -37,9 +37,14 @@ export type IPublishRecipeDto = ISaveRecipeDto & {
   readonly instructions: IPublishRecipeInstructionDto[];
 };
 
+export interface IListRecipesIngredientFilterDto {
+  readonly id: IngredientId;
+}
+
 export interface IListRecipesQueryDto {
   readonly page: number;
   readonly perPage: number;
+  readonly ingredients: IListRecipesIngredientFilterDto[];
 }
 
 export interface IRecipeListItemDto {
