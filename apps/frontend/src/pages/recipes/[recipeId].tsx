@@ -43,11 +43,13 @@ export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   })
 );
 
-interface RecipesPageProps {
+interface RecipeDetailsPageProps {
   recipeId: RecipeId;
 }
 
-export default function RecipesPage({ recipeId }: RecipesPageProps) {
+export default function RecipeDetailsPage({
+  recipeId,
+}: RecipeDetailsPageProps) {
   const getRecipeCategories = useConnectedCategories();
 
   const [recipe, loading, error] = useRecipeDetails(recipeId);

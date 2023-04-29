@@ -33,6 +33,12 @@ testContext.api.recipesApi.getRecipeDetails.mockResolvedValue(
       'Dodaj składniki',
       'Wsadź do piekarnika na 10min'
     )
+    .withIngredients(
+      (ingredient) => ingredient.named('Mąka').g(320),
+      (ingredient) => ingredient.named('Drożdże').g(5),
+      (ingredient) => ingredient.named('Sos pomidorowy').pieces(1),
+      (ingredient) => ingredient.named('Mozarella').g(250)
+    )
     .build()
 );
 
@@ -40,6 +46,7 @@ describe(RecipeDetailsPage.name, () => {
   it('renders recipes', async () => {
     await testContext
       .signedIn()
+      .withoutFavouriteRecipes()
       .renderPrivatePage(
         <RecipeDetailsPage
           recipeId={Id('8a1b797a-f436-496e-82e1-faae34af0b2d')}
@@ -50,7 +57,7 @@ describe(RecipeDetailsPage.name, () => {
     await findAllByText(testContext.container, /^Obiad$/);
 
     expect(testContext.container.textContent).toMatchInlineSnapshot(
-      `"ObiadPizza margaritaKrólowa gatunku, czyli margherita!0:25Krok 1:Zrób ciastoKrok 2:Dodaj składnikiKrok 3:Wsadź do piekarnika na 10min"`
+      `"ObiadPizza margaritaKrólowa gatunku, czyli margherita!0:25Składniki:Mąka - 320 gDrożdże - 5 gSos pomidorowy - 1 szt.Mozarella - 250 gKrok 1:Zrób ciastoKrok 2:Dodaj składnikiKrok 3:Wsadź do piekarnika na 10min"`
     );
   });
 });

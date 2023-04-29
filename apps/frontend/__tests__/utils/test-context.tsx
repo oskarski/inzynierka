@@ -51,6 +51,12 @@ export class TestContext {
     return this;
   }
 
+  withoutFavouriteRecipes(): this {
+    this.api.recipesApi.listFavouriteRecipes.mockResolvedValue([]);
+
+    return this;
+  }
+
   notSignedIn(): this {
     this.api.iamApi.signedInUser.mockResolvedValue(null);
 

@@ -19,6 +19,7 @@ describe(SearchRecipesByIngredientsPopupContent.name, () => {
 
     await testContext
       .signedIn()
+      .withoutFavouriteRecipes()
       .renderPrivatePopup(<SearchRecipesByIngredientsPopupContent />)
       .then(() => findAllByText(testContext.container, /^Dodaj$/));
 
