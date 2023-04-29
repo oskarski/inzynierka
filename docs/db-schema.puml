@@ -58,16 +58,16 @@ note top of CuisineType
     Not sure if we need this table. Perhaps
     `Recipie` entity should store cuisine type
     as column? Or maybe it should be defined
-    as `RecipeCategory`?
+    as `Category`?
 end note
 
-object RecipeCategory {
+object Category {
     <#F1F1F1,#F1F1F1>|= |= |= |
     | *id |  uuid | **PK** |
     | *name | varchar(20) |
 }
 
-object Recipe_RecipeCategory {
+object Recipe_Category {
     <#F1F1F1,#F1F1F1>|= |= |= |
     | *recipe_id | uuid | **PK FK** |
     | *recipe_category_id | uuid | **PK FK** |
@@ -106,8 +106,8 @@ Recipe -down-{ RecipeIngredient
 RecipeIngredient }-right- Ingredient
 Ingredient }-- IngredientCategory
 Recipe }-up- CuisineType
-Recipe -left-{ Recipe_RecipeCategory
-Recipe_RecipeCategory }-up- RecipeCategory
+Recipe -left-{ Recipe_Category
+Recipe_Category }-up- Category
 Recipe -right-{ UserFavouriteRecipe
 UserFavouriteRecipe }-right- User
 Recipe -up-{ Review
