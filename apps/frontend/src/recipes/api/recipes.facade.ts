@@ -97,7 +97,11 @@ export const useListPaginatedRecipes = () => {
   return usePaginatedQuery<IRecipeListItemDto, IRecipeListItem>(
     ListPaginatedRecipesQueryKey,
     ({ pageParam = 0 }) =>
-      recipesApi.listRecipesPaginated({ page: pageParam, perPage: 20 }),
+      recipesApi.listRecipesPaginated({
+        page: pageParam,
+        perPage: 20,
+        ingredients: [],
+      }),
     20,
     {
       select: PaginationSelector(RecipeListItemSelector),

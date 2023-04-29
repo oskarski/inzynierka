@@ -1,6 +1,25 @@
-import { IListRecipesQueryDto } from '@lib/shared';
-import { IsNumber, Min, IsInt, Max } from 'class-validator';
-import { Transform } from 'class-transformer';
+import {
+  IListRecipesIngredientFilterDto,
+  IListRecipesQueryDto,
+  IngredientId,
+} from '@lib/shared';
+import {
+  IsNumber,
+  Min,
+  IsInt,
+  Max,
+  IsArray,
+  ValidateNested,
+  IsUUID,
+} from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+
+class ListRecipesIngredientFilterDto
+  implements IListRecipesIngredientFilterDto
+{
+  @IsUUID()
+  readonly id: IngredientId;
+}
 
 export class ListRecipesQueryDto implements IListRecipesQueryDto {
   @IsNumber()
@@ -15,4 +34,9 @@ export class ListRecipesQueryDto implements IListRecipesQueryDto {
   @Max(20)
   @Transform(({ value }) => parseInt(value, 10))
   readonly perPage: number;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ListRecipesIngredientFilterDto)
+  readonly ingredients: ListRecipesIngredientFilterDto[];
 }

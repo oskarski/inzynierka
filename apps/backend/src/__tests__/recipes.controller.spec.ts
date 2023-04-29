@@ -161,11 +161,13 @@ describe(RecipesController.name, () => {
         await testCtx.controllers.recipeController.listRecipesPaginated({
           page: 0,
           perPage: 2,
+          ingredients: [],
         });
       const secondPage =
         await testCtx.controllers.recipeController.listRecipesPaginated({
           page: 1,
           perPage: 2,
+          ingredients: [],
         });
 
       expect(firstPage.total).toBe(3);
