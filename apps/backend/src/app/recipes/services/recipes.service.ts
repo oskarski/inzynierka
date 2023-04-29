@@ -61,9 +61,21 @@ export class RecipesService {
   async listRecipesPaginated(
     queryDto: ListRecipesQueryDto,
   ): Promise<IPaginated<IRecipeListItemDto>> {
-    const [data, total] = await this.recipesRepository.findAll(
-      Pagination.page(queryDto.page, queryDto.perPage),
-    );
+    const pagination = Pagination.page(queryDto.page, queryDto.perPage);
+
+    if (queryDto.ingredients.length) {
+      const [data, total] = await this.recipesRepository.findByFilters(
+        queryDto,
+        pagination,
+      );
+
+      return {
+        data,
+        total,
+      };
+    }
+
+    const [data, total] = await this.recipesRepository.findAll(pagination);
 
     return {
       data,
