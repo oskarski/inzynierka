@@ -16,20 +16,20 @@ import { IPaginated } from '@lib/shared';
 export function useAdaptedQuery<ApiReturnType, ReturnType = ApiReturnType>(
   queryKey: QueryKey,
   fn: QueryFunction<ApiReturnType>,
-  options?: {
+  options: {
     keepPreviousData?: boolean;
     onSuccess?: (data: ReturnType) => void;
     select?: (data: ApiReturnType) => ReturnType;
-  }
+    staleTime?: number;
+  } = {}
 ):
   | [undefined, true, Error | null, UseQueryResult<ReturnType, Error>]
   | [undefined, false, Error, UseQueryResult<ReturnType, Error>]
   | [ReturnType, false, null, UseQueryResult<ReturnType, Error>] {
-  const queryResult = useQuery<ApiReturnType, Error, ReturnType>(
-    queryKey,
-    fn,
-    options
-  );
+  const queryResult = useQuery<ApiReturnType, Error, ReturnType>(queryKey, fn, {
+    ...options,
+    staleTime: options.staleTime || 5 * 60 * 1000, // 5 min by default
+  });
 
   if (queryResult.isLoading)
     return [
@@ -59,11 +59,12 @@ export function usePaginatedQuery<ApiReturnType, ReturnType = ApiReturnType>(
   queryKey: QueryKey,
   fn: QueryFunction<IPaginated<ApiReturnType>>,
   perPage: number,
-  options?: {
+  options: {
     select?: (
       data: InfiniteData<IPaginated<ApiReturnType>>
     ) => InfiniteData<IPaginated<ReturnType>>;
-  }
+    staleTime?: number;
+  } = {}
 ):
   | [
       ReturnType[] | undefined,
@@ -92,6 +93,7 @@ export function usePaginatedQuery<ApiReturnType, ReturnType = ApiReturnType>(
     IPaginated<ReturnType>
   >(queryKey, fn, {
     ...options,
+    staleTime: options.staleTime || 5 * 60 * 1000, // 5 min by default,
     getNextPageParam: (lastPage, allPages) => {
       const page = allPages.length - 1;
 
