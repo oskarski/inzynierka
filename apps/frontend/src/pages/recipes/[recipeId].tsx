@@ -3,7 +3,7 @@ import { env, headTitle, HttpClient } from '@fe/utils';
 import { HydrateReactQueryState } from '../../server/server-react-query';
 import { SignedInGuard } from '../../server/server-guards';
 import { GetServerSideProps } from 'next/types';
-import React from 'react';
+import React, { useState } from 'react';
 import { RecipeCategoryTag } from '@fe/recipes-categories';
 import { Loader, SectionSubTitle, SectionTitle } from '@fe/components';
 import { ShoppingOutlined, TeamOutlined } from '@ant-design/icons';
@@ -53,6 +53,8 @@ export default function RecipesPage({ recipeId }: RecipesPageProps) {
   const [recipe, loading, error] = useRecipeDetails(recipeId);
 
   const categories = recipe && getRecipeCategories(recipe);
+
+  const [portionsProportion, setPortionsProportion] = useState(1);
 
   return (
     <>
@@ -106,7 +108,13 @@ export default function RecipesPage({ recipeId }: RecipesPageProps) {
 
                   <div className="flex items-center">
                     <TeamOutlined className="text-base leading-none mr-2" />
-                    <Stepper defaultValue={recipe.portions} min={1} />
+                    <Stepper
+                      defaultValue={recipe.portions}
+                      min={1}
+                      onChange={(portions) =>
+                        setPortionsProportion(portions / recipe.portions)
+                      }
+                    />
                   </div>
                 </div>
 
@@ -126,7 +134,9 @@ export default function RecipesPage({ recipeId }: RecipesPageProps) {
               <ul className="list-disc list-inside text-base text-secondary pb-3 mb-4">
                 {recipe.ingredients.map((ingredient) => (
                   <li key={ingredient.id}>
-                    {ingredient.name} - {ingredient.quantity} {ingredient.unit}
+                    {ingredient.name} -{' '}
+                    {+(ingredient.quantity * portionsProportion).toFixed(2)}{' '}
+                    {ingredient.unit}
                   </li>
                 ))}
               </ul>
