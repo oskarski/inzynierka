@@ -1,8 +1,13 @@
 import { RecipesController } from '../app/recipes/recipes.controller';
-import { Recipe } from '../app/recipes/entities';
+import {
+  Recipe,
+  RecipeCategory,
+  RecipeIngredient,
+} from '../app/recipes/entities';
 import { TestContext } from './utils';
 import { Category } from '../app/recipe-categories/entities';
 import { Id } from '@lib/shared';
+import { Ingredient } from '../app/ingredients/entities';
 
 const testCtx = new TestContext();
 
@@ -21,20 +26,52 @@ describe(RecipesController.name, () => {
   thirdCategory.id = Id('b7bcb176-3bbc-4ef0-b0cb-5b0ff1332fc7');
   thirdCategory.name = 'Śniadanie';
 
-  beforeEach(async () => {
+  const deleteTestData = async () => {
+    await testCtx.repositories.recipeCategoriesRepository
+      .createQueryBuilder()
+      .delete()
+      .execute();
+    await testCtx.repositories.recipeIngredientsRepository
+      .createQueryBuilder()
+      .delete()
+      .execute();
     await testCtx.repositories.recipeRepository
       .createQueryBuilder()
       .delete()
       .execute();
-    await testCtx.repositories.recipesCategoriesRepository
+    await testCtx.repositories.categoriesRepository
       .createQueryBuilder()
       .delete()
       .execute();
+  };
 
-    await testCtx.repositories.recipesCategoriesRepository.save([
+  beforeEach(async () => {
+    await deleteTestData();
+
+    await testCtx.repositories.categoriesRepository.save([
       firstCategory,
       secondCategory,
       thirdCategory,
+    ]);
+
+    const firstIngredient = new Ingredient();
+    firstIngredient.id = Id('c1a03fdc-b158-4768-afc2-dae2fefe6209');
+    firstIngredient.name = 'Mąka';
+    const secondIngredient = new Ingredient();
+    secondIngredient.id = Id('b7eac4e1-6cfd-458c-a57c-ab35e4b0f6e8');
+    secondIngredient.name = 'Sos pomidorowy';
+    const thirdIngredient = new Ingredient();
+    thirdIngredient.id = Id('a0bd90c6-a5a9-4370-b907-faae2b6722cd');
+    thirdIngredient.name = 'Mozzarella';
+    const fourthIngredient = new Ingredient();
+    fourthIngredient.id = Id('8cd14ef7-2bc4-4584-8470-5e2b9cc7f709');
+    fourthIngredient.name = 'Pasztet';
+
+    await testCtx.repositories.ingredientRepository.save([
+      firstIngredient,
+      secondIngredient,
+      thirdIngredient,
+      fourthIngredient,
     ]);
 
     const firstRecipe = new Recipe();
@@ -43,7 +80,6 @@ describe(RecipesController.name, () => {
     firstRecipe.description = 'Królowa gatunku, czyli margherita!';
     firstRecipe.preparationTime = 1500;
     firstRecipe.portions = 8;
-    firstRecipe.categories = [secondCategory];
     firstRecipe.instructions = [
       { step: 'Weź telefon' },
       { step: 'Zamów pizze' },
@@ -56,7 +92,6 @@ describe(RecipesController.name, () => {
     secondRecipe.description = 'Klasyka gatunku!';
     secondRecipe.preparationTime = 300;
     secondRecipe.portions = 1;
-    secondRecipe.categories = [thirdCategory];
 
     const thirdRecipe = new Recipe();
     thirdRecipe.id = Id('e4d81d15-4ad6-4f21-aec1-8a24af414aa4');
@@ -64,13 +99,60 @@ describe(RecipesController.name, () => {
     thirdRecipe.description = 'Bardzo dobry!';
     thirdRecipe.preparationTime = 900;
     thirdRecipe.portions = 5;
-    thirdRecipe.categories = [thirdCategory, secondCategory];
 
     await testCtx.repositories.recipeRepository.save([
       firstRecipe,
       secondRecipe,
       thirdRecipe,
     ]);
+
+    const firstRecipeFirstIngredient = new RecipeIngredient();
+    firstRecipeFirstIngredient.recipeId = firstRecipe.id;
+    firstRecipeFirstIngredient.ingredientId = firstIngredient.id;
+    firstRecipeFirstIngredient.quantity = 320;
+    firstRecipeFirstIngredient.unit = 'g';
+    const firstRecipeSecondIngredient = new RecipeIngredient();
+    firstRecipeSecondIngredient.recipeId = firstRecipe.id;
+    firstRecipeSecondIngredient.ingredientId = secondIngredient.id;
+    firstRecipeSecondIngredient.quantity = 1;
+    firstRecipeSecondIngredient.unit = 'szt.';
+    const firstRecipeThirdIngredient = new RecipeIngredient();
+    firstRecipeThirdIngredient.recipeId = firstRecipe.id;
+    firstRecipeThirdIngredient.ingredientId = thirdIngredient.id;
+    firstRecipeThirdIngredient.quantity = 250;
+    firstRecipeThirdIngredient.unit = 'g';
+
+    await testCtx.repositories.recipeIngredientsRepository.save([
+      firstRecipeFirstIngredient,
+      firstRecipeSecondIngredient,
+      firstRecipeThirdIngredient,
+    ]);
+
+    const firstRecipeSecondCategory = new RecipeCategory();
+    firstRecipeSecondCategory.recipeId = firstRecipe.id;
+    firstRecipeSecondCategory.categoryId = secondCategory.id;
+
+    const secondRecipeThirdCategory = new RecipeCategory();
+    secondRecipeThirdCategory.recipeId = secondRecipe.id;
+    secondRecipeThirdCategory.categoryId = thirdCategory.id;
+
+    const thirdRecipeThirdCategory = new RecipeCategory();
+    thirdRecipeThirdCategory.recipeId = thirdRecipe.id;
+    thirdRecipeThirdCategory.categoryId = thirdCategory.id;
+    const thirdRecipeSecondCategory = new RecipeCategory();
+    thirdRecipeSecondCategory.recipeId = thirdRecipe.id;
+    thirdRecipeSecondCategory.categoryId = secondCategory.id;
+
+    await testCtx.repositories.recipeCategoriesRepository.save([
+      firstRecipeSecondCategory,
+      secondRecipeThirdCategory,
+      thirdRecipeThirdCategory,
+      thirdRecipeSecondCategory,
+    ]);
+  });
+
+  afterAll(async () => {
+    await deleteTestData();
   });
 
   describe('listRecipesPaginated()', () => {
@@ -141,6 +223,26 @@ describe(RecipesController.name, () => {
           { step: 'Weź telefon' },
           { step: 'Zamów pizze' },
           { step: 'Smacznego!' },
+        ],
+        ingredients: [
+          {
+            id: expect.stringContaining('-'),
+            name: 'Mąka',
+            quantity: 320,
+            unit: 'g',
+          },
+          {
+            id: expect.stringContaining('-'),
+            name: 'Sos pomidorowy',
+            quantity: 1,
+            unit: 'szt.',
+          },
+          {
+            id: expect.stringContaining('-'),
+            name: 'Mozzarella',
+            quantity: 250,
+            unit: 'g',
+          },
         ],
       });
     });

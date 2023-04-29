@@ -5,7 +5,12 @@ import { Ingredient } from '../../app/ingredients/entities';
 import { IngredientsModule } from '../../app/ingredients';
 import { IngredientsController } from '../../app/ingredients/ingredients.controller';
 import { Repository } from 'typeorm';
-import { Recipe, RecipeIngredient } from '../../app/recipes/entities';
+import {
+  Recipe,
+  RecipeCategory,
+  RecipeDetailsViewEntity,
+  RecipeIngredient,
+} from '../../app/recipes/entities';
 import { RecipesController } from '../../app/recipes/recipes.controller';
 import { RecipesModule } from '../../app/recipes';
 import { IamController } from '../../app/iam/iam.controller';
@@ -45,7 +50,15 @@ export class TestContext {
             username: 'root',
             password: 'root',
             database: 'inzynierka_test',
-            entities: [Category, Ingredient, Recipe, RecipeIngredient, User],
+            entities: [
+              Category,
+              Ingredient,
+              Recipe,
+              RecipeIngredient,
+              RecipeCategory,
+              RecipeDetailsViewEntity,
+              User,
+            ],
             synchronize: true,
             migrationsRun: true,
             migrations: [__dirname + '/../migrations/*.ts'],
@@ -89,12 +102,18 @@ export class TestContext {
 
   get repositories() {
     return {
-      recipesCategoriesRepository: this.moduleFixture.get<Repository<Category>>(
+      categoriesRepository: this.moduleFixture.get<Repository<Category>>(
         getRepositoryToken(Category),
       ),
+      recipeCategoriesRepository: this.moduleFixture.get<
+        Repository<RecipeCategory>
+      >(getRepositoryToken(RecipeCategory)),
       ingredientRepository: this.moduleFixture.get<Repository<Ingredient>>(
         getRepositoryToken(Ingredient),
       ),
+      recipeIngredientsRepository: this.moduleFixture.get<
+        Repository<RecipeIngredient>
+      >(getRepositoryToken(RecipeIngredient)),
       recipeRepository: this.moduleFixture.get<Repository<Recipe>>(
         getRepositoryToken(Recipe),
       ),
