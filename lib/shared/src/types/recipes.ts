@@ -1,4 +1,5 @@
 import { RecipeCategoryId } from './recipe-categories';
+import { IngredientId } from './ingredients';
 
 export type RecipeId = string & { readonly __type: unique symbol };
 
@@ -20,6 +21,13 @@ export interface IRecipeInstructionDto {
   readonly step: string;
 }
 
+export interface IRecipeIngredientDto {
+  readonly id: IngredientId;
+  readonly name: string;
+  readonly quantity: number;
+  readonly unit: string;
+}
+
 export interface IRecipeDto {
   readonly id: RecipeId;
   readonly name: string;
@@ -28,4 +36,5 @@ export interface IRecipeDto {
   readonly portions: number;
   readonly categoryIds: RecipeCategoryId[];
   readonly instructions: IRecipeInstructionDto[];
+  readonly ingredients: IRecipeIngredientDto[];
 }

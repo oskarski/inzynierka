@@ -113,26 +113,23 @@ export default function RecipesPage({ recipeId }: RecipesPageProps) {
                 <FavouriteRecipeButton recipeId={recipe.id} />
               </div>
 
-              {/* TODO Add ingredients listing */}
+              <div className="flex justify-between items-center mb-2">
+                <SectionSubTitle>Składniki:</SectionSubTitle>
 
-              {/*<div className="flex justify-between items-center mb-2">*/}
-              {/*  <SectionSubTitle>Składniki:</SectionSubTitle>*/}
+                {/*  /!* TODO Implement adding to shopping list *!/*/}
+                {/*  /!*<button className="text-secondary text-xs font-normal inline-flex items-center">*!/*/}
+                {/*  /!*  <ShoppingOutlined className="text-base leading-none mr-1.5" />*!/*/}
+                {/*  /!*  Dodaj do zakupów*!/*/}
+                {/*  /!*</button>*!/*/}
+              </div>
 
-              {/*  /!* TODO Implement adding to shopping list *!/*/}
-              {/*  /!*<button className="text-secondary text-xs font-normal inline-flex items-center">*!/*/}
-              {/*  /!*  <ShoppingOutlined className="text-base leading-none mr-1.5" />*!/*/}
-              {/*  /!*  Dodaj do zakupów*!/*/}
-              {/*  /!*</button>*!/*/}
-              {/*</div>*/}
-
-              {/*<ul className="list-disc list-inside text-base text-secondary pb-3 mb-4">*/}
-              {/*  {dummyRecipe.ingredients.map((ingredient, i) => (*/}
-              {/*    <li key={i}>*/}
-              {/*      {ingredient.name} - {ingredient.quantity}{' '}*/}
-              {/*      {ingredient.quantity}*/}
-              {/*    </li>*/}
-              {/*  ))}*/}
-              {/*</ul>*/}
+              <ul className="list-disc list-inside text-base text-secondary pb-3 mb-4">
+                {recipe.ingredients.map((ingredient) => (
+                  <li key={ingredient.id}>
+                    {ingredient.name} - {ingredient.quantity} {ingredient.unit}
+                  </li>
+                ))}
+              </ul>
 
               {recipe.instructions.map(({ step }, i) => (
                 <React.Fragment key={i}>

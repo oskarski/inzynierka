@@ -5,7 +5,7 @@ import { Ingredient } from '../../app/ingredients/entities';
 import { IngredientsModule } from '../../app/ingredients';
 import { IngredientsController } from '../../app/ingredients/ingredients.controller';
 import { Repository } from 'typeorm';
-import { Recipe } from '../../app/recipes/entities';
+import { Recipe, RecipeIngredient } from '../../app/recipes/entities';
 import { RecipesController } from '../../app/recipes/recipes.controller';
 import { RecipesModule } from '../../app/recipes';
 import { IamController } from '../../app/iam/iam.controller';
@@ -45,7 +45,13 @@ export class TestContext {
             username: 'root',
             password: 'root',
             database: 'inzynierka_test',
-            entities: [RecipeCategory, Ingredient, Recipe, User],
+            entities: [
+              RecipeCategory,
+              Ingredient,
+              Recipe,
+              RecipeIngredient,
+              User,
+            ],
             synchronize: true,
             migrationsRun: true,
             migrations: [__dirname + '/../migrations/*.ts'],

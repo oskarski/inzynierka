@@ -3,7 +3,7 @@ import { Recipe } from '../entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { Pagination } from '../../utils';
-import { RecipeCategoryId, RecipeId, UserId } from '@lib/shared';
+import { IngredientId, RecipeCategoryId, RecipeId, UserId } from '@lib/shared';
 
 interface FindAllSelect {
   id: RecipeId;
@@ -12,6 +12,22 @@ interface FindAllSelect {
   preparationTime: number;
   portions: number;
   categoryIds: RecipeCategoryId[];
+}
+
+interface FindOneSelect {
+  id: RecipeId;
+  name: string;
+  description: string;
+  preparationTime: number;
+  portions: number;
+  categoryIds: RecipeCategoryId[];
+  instructions: Array<{ step: string }>;
+  ingredients: Array<{
+    id: IngredientId;
+    name: string;
+    quantity: number;
+    unit: string;
+  }>;
 }
 
 @Injectable()
@@ -45,6 +61,30 @@ export class RecipesRepository {
       .createQueryBuilder()
       .where('id = :id', { id })
       .getOne();
+  }
+
+  async findRecipeWithDetail(id: RecipeId): Promise<FindOneSelect | null> {
+    return this.repository
+      .createQueryBuilder('recipe')
+      .select([
+        'recipe.id id',
+        'recipe.name name',
+        'recipe.description description',
+        'recipe.portions portions',
+        'recipe.instructions instructions',
+      ])
+      .addSelect('recipe.preparation_time', 'preparationTime')
+      .addSelect('array_remove(array_agg(category.id), NULL)', 'categoryIds')
+      .addSelect(
+        "array_agg(json_build_object('id', ingredient.id, 'name', ingredient.name, 'quantity', recipeIngredients.quantity, 'unit', recipeIngredients.unit))",
+        'ingredients',
+      )
+      .leftJoin('recipe.categories', 'category')
+      .innerJoin('recipe.ingredients', 'recipeIngredients')
+      .innerJoin('recipeIngredients.ingredient', 'ingredient')
+      .where('recipe.id = :id', { id })
+      .groupBy('recipe.id')
+      .getRawOne<FindOneSelect>();
   }
 
   findAllFavourite(userId: UserId): Promise<FindAllSelect[]> {

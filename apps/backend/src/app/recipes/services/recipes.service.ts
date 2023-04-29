@@ -36,7 +36,7 @@ export class RecipesService {
   }
 
   async getRecipe(id: RecipeId): Promise<IRecipeDto> {
-    const recipe = await this.recipesRepository.find(id);
+    const recipe = await this.recipesRepository.findRecipeWithDetail(id);
 
     if (!recipe) throw new NotFoundException();
 
