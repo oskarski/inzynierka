@@ -47,7 +47,7 @@ export class RecipesRepository {
         'recipe.preparationTime',
         'recipe.portions',
       ])
-      .addSelect('array_agg(category.id)', 'categoryIds')
+      .addSelect('array_agg(category.category_id)', 'categoryIds')
       .leftJoin('recipe.categories', 'category')
       .groupBy('recipe.id')
       .orderBy('recipe.id')
@@ -74,7 +74,10 @@ export class RecipesRepository {
         'recipe.instructions instructions',
       ])
       .addSelect('recipe.preparation_time', 'preparationTime')
-      .addSelect('array_remove(array_agg(category.id), NULL)', 'categoryIds')
+      .addSelect(
+        'array_remove(array_agg(DISTINCT category.category_id), NULL)',
+        'categoryIds',
+      )
       .addSelect(
         "array_agg(json_build_object('id', ingredient.id, 'name', ingredient.name, 'quantity', recipeIngredients.quantity, 'unit', recipeIngredients.unit))",
         'ingredients',
@@ -91,18 +94,18 @@ export class RecipesRepository {
     return this.repository
       .createQueryBuilder('recipes')
       .select([
-        'recipes.id',
-        'recipes.name',
-        'recipes.description',
-        'recipes.preparationTime',
-        'recipes.portions',
+        'recipes.id id',
+        'recipes.name name',
+        'recipes.description description',
+        'recipes.portions portions',
       ])
-      .addSelect('array_agg(category.id)', 'categoryIds')
+      .addSelect('recipes.preparation_time', 'preparationTime')
+      .addSelect('array_agg(category.category_id)', 'categoryIds')
       .leftJoin('recipes.categories', 'category')
       .innerJoin('users_favourite_recipes', 'ufr', 'ufr.recipe_id = recipes.id')
       .where('ufr.user_id = :userId', { userId })
       .groupBy('recipes.id')
       .orderBy('recipes.id')
-      .getMany();
+      .getRawMany();
   }
 }

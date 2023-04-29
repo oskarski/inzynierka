@@ -1,15 +1,13 @@
 import {
   Column,
   Entity,
-  JoinTable,
-  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
 import { IRecipeInstructionDto, RecipeCategoryId, RecipeId } from '@lib/shared';
-import { Category } from '../../recipe-categories/entities';
 import { RecipeIngredient } from './recipe-ingredient.entity';
+import { RecipeCategory } from './recipe-category.entity';
 
 @Entity('recipes')
 export class Recipe {
@@ -31,9 +29,8 @@ export class Recipe {
   @Column({ type: 'jsonb', default: '[]' })
   instructions: IRecipeInstructionDto[];
 
-  @ManyToMany(() => Category)
-  @JoinTable({ name: 'recipes_recipes_categories' })
-  categories: Category[];
+  @OneToMany(() => RecipeCategory, (recipeCategory) => recipeCategory.recipe)
+  categories: RecipeCategory[];
 
   @RelationId((recipe: Recipe) => recipe.categories)
   categoryIds: RecipeCategoryId[];
