@@ -1,7 +1,7 @@
 import { RecipesController } from '../app/recipes/recipes.controller';
 import { Recipe } from '../app/recipes/entities';
 import { TestContext } from './utils';
-import { RecipeCategory } from '../app/recipe-categories/entities';
+import { Category } from '../app/recipe-categories/entities';
 import { Id } from '@lib/shared';
 
 const testCtx = new TestContext();
@@ -9,15 +9,15 @@ const testCtx = new TestContext();
 testCtx.startAppBeforeAll().closeAppAfterAll();
 
 describe(RecipesController.name, () => {
-  const firstCategory = new RecipeCategory();
+  const firstCategory = new Category();
   firstCategory.id = Id('49062c6f-401e-4fb1-a3de-9bec74df8081');
   firstCategory.name = 'Lekkie i Fit';
 
-  const secondCategory = new RecipeCategory();
+  const secondCategory = new Category();
   secondCategory.id = Id('7263df84-ac67-4cdd-8c0c-860caff5fb90');
   secondCategory.name = 'Obiad';
 
-  const thirdCategory = new RecipeCategory();
+  const thirdCategory = new Category();
   thirdCategory.id = Id('b7bcb176-3bbc-4ef0-b0cb-5b0ff1332fc7');
   thirdCategory.name = 'Śniadanie';
 

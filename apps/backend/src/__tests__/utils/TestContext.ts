@@ -13,7 +13,7 @@ import { User } from '../../app/iam/entities';
 import { IamModule } from '../../app/iam';
 import { CognitoAdapter } from '../../app/iam/cognito.adapter';
 import { CognitoTestAdapter } from './CognitoTestAdapter';
-import { RecipeCategory } from '../../app/recipe-categories/entities';
+import { Category } from '../../app/recipe-categories/entities';
 import { RecipeCategoriesModule } from '../../app/recipe-categories';
 
 export class TestContext {
@@ -45,13 +45,7 @@ export class TestContext {
             username: 'root',
             password: 'root',
             database: 'inzynierka_test',
-            entities: [
-              RecipeCategory,
-              Ingredient,
-              Recipe,
-              RecipeIngredient,
-              User,
-            ],
+            entities: [Category, Ingredient, Recipe, RecipeIngredient, User],
             synchronize: true,
             migrationsRun: true,
             migrations: [__dirname + '/../migrations/*.ts'],
@@ -95,9 +89,9 @@ export class TestContext {
 
   get repositories() {
     return {
-      recipesCategoriesRepository: this.moduleFixture.get<
-        Repository<RecipeCategory>
-      >(getRepositoryToken(RecipeCategory)),
+      recipesCategoriesRepository: this.moduleFixture.get<Repository<Category>>(
+        getRepositoryToken(Category),
+      ),
       ingredientRepository: this.moduleFixture.get<Repository<Ingredient>>(
         getRepositoryToken(Ingredient),
       ),

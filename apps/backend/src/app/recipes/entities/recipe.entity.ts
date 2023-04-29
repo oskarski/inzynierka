@@ -8,7 +8,7 @@ import {
   RelationId,
 } from 'typeorm';
 import { IRecipeInstructionDto, RecipeCategoryId, RecipeId } from '@lib/shared';
-import { RecipeCategory } from '../../recipe-categories/entities';
+import { Category } from '../../recipe-categories/entities';
 import { RecipeIngredient } from './recipe-ingredient.entity';
 
 @Entity('recipes')
@@ -31,9 +31,9 @@ export class Recipe {
   @Column({ type: 'jsonb', default: '[]' })
   instructions: IRecipeInstructionDto[];
 
-  @ManyToMany(() => RecipeCategory)
+  @ManyToMany(() => Category)
   @JoinTable({ name: 'recipes_recipes_categories' })
-  categories: RecipeCategory[];
+  categories: Category[];
 
   @RelationId((recipe: Recipe) => recipe.categories)
   categoryIds: RecipeCategoryId[];
