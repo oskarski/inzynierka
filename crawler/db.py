@@ -12,12 +12,13 @@ conn = psycopg2.connect(
 # create a cursor object to execute SQL statements
 cur = conn.cursor()
 
-cur.execute("TRUNCATE TABLE recipes CASCADE")
+
+# commands to clean tables if needed
+#cur.execute("TRUNCATE TABLE recipes CASCADE")
 #cur.execute("TRUNCATE TABLE ingredients CASCADE")
 #cur.execute("TRUNCATE TABLE crawler_recipes  CASCADE")
 #cur.execute("TRUNCATE TABLE crawler_recipeType  CASCADE")
-cur.execute("TRUNCATE TABLE recipe_Category   CASCADE")
-
+#cur.execute("TRUNCATE TABLE recipe_Category   CASCADE")
 
 # insert new data into the recipes table
 cur.execute("INSERT INTO recipes (name, description, preparation_time, portions, instructions) SELECT title, description, (substring(time from 1 for 1)::INTEGER * 3600) + (substring(time from 3)::INTEGER * 60), CAST(size AS INTEGER), to_json(jsondescription) FROM crawler_recipes INNER JOIN crawler_recipeinstruction ON crawler_recipes.link = crawler_recipeinstruction.link WHERE trim(time) <> '' AND trim(size) <> ''")
@@ -39,7 +40,7 @@ cur.execute("ALTER TABLE crawler_recipes ADD COLUMN IF NOT EXISTS type varchar(2
 cur.execute("ALTER TABLE crawler_recipes ADD COLUMN IF NOT EXISTS categoryName varchar(255); UPDATE crawler_recipes SET categoryName = cr.name FROM crawler_recipeType cr WHERE crawler_recipes.link = cr.link;")
 
 #insert new data into recipe_recipes_categories
-#cur.execute("INSERT INTO recipes_recipes_categories (recipesId, recipeCategoryId) SELECT r.id, rc.id FROM recipes r JOIN crawler_recipes cr ON r.name = cr.title JOIN crawler_recipeType crt ON cr.categoryName = crt.name JOIN recipe_Category rc ON crt.name = rc.name;")
+#cur.execute("INSERT INTO recipes_recipes_categories (recipesId, recipeCategoryId) SELECT r.id, rc.id FROM recipes r JOIN crawler_recipes cr ON r.name = cr.title JOIN crawler_recipeType crt ON cr.categoryName = crt.name JOIN recipe_Category rc ON crt.name = rc.name ON CONFLICT DO NOTHING;")
 
 # commit the changes to the database and close the cursor and connection
 cur.close()
