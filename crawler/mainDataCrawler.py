@@ -84,7 +84,7 @@ if recipes:
     cursor = db.cursor()
 
     # Create a table to store the data
-    #cursor.execute("DROP TABLE IF EXISTS crawler_recipes")
+
     cursor.execute("CREATE TABLE IF NOT EXISTS crawler_recipes (id SERIAL PRIMARY KEY, title VARCHAR(255), description TEXT, link VARCHAR(255), image VARCHAR(255), difficulty VARCHAR(255), time VARCHAR(255), size VARCHAR(255), wege VARCHAR(255))")
 
     # Insert the data into the table, skipping duplicates
