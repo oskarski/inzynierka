@@ -84,13 +84,23 @@ if recipes:
     cursor = db.cursor()
 
     # Create a table to store the data
-    cursor.execute("DROP TABLE IF EXISTS crawler_recipes")
-    cursor.execute("CREATE TABLE crawler_recipes (id SERIAL PRIMARY KEY, title VARCHAR(255), description TEXT, link VARCHAR(255), image VARCHAR(255), difficulty VARCHAR(255), time VARCHAR(255), size VARCHAR(255), wege VARCHAR(255))")    # Insert the data into the table
+    #cursor.execute("DROP TABLE IF EXISTS crawler_recipes")
+    cursor.execute("CREATE TABLE IF NOT EXISTS crawler_recipes (id SERIAL PRIMARY KEY, title VARCHAR(255), description TEXT, link VARCHAR(255), image VARCHAR(255), difficulty VARCHAR(255), time VARCHAR(255), size VARCHAR(255), wege VARCHAR(255))")
+
+    # Insert the data into the table, skipping duplicates
     for recipe in recipes:
-        query = "INSERT INTO crawler_recipes (title, description, link, image, difficulty, time, size, wege) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-        values = (recipe['title'], recipe['description'], recipe['link'], recipe['image'], recipe['difficulty'], recipe['time'], recipe['size'], recipe['wege'])
+        query = "SELECT id FROM crawler_recipes WHERE link = %s"
+        values = (recipe['link'],)
         cursor.execute(query, values)
-    # Commit the changes to the database
+        result = cursor.fetchone()
+        if result:
+            print(f"Skipping recipe '{recipe['title']}' because link '{recipe['link']}' already exists in the database")
+        else:
+            query = "INSERT INTO crawler_recipes (title, description, link, image, difficulty, time, size, wege) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+            values = (recipe['title'], recipe['description'], recipe['link'], recipe['image'], recipe['difficulty'], recipe['time'], recipe['size'], recipe['wege'])
+            cursor.execute(query, values)
+
+# Commit the changes to the database
 db.commit()
 
 # Close the database connection
