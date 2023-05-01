@@ -11,6 +11,7 @@ import { Stepper } from 'antd-mobile';
 import {
   FavouriteRecipeButton,
   GetRecipeDetailsQueryKey,
+  RecipeCookingModeModalButton,
   RecipeImage,
   RecipePreparationTime,
   RecipeRate,
@@ -80,7 +81,7 @@ export default function RecipeDetailsPage({
             {/*  />*/}
             {/*)}*/}
 
-            <div className="px-2">
+            <div className="pb-12">
               {categories && categories.length > 0 && (
                 <div className="flex items-center space-x-2 mb-3">
                   {categories.map((category) => (
@@ -153,6 +154,8 @@ export default function RecipeDetailsPage({
                 </React.Fragment>
               ))}
             </div>
+
+            <RecipeCookingModeModalButton recipe={recipe} />
           </>
         )}
       </main>
