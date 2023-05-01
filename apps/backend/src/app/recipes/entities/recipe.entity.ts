@@ -1,13 +1,21 @@
 import {
   Column,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
-import { IRecipeInstructionDto, RecipeCategoryId, RecipeId } from '@lib/shared';
+import {
+  IRecipeInstructionDto,
+  RecipeCategoryId,
+  RecipeId,
+  UserId,
+} from '@lib/shared';
 import { RecipeIngredient } from './recipe-ingredient.entity';
 import { RecipeCategory } from './recipe-category.entity';
+import { User } from '../../iam/entities';
 
 @Entity('recipes')
 export class Recipe {
@@ -40,4 +48,12 @@ export class Recipe {
     (recipeIngredient) => recipeIngredient.recipe,
   )
   ingredients: RecipeIngredient[];
+
+  @Column({ nullable: true, name: 'author_id' })
+  @RelationId((recipe: Recipe) => recipe.author)
+  authorId: UserId | null;
+
+  @ManyToOne(() => User, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'author_id' })
+  author: User | null;
 }
