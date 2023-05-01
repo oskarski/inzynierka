@@ -44,6 +44,8 @@ export const routes = {
 
   favourite: () => '/favourite',
 
+  yourRecipes: () => '/me/recipes',
+
   signUp: () => '/sign-up',
 
   signUpConfirm: (userId: string, email: string) =>

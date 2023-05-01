@@ -1,9 +1,9 @@
 import { Avatar, List, NavBar } from 'antd-mobile';
-import { LogoutOutlined } from '@ant-design/icons';
+import { LogoutOutlined, ReadOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 import Link from 'next/link';
-import { routes } from '@fe/utils';
-import React from 'react';
+import { routes, useRouting } from '@fe/utils';
+import React, { useCallback } from 'react';
 import { useSignedInUser, useSignOut } from '@fe/iam';
 import { AppPopup } from '@fe/components';
 
@@ -26,14 +26,24 @@ const TopBar = ({ className }: TopBarProps) => {
 
 export default TopBar;
 
-function ProfileAvatar() {
+const ProfileAvatar = AppPopup.withAppPopup(() => {
+  const { redirectTo } = useRouting();
   const [signedInUser] = useSignedInUser();
   const signOut = useSignOut();
+  const closePopup = AppPopup.useClosePopup();
+
+  const onClickPopupListItem = useCallback(
+    (onClick: () => void) => () => {
+      closePopup();
+      onClick();
+    },
+    [closePopup]
+  );
 
   if (!signedInUser) return null;
 
   return (
-    <AppPopup>
+    <>
       <AppPopup.TriggerButton className="inline-block">
         {/*TODO Replace with current user avatar*/}
         <Avatar
@@ -48,14 +58,24 @@ function ProfileAvatar() {
 
         <List style={{ '--border-bottom': '0' }}>
           <List.Item
+            prefix={<ReadOutlined />}
+            onClick={onClickPopupListItem(() =>
+              redirectTo(routes.yourRecipes())
+            )}
+            arrow={false}
+          >
+            Twoje przepisy
+          </List.Item>
+
+          <List.Item
             prefix={<LogoutOutlined />}
-            onClick={signOut}
+            onClick={onClickPopupListItem(signOut)}
             arrow={false}
           >
             Wyloguj
           </List.Item>
         </List>
       </AppPopup.Content>
-    </AppPopup>
+    </>
   );
-}
+});

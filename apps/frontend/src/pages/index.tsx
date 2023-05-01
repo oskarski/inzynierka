@@ -24,6 +24,9 @@ export default function HomePage() {
           Popularne kategorie
         </SectionTitle>
         <div>POPULAR CATEGORIES WILL BE HERE</div>
+
+        <SectionTitle href={routes.yourRecipes()}>Twoje przepisy</SectionTitle>
+        <div>YOUR RECIPES WILL BE HERE</div>
       </main>
     </>
   );
