@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -15,13 +16,21 @@ import {
 } from '@lib/shared';
 import { CurrentUser, PrivateApiGuard } from '../auth';
 import { RecipesService } from './services';
-import { ListRecipesQueryDto } from './dtos';
+import { CreateRecipeDto, ListRecipesQueryDto } from './dtos';
 import { User } from '../iam/entities';
 
 @Controller('recipes')
 @UseGuards(PrivateApiGuard)
 export class RecipesController {
   constructor(private readonly recipesService: RecipesService) {}
+
+  @Post()
+  async createRecipe(
+    @Body() createRecipeDto: CreateRecipeDto,
+    @CurrentUser() currentUser: User,
+  ): Promise<RecipeId> {
+    return this.recipesService.createRecipe(createRecipeDto, currentUser.id);
+  }
 
   @Get()
   async listRecipesPaginated(

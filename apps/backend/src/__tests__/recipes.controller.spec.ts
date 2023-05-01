@@ -259,4 +259,8 @@ describe(RecipesController.name, () => {
   describe('removeRecipeFromFavorites()', () => {
     it.todo('removes recipe from favourite');
   });
+
+  describe('createRecipe()', () => {
+    it.todo('creates recipe');
+  });
 });

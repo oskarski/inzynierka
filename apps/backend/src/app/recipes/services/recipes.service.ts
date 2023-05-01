@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
+  ICreateRecipeDto,
   IPaginated,
   IRecipeDto,
   IRecipeListItemDto,
@@ -16,7 +17,7 @@ import { ListRecipesQueryDto } from '../dtos';
 import { UserRepository } from '../../iam/repositories';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { RecipeDetailsViewEntity } from '../entities/recipe-details.view.entity';
+import { RecipeDetailsViewEntity } from '../entities';
 
 @Injectable()
 export class RecipesService {
@@ -26,6 +27,13 @@ export class RecipesService {
     private readonly recipeDetailsRepository: Repository<RecipeDetailsViewEntity>,
     private readonly usersRepository: UserRepository,
   ) {}
+
+  async createRecipe(
+    createRecipeDto: ICreateRecipeDto,
+    userId: UserId,
+  ): Promise<RecipeId> {
+    return this.recipesRepository.createRecipe(createRecipeDto, userId);
+  }
 
   async listRecipesPaginated(
     queryDto: ListRecipesQueryDto,

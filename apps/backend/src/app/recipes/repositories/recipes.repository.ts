@@ -1,9 +1,14 @@
-import { Repository } from 'typeorm';
-import { Recipe } from '../entities';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable } from '@nestjs/common';
+import { DataSource, Repository } from 'typeorm';
+import { Recipe, RecipeCategory, RecipeIngredient } from '../entities';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Pagination } from '../../utils';
-import { RecipeCategoryId, RecipeId, UserId } from '@lib/shared';
+import {
+  ICreateRecipeDto,
+  RecipeCategoryId,
+  RecipeId,
+  UserId,
+} from '@lib/shared';
 
 interface FindAllSelect {
   id: RecipeId;
@@ -18,8 +23,58 @@ interface FindAllSelect {
 export class RecipesRepository {
   constructor(
     @InjectRepository(Recipe)
-    private repository: Repository<Recipe>,
+    private readonly repository: Repository<Recipe>,
+    @InjectDataSource()
+    private readonly dataSource: DataSource,
   ) {}
+
+  async createRecipe(dto: ICreateRecipeDto, userId: UserId): Promise<RecipeId> {
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const createdRecipe = await queryRunner.manager.save(Recipe, {
+        name: dto.name,
+        description: dto.description,
+        preparationTime: dto.preparationTime,
+        portions: dto.portions,
+        instructions: dto.instructions,
+        authorId: userId,
+      });
+
+      if (dto.categoryIds.length)
+        await queryRunner.manager.save(
+          RecipeCategory,
+          dto.categoryIds.map((categoryId) => ({
+            recipeId: createdRecipe.id,
+            categoryId,
+          })),
+        );
+
+      await queryRunner.manager.save(
+        RecipeIngredient,
+        dto.ingredients.map((ingredient) => ({
+          recipeId: createdRecipe.id,
+          ingredientId: ingredient.id,
+          quantity: ingredient.quantity,
+          unit: ingredient.unit,
+        })),
+      );
+
+      await queryRunner.commitTransaction();
+      await queryRunner.release();
+
+      return createdRecipe.id;
+    } catch (err) {
+      console.error(err);
+      await queryRunner.rollbackTransaction();
+      await queryRunner.release();
+
+      throw new BadRequestException();
+    }
+  }
 
   private listRecipesQuery() {
     return this.repository
