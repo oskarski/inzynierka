@@ -49,14 +49,14 @@ export default function App({ Component, pageProps }: AppProps) {
         dehydratedReactQueryState={pageProps.dehydratedReactQueryState}
         isPublicPage={!!pageProps.isPublicPage}
       >
-        <div className={classNames('h-screen flex flex-col justify-between')}>
+        <div className={classNames('pb-16 flex flex-col justify-between')}>
           <TopBar className="grow-0 pt-4" />
 
           <div className="grow overflow-auto p-4">
             <Component {...pageProps} />
           </div>
 
-          <NavigationBar className="grow-0" />
+          <NavigationBar className="fixed left-0 right-0 bottom-0 bg-white" />
         </div>
       </AppProvider>
     </>
