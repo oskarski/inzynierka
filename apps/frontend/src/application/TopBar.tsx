@@ -1,5 +1,9 @@
 import { Avatar, List, NavBar } from 'antd-mobile';
-import { LogoutOutlined, ReadOutlined } from '@ant-design/icons';
+import {
+  LogoutOutlined,
+  ReadOutlined,
+  PlusCircleOutlined,
+} from '@ant-design/icons';
 import classNames from 'classnames';
 import Link from 'next/link';
 import { routes, useRouting } from '@fe/utils';
@@ -65,6 +69,16 @@ const ProfileAvatar = AppPopup.withAppPopup(() => {
             arrow={false}
           >
             Twoje przepisy
+          </List.Item>
+
+          <List.Item
+            prefix={<PlusCircleOutlined />}
+            onClick={onClickPopupListItem(() =>
+              redirectTo(routes.createRecipe())
+            )}
+            arrow={false}
+          >
+            Dodaj przepis
           </List.Item>
 
           <List.Item
