@@ -93,3 +93,13 @@ export const StepperField = ({
     </>
   );
 };
+
+interface HiddenProps extends ComponentProps<typeof Form.Item> {}
+
+export const HiddenField = ({ ...props }: HiddenProps) => {
+  return (
+    <Form.Item {...props}>
+      <input type="hidden" defaultValue={props.initialValue} />
+    </Form.Item>
+  );
+};
