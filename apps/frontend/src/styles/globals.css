@@ -17,9 +17,57 @@
 }
 
 .anticon {
-  display: block;
+  @apply block;
 }
 
 div.adm-list {
   --border-top: 0;
+}
+
+form.adm-form .adm-form-footer {
+  @apply py-5 px-0;
+}
+
+.adm-form .adm-list-item {
+  @apply pl-0;
+}
+
+.adm-form .adm-capsule-tabs-content {
+  @apply pb-0;
+}
+
+.adm-form .adm-list-item-content {
+  @apply pr-0;
+}
+
+div.adm-capsule-tabs-header {
+  @apply border-0 p-0;
+}
+
+.adm-capsule-tabs-header .adm-capsule-tabs-tab-list {
+  @apply justify-between -mx-1;
+}
+
+.adm-capsule-tabs-header .adm-capsule-tabs-tab-list .adm-capsule-tabs-tab-wrapper {
+  @apply py-0 px-1 flex-1;
+}
+
+div.adm-capsule-tabs-content {
+  @apply py-4 px-0;
+}
+
+.instructions-field .adm-list-card {
+  @apply m-0;
+}
+
+.instructions-field .adm-list-body-inner {
+  @apply mt-0;
+}
+
+.instructions-field .adm-list-item-content-main {
+  @apply pt-0;
+}
+
+.instructions-field .adm-form-list-operation {
+  @apply w-5 mx-auto;
 }
