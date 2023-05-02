@@ -3,7 +3,7 @@ import {
   FormValidationErrorMessage,
   FormValidationOrApiError,
 } from '@fe/errors';
-import React, { ComponentProps } from 'react';
+import React, { ComponentProps, ReactNode } from 'react';
 
 interface TextFieldProps extends ComponentProps<typeof Form.Item> {
   error: FormValidationOrApiError | null;
@@ -60,12 +60,14 @@ export const TextAreaField = ({
 interface StepperFieldProps extends ComponentProps<typeof Form.Item> {
   error: FormValidationOrApiError | null;
   min?: number;
+  suffix?: ReactNode;
 }
 
 export const StepperField = ({
   error,
   label,
   min,
+  suffix,
   ...props
 }: StepperFieldProps) => {
   return (
@@ -73,9 +75,13 @@ export const StepperField = ({
       <div className="flex justify-between items-center">
         {label}
 
-        <Form.Item {...props}>
-          <Stepper defaultValue={props.initialValue} min={min} />
-        </Form.Item>
+        <div className="pl-2 flex items-center">
+          <Form.Item {...props}>
+            <Stepper defaultValue={props.initialValue} min={min} />
+          </Form.Item>
+
+          {suffix}
+        </div>
       </div>
 
       <FormValidationErrorMessage
