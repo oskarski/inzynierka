@@ -1,12 +1,7 @@
 import { assertIsDefined } from '@fe/utils';
-import React, {
-  createContext,
-  PropsWithChildren,
-  useCallback,
-  useContext,
-  useState,
-} from 'react';
+import React, { createContext, PropsWithChildren, useContext } from 'react';
 import { IIngredientListItemDto, IngredientId } from '@lib/shared';
+import { useIngredientsSelection } from '@fe/ingredients';
 
 interface IRecipesFiltersContext {
   selectedIngredients: IIngredientListItemDto[];
@@ -20,35 +15,15 @@ const RecipesFiltersContext = createContext<Partial<IRecipesFiltersContext>>(
 );
 
 export const RecipesFiltersProvider = ({ children }: PropsWithChildren<{}>) => {
-  const [selectedIngredients, setSelectedIngredients] = useState<
-    Map<IngredientId, IIngredientListItemDto>
-  >(new Map());
-
-  const selectIngredient = useCallback(
-    (ingredient: IIngredientListItemDto) =>
-      setSelectedIngredients(
-        (prev) => new Map(prev.set(ingredient.id, ingredient))
-      ),
-    []
-  );
-
-  const unselectIngredient = useCallback(
-    (ingredientId: IngredientId) =>
-      setSelectedIngredients((prev) => {
-        prev.delete(ingredientId);
-
-        return new Map(prev);
-      }),
-    []
-  );
-
-  const isIngredientSelected = useCallback(
-    (ingredientId: IngredientId) => selectedIngredients.has(ingredientId),
-    [selectedIngredients]
-  );
+  const {
+    selectedIngredients,
+    selectIngredient,
+    unselectIngredient,
+    isIngredientSelected,
+  } = useIngredientsSelection();
 
   const ctx: IRecipesFiltersContext = {
-    selectedIngredients: Array.from(selectedIngredients.values()),
+    selectedIngredients,
     selectIngredient,
     unselectIngredient,
     isIngredientSelected,

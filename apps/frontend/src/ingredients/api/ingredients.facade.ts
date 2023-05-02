@@ -1,6 +1,10 @@
 import { useIngredientsApi } from './IngredientsApi.context';
 import { useAdaptedQuery } from '@fe/utils';
-import { IIngredientListItemDto, IListIngredientsDto } from '@lib/shared';
+import {
+  IIngredientListItemDto,
+  IListIngredientsDto,
+  IngredientId,
+} from '@lib/shared';
 import { useCallback, useState } from 'react';
 import { debounce } from 'lodash';
 
@@ -34,5 +38,41 @@ export const useSearchIngredients = () => {
     isFetching,
     error,
     onSearch: debouncedOnSearch,
+  };
+};
+
+export const useIngredientsSelection = () => {
+  const [selectedIngredients, setSelectedIngredients] = useState<
+    Map<IngredientId, IIngredientListItemDto>
+  >(new Map());
+
+  const selectIngredient = useCallback(
+    (ingredient: IIngredientListItemDto) =>
+      setSelectedIngredients(
+        (prev) => new Map(prev.set(ingredient.id, ingredient))
+      ),
+    []
+  );
+
+  const unselectIngredient = useCallback(
+    (ingredientId: IngredientId) =>
+      setSelectedIngredients((prev) => {
+        prev.delete(ingredientId);
+
+        return new Map(prev);
+      }),
+    []
+  );
+
+  const isIngredientSelected = useCallback(
+    (ingredientId: IngredientId) => selectedIngredients.has(ingredientId),
+    [selectedIngredients]
+  );
+
+  return {
+    selectedIngredients: Array.from(selectedIngredients.values()),
+    selectIngredient,
+    unselectIngredient,
+    isIngredientSelected,
   };
 };
