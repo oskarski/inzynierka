@@ -13,9 +13,10 @@ module.exports = {
         image: '396 / 226',
       },
       colors: {
-        default: '#111827',
-        secondary: '#666666',
-        success: '#00B578',
+        default: 'var(--adm-color-text)',
+        secondary: 'var(--adm-color-text-secondary)',
+        success: 'var(--adm-color-success)',
+        primary: 'var(--adm-color-primary)',
       },
       opacity: {
         55: '.55',
