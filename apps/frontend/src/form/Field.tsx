@@ -4,6 +4,7 @@ import {
   FormValidationOrApiError,
 } from '@fe/errors';
 import React, { ComponentProps, PropsWithChildren, ReactNode } from 'react';
+import { PickerBasedSelect } from '@fe/components';
 
 interface TextFieldProps extends ComponentProps<typeof Form.Item> {
   error: FormValidationOrApiError | null;
@@ -94,19 +95,21 @@ export const StepperField = ({
   );
 };
 
-interface SelectFieldProps extends ComponentProps<typeof Form.Item> {
+interface PickerBasedSelectFieldProps extends ComponentProps<typeof Form.Item> {
   error: FormValidationOrApiError | null;
+  options: ComponentProps<typeof PickerBasedSelect>['options'];
 }
 
-export const SelectField = ({
+export const PickerBasedSelectField = ({
   error,
+  options,
   children,
   ...props
-}: PropsWithChildren<SelectFieldProps>) => {
+}: PropsWithChildren<PickerBasedSelectFieldProps>) => {
   return (
     <>
       <Form.Item {...props}>
-        <select defaultValue={props.initialValue}>{children}</select>
+        <PickerBasedSelect options={options} />
       </Form.Item>
 
       <FormValidationErrorMessage
