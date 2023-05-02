@@ -10,16 +10,19 @@ interface AppFormProps {
   onSubmit: (values: any) => void;
   submitBtn: ReactNode;
   error: FormValidationOrApiError | null;
+  className?: string;
 }
 
 export const AppForm = ({
   error,
   onSubmit,
   submitBtn,
+  className,
   children,
 }: PropsWithChildren<AppFormProps>) => {
   return (
     <Form
+      className={className}
       onFinish={onSubmit}
       footer={
         <>
