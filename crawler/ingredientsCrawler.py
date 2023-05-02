@@ -17,7 +17,7 @@ conn = psycopg2.connect(
 cursor = conn.cursor()
 
 cursor.execute("DROP TABLE IF EXISTS crawler_ingredients")
-cursor.execute("CREATE TABLE IF NOT EXISTS crawler_ingredients (id SERIAL PRIMARY KEY, recipe_id INT, name VARCHAR(255), amount VARCHAR(255), unit VARCHAR(255))")
+cursor.execute("CREATE TABLE IF NOT EXISTS crawler_ingredients (id SERIAL PRIMARY KEY, recipe_id INT, link VARCHAR(255), name VARCHAR(255), amount VARCHAR(255), unit VARCHAR(255))")
 
 cursor.execute("SELECT link FROM crawler_recipes")
 links = cursor.fetchall()
@@ -26,19 +26,21 @@ links = cursor.fetchall()
 recipe_id = 1
 
 for link in links:
+
+    print("Processing link:", link[0])
+
     url = 'https://kuchnialidla.pl/' + link[0]
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    sql_insert_ingredient = "INSERT INTO crawler_ingredients (recipe_id, name, amount, unit) VALUES (%s, %s, %s, %s)"
+    sql_insert_ingredient = "INSERT INTO crawler_ingredients (recipe_id, link, name, amount, unit) VALUES (%s, %s, %s, %s, %s)"
 
     # Extract ingredients and insert into database
     skladniki_div = soup.find('div', class_='skladniki')
     if skladniki_div is not None:
-        ul = skladniki_div.find('ul')
-        if ul is not None:
-            ingredients_list = ul.find_all('li')
-            for ingredient in ingredients_list:
+        ingredient_data_list = []
+        for ul in skladniki_div.find_all('ul'):
+            for ingredient in ul.find_all('li'):
                 name, amount, unit = '', '', ''
                 name_and_amount = re.split('[-–:]', ingredient.text.strip(), maxsplit=1)
                 name = name_and_amount[0].strip()
@@ -48,19 +50,19 @@ for link in links:
                     if match:
                         amount = match.group(1)
                         unit = match.group(2).strip()
-                ingredient_data = (recipe_id, name, amount, unit)
-                cursor.execute(sql_insert_ingredient, ingredient_data)
-                conn.commit()
-        else:
+                ingredient_data = (recipe_id, link[0], name, amount, unit)
+                ingredient_data_list.append(ingredient_data)
+        if not ingredient_data_list:
             # Insert a special record to indicate an empty recipe
-            ingredient_data = (recipe_id, '-', '-', '-')
-            cursor.execute(sql_insert_ingredient, ingredient_data)
-            conn.commit()
+            ingredient_data_list.append((recipe_id, link[0], '-', '-', '-'))
+        cursor.executemany(sql_insert_ingredient, ingredient_data_list)
+        conn.commit()
     else:
         # Insert a special record to indicate an empty recipe
-        ingredient_data = (recipe_id, '-', '-', '-')
+        ingredient_data = (recipe_id, link[0], '-', '-', '-')
         cursor.execute(sql_insert_ingredient, ingredient_data)
         conn.commit()
+
 
     # Increment recipe_id for next iteration
     recipe_id +=1
