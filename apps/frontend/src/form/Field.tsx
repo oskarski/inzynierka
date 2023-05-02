@@ -3,7 +3,7 @@ import {
   FormValidationErrorMessage,
   FormValidationOrApiError,
 } from '@fe/errors';
-import React, { ComponentProps, ReactNode } from 'react';
+import React, { ComponentProps, PropsWithChildren, ReactNode } from 'react';
 
 interface TextFieldProps extends ComponentProps<typeof Form.Item> {
   error: FormValidationOrApiError | null;
@@ -83,6 +83,31 @@ export const StepperField = ({
           {suffix}
         </div>
       </div>
+
+      <FormValidationErrorMessage
+        error={error}
+        name={`${props.name}`}
+        block={true}
+        className="-mt-2 relative"
+      />
+    </>
+  );
+};
+
+interface SelectFieldProps extends ComponentProps<typeof Form.Item> {
+  error: FormValidationOrApiError | null;
+}
+
+export const SelectField = ({
+  error,
+  children,
+  ...props
+}: PropsWithChildren<SelectFieldProps>) => {
+  return (
+    <>
+      <Form.Item {...props}>
+        <select defaultValue={props.initialValue}>{children}</select>
+      </Form.Item>
 
       <FormValidationErrorMessage
         error={error}
