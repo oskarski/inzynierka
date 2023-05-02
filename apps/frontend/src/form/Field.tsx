@@ -61,6 +61,7 @@ export const TextAreaField = ({
 interface StepperFieldProps extends ComponentProps<typeof Form.Item> {
   error: FormValidationOrApiError | null;
   min?: number;
+  step?: number;
   suffix?: ReactNode;
 }
 
@@ -68,6 +69,7 @@ export const StepperField = ({
   error,
   label,
   min,
+  step,
   suffix,
   ...props
 }: StepperFieldProps) => {
@@ -78,7 +80,7 @@ export const StepperField = ({
 
         <div className="pl-2 flex items-center">
           <Form.Item {...props}>
-            <Stepper defaultValue={props.initialValue} min={min} />
+            <Stepper defaultValue={props.initialValue} min={min} step={step} />
           </Form.Item>
 
           {suffix}
