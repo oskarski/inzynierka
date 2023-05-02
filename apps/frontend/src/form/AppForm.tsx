@@ -11,6 +11,7 @@ interface AppFormProps {
   submitBtn: ReactNode;
   error: FormValidationOrApiError | null;
   className?: string;
+  footerClassName?: string;
 }
 
 export const AppForm = ({
@@ -18,6 +19,7 @@ export const AppForm = ({
   onSubmit,
   submitBtn,
   className,
+  footerClassName,
   children,
 }: PropsWithChildren<AppFormProps>) => {
   return (
@@ -25,12 +27,12 @@ export const AppForm = ({
       className={className}
       onFinish={onSubmit}
       footer={
-        <>
+        <div className={footerClassName}>
           {submitBtn}
 
           <FormValidationSummaryErrorMessage error={error} className="mt-2" />
           <ApiErrorMessage error={error} className="mt-2" />
-        </>
+        </div>
       }
       style={{
         '--border-inner': '0',

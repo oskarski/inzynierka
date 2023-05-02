@@ -35,7 +35,7 @@ export function FormValidationErrorMessage({
   ...props
 }: FormValidationErrorMessageProps) {
   if (!error || !(error instanceof FormValidationError)) return null;
-
+  console.log(error.errorsMap, name);
   return (
     <ErrorMessage {...props} data-testid={`error-msg-${name}`}>
       {error.errorsMap[name]}

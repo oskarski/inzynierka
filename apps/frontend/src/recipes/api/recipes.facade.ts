@@ -6,13 +6,25 @@ import {
   useAdaptedQuery,
   usePaginatedQuery,
 } from '@fe/utils';
-import { IRecipeDto, IRecipeListItemDto, RecipeId } from '@lib/shared';
+import {
+  ICreateRecipeDto,
+  IRecipeDto,
+  IRecipeListItemDto,
+  RecipeId,
+} from '@lib/shared';
 import { RecipeDetailsSelector, RecipeListItemSelector } from './selectors';
 import { IRecipe, IRecipeListItem } from './types';
 import { useListAllRecipesCategories } from '@fe/recipes-categories';
 import { useCallback } from 'react';
-import { ApiError } from '@fe/errors';
+import {
+  ApiError,
+  catchFormValidationOrApiError,
+  FormValidationOrApiError,
+} from '@fe/errors';
 import { useQueryClient } from 'react-query';
+import { ISignedInUserDto, ISignInDto, SignedInUserQueryKey } from '@fe/iam';
+import { SignInFormSchema } from '@fe/iam/api/schema/sign-in.schema';
+import { CreateRecipeFormSchema } from '@fe/recipes/api/schema/create-recipe.schema';
 
 export const ListPaginatedRecipesQueryKey = [
   'recipesApi',
@@ -29,6 +41,32 @@ export const ListFavouriteRecipesQueryKey = [
   'recipesApi',
   'listFavouriteRecipes',
 ];
+
+export const useCreateRecipe = ({
+  onSuccess,
+}: { onSuccess?: () => void } = {}) => {
+  const queryClient = useQueryClient();
+
+  const { recipesApi } = useRecipesApi();
+
+  return useAdaptedMutation<
+    RecipeId,
+    ICreateRecipeDto,
+    FormValidationOrApiError
+  >(
+    (formValues) =>
+      CreateRecipeFormSchema.parseAsync(formValues)
+        .then((dto) => recipesApi.createRecipe({ ...dto, categoryIds: [] }))
+        .catch(catchFormValidationOrApiError),
+    {
+      onSuccess: () => {
+        // TODO reset my recipes list
+
+        if (onSuccess) onSuccess();
+      },
+    }
+  );
+};
 
 export const useListPaginatedRecipes = () => {
   const { recipesApi } = useRecipesApi();

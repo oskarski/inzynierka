@@ -36,12 +36,14 @@ interface TextAreaFieldProps extends ComponentProps<typeof Form.Item> {
   error: FormValidationOrApiError | null;
   rows?: number;
   placeholder?: string;
+  errorNamePrefix?: string;
 }
 
 export const TextAreaField = ({
   error,
   rows,
   placeholder,
+  errorNamePrefix = '',
   ...props
 }: TextAreaFieldProps) => {
   return (
@@ -57,7 +59,7 @@ export const TextAreaField = ({
 
       <FormValidationErrorMessage
         error={error}
-        name={`${props.name}`}
+        name={`${errorNamePrefix}${props.name}`}
         block={true}
         className="-mt-2 relative"
       />

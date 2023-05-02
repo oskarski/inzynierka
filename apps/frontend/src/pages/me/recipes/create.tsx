@@ -27,15 +27,18 @@ import {
   IngredientsSearchResultList,
   IngredientsSearch,
 } from '@fe/ingredients';
-import { FormValidationOrApiError } from '@fe/errors';
+import {
+  FormValidationErrorMessage,
+  FormValidationOrApiError,
+} from '@fe/errors';
+import { useCreateRecipe } from '@fe/recipes';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard()
 );
 
 export default function CreateYourRecipePage() {
-  const error = null;
-  const loading = false;
+  const [createRecipe, loading, error] = useCreateRecipe();
 
   return (
     <>
@@ -48,17 +51,20 @@ export default function CreateYourRecipePage() {
 
         <AppForm
           className="pb-8"
-          onSubmit={(values) => {
-            console.log(values);
-          }}
+          onSubmit={(formValues) =>
+            createRecipe({
+              ...formValues,
+              ingredients:
+                formValues.ingredients && Object.values(formValues.ingredients),
+            })
+          }
           error={error}
+          footerClassName="fixed bottom-20 left-4 right-4"
           submitBtn={
-            <div className="fixed bottom-20 left-4 right-4">
-              <div className="bg-white">
-                <SubmitButton loading={loading} block={true} fill="outline">
-                  Zapisz
-                </SubmitButton>
-              </div>
+            <div className="bg-white">
+              <SubmitButton loading={loading} block={true} fill="outline">
+                Zapisz
+              </SubmitButton>
             </div>
           }
         >
@@ -134,6 +140,8 @@ function IngredientsTab({ error }: IngredientsTabProps) {
 
       <IngredientsSearch>
         <IngredientsSearchBar className="mb-3" />
+
+        <FormValidationErrorMessage name="ingredients" error={error} />
 
         <div className="overflow-y-auto">
           <IngredientsSearchResultList
@@ -260,6 +268,7 @@ function InstructionsTab({ error }: InstructionsTabProps) {
                 </div>
 
                 <TextAreaField
+                  errorNamePrefix="instructions,"
                   name={[index, 'step']}
                   rows={3}
                   error={error}
@@ -269,6 +278,8 @@ function InstructionsTab({ error }: InstructionsTabProps) {
             ))
           }
         </Form.Array>
+
+        <FormValidationErrorMessage name="instructions" error={error} />
       </div>
     </>
   );

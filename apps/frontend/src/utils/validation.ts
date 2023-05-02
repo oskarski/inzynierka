@@ -10,4 +10,6 @@ export const validationMessages = {
   mustContainUpperCaseLetter: (name: string) =>
     `${name} musi zawierać wielką literę`,
   mustContainDigit: (name: string) => `${name} musi zawierać cyfrę`,
+  positive: `Pole musi być liczbą dodatnią`,
+  int: `Pole musi być liczbą całkowitą`,
 };

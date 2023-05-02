@@ -9,6 +9,8 @@ export class FormValidationError extends Error {
     this.errorsMap = zodError.errors.reduce(
       (prev, current) => ({
         [current.path.join('.')]: current.message,
+        // For stringified arrays
+        [current.path.join(',')]: current.message,
         ...prev,
       }),
       {}
