@@ -1,35 +1,10 @@
 import { AppPopup, Loader } from '@fe/components';
 import { Button, List, SearchBar } from 'antd-mobile';
-import React, { useCallback, useState } from 'react';
-import { useListIngredients } from '@fe/ingredients';
-import { debounce } from 'lodash';
-import { IListIngredientsDto } from '@lib/shared';
+import React from 'react';
 import { ApiErrorMessage } from '@fe/errors';
 import { useRecipesFilters } from '../RecipesFilters.context';
 import { routes, useRouting } from '@fe/utils';
-
-const useSearchIngredients = () => {
-  const [queryDto, setQueryDto] = useState<IListIngredientsDto>({ name: '' });
-
-  const [ingredients = [], loading, error, { isFetching }] =
-    useListIngredients(queryDto);
-
-  const debouncedOnSearch = useCallback(
-    debounce(
-      (phrase) => setQueryDto((prev) => ({ ...prev, name: phrase })),
-      350
-    ),
-    []
-  );
-
-  return {
-    ingredients,
-    loading,
-    isFetching,
-    error,
-    onSearch: debouncedOnSearch,
-  };
-};
+import { useSearchIngredients } from '@fe/ingredients';
 
 export const SearchRecipesByIngredientsPopupContent =
   AppPopup.withAppPopupContent(() => {
