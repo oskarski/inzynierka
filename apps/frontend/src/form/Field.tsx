@@ -35,17 +35,24 @@ export const TextField = ({
 interface TextAreaFieldProps extends ComponentProps<typeof Form.Item> {
   error: FormValidationOrApiError | null;
   rows?: number;
+  placeholder?: string;
 }
 
 export const TextAreaField = ({
   error,
   rows,
+  placeholder,
   ...props
 }: TextAreaFieldProps) => {
   return (
     <>
       <Form.Item {...props}>
-        <TextArea id={`${props.name}`} className="border-b" rows={rows} />
+        <TextArea
+          id={`${props.name}`}
+          className="border-b"
+          rows={rows}
+          placeholder={placeholder}
+        />
       </Form.Item>
 
       <FormValidationErrorMessage
@@ -129,7 +136,7 @@ interface HiddenProps extends ComponentProps<typeof Form.Item> {}
 export const HiddenField = ({ ...props }: HiddenProps) => {
   return (
     <Form.Item {...props}>
-      <input type="hidden" defaultValue={props.initialValue} />
+      <input type="hidden" />
     </Form.Item>
   );
 };
