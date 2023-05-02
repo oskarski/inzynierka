@@ -1,9 +1,9 @@
-import { Form, Input, TextArea } from 'antd-mobile';
+import { Form, Input, Stepper, TextArea } from 'antd-mobile';
 import {
   FormValidationErrorMessage,
   FormValidationOrApiError,
 } from '@fe/errors';
-import { ComponentProps } from 'react';
+import React, { ComponentProps } from 'react';
 
 interface TextFieldProps extends ComponentProps<typeof Form.Item> {
   error: FormValidationOrApiError | null;
@@ -25,7 +25,7 @@ export const TextField = ({
         error={error}
         name={`${props.name}`}
         block={true}
-        className="pl-4 -mt-2 relative"
+        className="-mt-2 relative"
       />
     </>
   );
@@ -51,7 +51,38 @@ export const TextAreaField = ({
         error={error}
         name={`${props.name}`}
         block={true}
-        className="pl-4 -mt-2 relative"
+        className="-mt-2 relative"
+      />
+    </>
+  );
+};
+
+interface StepperFieldProps extends ComponentProps<typeof Form.Item> {
+  error: FormValidationOrApiError | null;
+  min?: number;
+}
+
+export const StepperField = ({
+  error,
+  label,
+  min,
+  ...props
+}: StepperFieldProps) => {
+  return (
+    <>
+      <div className="flex justify-between items-center">
+        {label}
+
+        <Form.Item {...props}>
+          <Stepper defaultValue={props.initialValue} min={min} />
+        </Form.Item>
+      </div>
+
+      <FormValidationErrorMessage
+        error={error}
+        name={`${props.name}`}
+        block={true}
+        className="-mt-2 relative"
       />
     </>
   );
