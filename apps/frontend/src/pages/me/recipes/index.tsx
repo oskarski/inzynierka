@@ -7,6 +7,7 @@ import { GetServerSideProps } from 'next/types';
 import { PlusSquareOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import {
+  EmptyMyRecipesList,
   ListMyRecipesQueryKey,
   MyRecipesApi,
   RecipeCard,
@@ -63,6 +64,8 @@ export default function YourRecipesPage() {
             className="mb-4"
           />
         ))}
+
+        {myRecipes && myRecipes.length === 0 && <EmptyMyRecipesList />}
       </main>
     </>
   );

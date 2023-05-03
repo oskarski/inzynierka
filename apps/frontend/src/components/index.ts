@@ -3,3 +3,4 @@ export * from './SectionSubTitle';
 export * from './Loader';
 export * from './AppPopup';
 export * from './PickerBasedSelect';
+export * from './ScrollableRow';

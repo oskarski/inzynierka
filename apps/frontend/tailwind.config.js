@@ -24,6 +24,9 @@ module.exports = {
       maxHeight: {
         '90-screen': '90vh',
       },
+      minWidth: {
+        70: '17.5rem',
+      },
     },
   },
   plugins: [],
