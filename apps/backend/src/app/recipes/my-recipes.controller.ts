@@ -1,21 +1,21 @@
 import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
 import { RecipeId } from '@lib/shared';
 import { CurrentUser, PrivateApiGuard } from '../auth';
-import { RecipesService } from './services';
+import { MyRecipesService } from './services';
 import { CreateRecipeDto, PublishRecipeDto } from './dtos';
 import { User } from '../iam/entities';
 
 @Controller('me/recipes')
 @UseGuards(PrivateApiGuard)
 export class MyRecipesController {
-  constructor(private readonly recipesService: RecipesService) {}
+  constructor(private readonly myRecipesService: MyRecipesService) {}
 
   @Post()
   async createRecipe(
     @Body() createRecipeDto: CreateRecipeDto,
     @CurrentUser() currentUser: User,
   ): Promise<RecipeId> {
-    return this.recipesService.createRecipe(createRecipeDto, currentUser.id);
+    return this.myRecipesService.createRecipe(createRecipeDto, currentUser.id);
   }
 
   @Post('/publish')
@@ -23,7 +23,7 @@ export class MyRecipesController {
     @Body() publishRecipeDto: PublishRecipeDto,
     @CurrentUser() currentUser: User,
   ): Promise<RecipeId> {
-    return this.recipesService.createAndPublishRecipe(
+    return this.myRecipesService.createAndPublishRecipe(
       publishRecipeDto,
       currentUser.id,
     );
@@ -35,7 +35,7 @@ export class MyRecipesController {
     @Body() publishRecipeDto: PublishRecipeDto,
     @CurrentUser() currentUser: User,
   ): Promise<void> {
-    await this.recipesService.publishRecipe(
+    await this.myRecipesService.publishRecipe(
       recipeId,
       publishRecipeDto,
       currentUser.id,
