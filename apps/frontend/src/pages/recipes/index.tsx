@@ -1,16 +1,28 @@
 import Head from 'next/head';
 import { headTitle } from '@fe/utils';
-import { SectionTitle } from '@fe/components';
-import { RecipesListing } from '@fe/recipes';
+import { Loader, SectionTitle } from '@fe/components';
+import {
+  RecipeCard,
+  useConnectedCategories,
+  useListPaginatedRecipes,
+} from '@fe/recipes';
 import { HydrateReactQueryState } from '../../server/server-react-query';
 import { SignedInGuard } from '../../server/server-guards';
 import { GetServerSideProps } from 'next/types';
+import { ApiErrorMessage } from '@fe/errors';
+import React from 'react';
+import { InfiniteScroll } from 'antd-mobile';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard()
 );
 
 export default function RecipesPage() {
+  const [recipes, loading, error, { loadMore, hasMore }] =
+    useListPaginatedRecipes();
+
+  const connectedCategories = useConnectedCategories();
+
   return (
     <>
       <Head>
@@ -20,9 +32,26 @@ export default function RecipesPage() {
       <main>
         <SectionTitle className="mb-6">Pasujące przepisy</SectionTitle>
 
-        <RecipesListing>
-          <RecipesListing.CardList />
-        </RecipesListing>
+        {loading && <Loader />}
+
+        <ApiErrorMessage size="base" error={error} />
+
+        {recipes && (
+          <>
+            {recipes.map((recipe) => (
+              <RecipeCard
+                key={recipe.id}
+                recipe={recipe}
+                categories={connectedCategories(recipe)}
+                className="mb-4"
+              />
+            ))}
+
+            <InfiniteScroll loadMore={loadMore} hasMore={hasMore}>
+              <Loader />
+            </InfiniteScroll>
+          </>
+        )}
       </main>
     </>
   );
