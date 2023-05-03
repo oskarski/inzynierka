@@ -55,7 +55,7 @@ export default function RecipesPage() {
             ))}
 
             <InfiniteScroll loadMore={loadMore} hasMore={hasMore}>
-              <Loader />
+              {loading && <Loader />}
             </InfiniteScroll>
           </>
         )}
