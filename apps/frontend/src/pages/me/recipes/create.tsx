@@ -77,7 +77,7 @@ export default function CreateYourRecipePage() {
           error={error}
           footerClassName="fixed bottom-20 left-4 right-4"
           submitBtn={
-            <div className="bg-white space-y-3">
+            <div className="space-y-3">
               <Button
                 type="button"
                 loading={createAndPublishRecipeLoading}
@@ -99,14 +99,16 @@ export default function CreateYourRecipePage() {
                 Opublikuj
               </Button>
 
-              <SubmitButton
-                loading={createRecipeLoading}
-                disabled={createAndPublishRecipeLoading}
-                fill="outline"
-                size="middle"
-              >
-                Zapisz
-              </SubmitButton>
+              <div className="bg-white">
+                <SubmitButton
+                  loading={createRecipeLoading}
+                  disabled={createAndPublishRecipeLoading}
+                  fill="outline"
+                  size="middle"
+                >
+                  Zapisz
+                </SubmitButton>
+              </div>
             </div>
           }
         >
