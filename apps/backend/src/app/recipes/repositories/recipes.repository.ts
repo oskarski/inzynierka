@@ -10,6 +10,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Pagination } from '../../utils';
 import {
   ICreateRecipeDto,
+  IListRecipesQueryDto,
   IPublishRecipeDto,
   ISaveRecipeIngredientDto,
   RecipeCategoryId,
@@ -17,7 +18,6 @@ import {
   RecipeState,
   UserId,
 } from '@lib/shared';
-import { ListRecipesQueryDto } from '../dtos';
 
 class SaveRecipeTransactionQuery {
   constructor(private readonly queryRunner: QueryRunner) {}
@@ -287,7 +287,7 @@ export class RecipesRepository {
   }
 
   async findByFilters(
-    queryDto: ListRecipesQueryDto,
+    queryDto: IListRecipesQueryDto,
     pagination: Pagination,
   ): Promise<[ListRecipesQueryResult[], number]> {
     const ingredientIds = queryDto.ingredients.map(

@@ -4,12 +4,13 @@ import {
   IPaginated,
   RecipeId,
   IRecipeDto,
+  IPaginationQueryDto,
 } from '@lib/shared';
 import { HttpClient } from '@fe/utils';
 
 export interface IRecipesApi {
   listRecipesPaginated(
-    dto: IListRecipesQueryDto
+    dto: IListRecipesQueryDto & IPaginationQueryDto
   ): Promise<IPaginated<IRecipeListItemDto>>;
 
   getRecipeDetails(id: RecipeId): Promise<IRecipeDto>;

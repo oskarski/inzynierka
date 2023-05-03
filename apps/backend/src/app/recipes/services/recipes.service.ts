@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import {
-  IListRecipesQueryDto,
   IPaginated,
   IRecipeDto,
   IRecipeListItemDto,
@@ -11,6 +10,7 @@ import { Pagination } from '../../utils';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RecipeDetailsViewEntity } from '../entities';
+import { ListRecipesQueryDto } from '../dtos';
 
 @Injectable()
 export class RecipesService {
@@ -21,7 +21,7 @@ export class RecipesService {
   ) {}
 
   async listRecipesPaginated(
-    queryDto: IListRecipesQueryDto,
+    queryDto: ListRecipesQueryDto,
   ): Promise<IPaginated<IRecipeListItemDto>> {
     const pagination = Pagination.page(queryDto.page, queryDto.perPage);
 
