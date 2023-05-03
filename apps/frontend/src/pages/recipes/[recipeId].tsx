@@ -155,7 +155,10 @@ export default function RecipeDetailsPage({
               ))}
             </div>
 
-            <RecipeCookingModeModalButton recipe={recipe} />
+            <RecipeCookingModeModalButton
+              recipe={recipe}
+              portionsProportion={portionsProportion}
+            />
           </>
         )}
       </main>
