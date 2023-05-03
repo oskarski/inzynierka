@@ -139,6 +139,7 @@ interface ListRecipesQueryResult {
   preparationTime: number;
   portions: number;
   categoryIds: RecipeCategoryId[];
+  state: RecipeState;
 }
 
 class ListRecipesQuery {
@@ -149,6 +150,7 @@ class ListRecipesQuery {
         'recipes.name name',
         'recipes.description description',
         'recipes.portions portions',
+        'recipes.state state',
       ])
       .addSelect('recipes.preparation_time', 'preparationTime')
       .addSelect('array_agg(category.category_id)', 'categoryIds')

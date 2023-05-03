@@ -48,6 +48,8 @@ export const routes = {
 
   createRecipe: () => '/me/recipes/create',
 
+  editRecipe: (recipeId: RecipeId) => `/me/recipes/${recipeId}`,
+
   signUp: () => '/sign-up',
 
   signUpConfirm: (userId: string, email: string) =>

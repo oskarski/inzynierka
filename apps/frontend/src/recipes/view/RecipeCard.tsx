@@ -25,7 +25,11 @@ export const RecipeCard = ({
 }: RecipeCardProps) => {
   return (
     <Link
-      href={routes.recipeDetails(recipe.id)}
+      href={
+        recipe.isPublished
+          ? routes.recipeDetails(recipe.id)
+          : routes.editRecipe(recipe.id)
+      }
       className={classNames(
         'block rounded-3xl overflow-hidden shadow-md min-w-70',
         className
