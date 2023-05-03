@@ -20,11 +20,22 @@ interface ISaveRecipeDto {
   readonly preparationTime: number;
   readonly portions: number;
   readonly categoryIds: RecipeCategoryId[];
-  readonly instructions: IRecipeInstructionDto[];
   readonly ingredients: ISaveRecipeIngredientDto[];
 }
 
-export type ICreateRecipeDto = ISaveRecipeDto;
+export type ICreateRecipeInstructionDto = Partial<IRecipeInstructionDto>;
+
+export type ICreateRecipeDto = Partial<
+  ISaveRecipeDto & { readonly instructions: ICreateRecipeInstructionDto[] }
+> & {
+  readonly name: string;
+};
+
+export type IPublishRecipeInstructionDto = Partial<IRecipeInstructionDto>;
+
+export type IPublishRecipeDto = ISaveRecipeDto & {
+  readonly instructions: IPublishRecipeInstructionDto[];
+};
 
 export interface IListRecipesQueryDto {
   readonly page: number;

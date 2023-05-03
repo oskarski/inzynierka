@@ -2,16 +2,17 @@ import { z } from 'zod';
 import { validationMessages } from '@fe/utils';
 import { Id, IngredientId } from '@lib/shared';
 
-export const CreateRecipeFormSchema = z.object({
+export const PublishRecipeFormSchema = z.object({
   name: z
     .string({ required_error: validationMessages.required })
     .nonempty(validationMessages.required),
-  description: z.string().optional(),
+  description: z
+    .string({ required_error: validationMessages.required })
+    .nonempty(validationMessages.required),
   portions: z
-    .number()
+    .number({ required_error: validationMessages.required })
     .positive(validationMessages.positive)
-    .int(validationMessages.positive)
-    .optional(),
+    .int(validationMessages.positive),
   ingredients: z
     .array(
       z.object({
@@ -25,22 +26,24 @@ export const CreateRecipeFormSchema = z.object({
         unit: z
           .string({ required_error: validationMessages.required })
           .nonempty(validationMessages.required),
-      })
+      }),
+      { required_error: 'Dodaj conajmniej jeden składnik' }
     )
-    .optional(),
+    .nonempty('Dodaj conajmniej jeden składnik'),
   preparationTime: z
-    .number()
+    .number({ required_error: validationMessages.required })
     .positive(validationMessages.positive)
     .int(validationMessages.positive)
-    .transform((min) => (min === undefined ? undefined : min * 60))
-    .optional(),
+    .transform((min) => min * 60),
   instructions: z
     .array(
       z.object({
-        step: z.string().optional(),
+        step: z
+          .string({ required_error: validationMessages.required })
+          .nonempty(validationMessages.required),
       })
     )
-    .optional(),
+    .nonempty(validationMessages.required),
 });
 
-export type CreateRecipeFormValues = z.infer<typeof CreateRecipeFormSchema>;
+export type PublishRecipeFormValues = z.infer<typeof PublishRecipeFormSchema>;

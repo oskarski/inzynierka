@@ -5,9 +5,11 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Pagination } from '../../utils';
 import {
   ICreateRecipeDto,
+  IPublishRecipeDto,
   ISaveRecipeIngredientDto,
   RecipeCategoryId,
   RecipeId,
+  RecipeState,
   UserId,
 } from '@lib/shared';
 
@@ -32,9 +34,35 @@ class SaveRecipeTransactionQuery {
     return new SaveRecipeTransactionQuery(queryRunner);
   }
 
-  async createRecipe(
+  async createDraftRecipe(
     dto: ICreateRecipeDto,
     authorId: UserId,
+  ): Promise<RecipeId> {
+    return this.createRecipe(
+      {
+        ...dto,
+        name: dto.name,
+        description: dto.description || '',
+        preparationTime: dto.preparationTime || 0,
+        portions: dto.portions || 0,
+        instructions: dto.instructions || [],
+      },
+      authorId,
+      RecipeState.draft,
+    );
+  }
+
+  async createPublishedRecipe(
+    dto: IPublishRecipeDto,
+    authorId: UserId,
+  ): Promise<RecipeId> {
+    return this.createRecipe(dto, authorId, RecipeState.published);
+  }
+
+  private async createRecipe(
+    dto: ICreateRecipeDto,
+    authorId: UserId,
+    state: RecipeState,
   ): Promise<RecipeId> {
     const createdRecipe = await this.queryRunner.manager.save(Recipe, {
       name: dto.name,
@@ -43,16 +71,32 @@ class SaveRecipeTransactionQuery {
       portions: dto.portions,
       instructions: dto.instructions,
       authorId,
+      state,
     });
 
     return createdRecipe.id;
   }
 
+  async publishRecipe(
+    recipeId: RecipeId,
+    dto: IPublishRecipeDto,
+  ): Promise<void> {
+    await this.queryRunner.manager.save(Recipe, {
+      recipeId,
+      name: dto.name,
+      description: dto.description,
+      preparationTime: dto.preparationTime,
+      portions: dto.portions,
+      instructions: dto.instructions,
+      state: RecipeState.published,
+    });
+  }
+
   async saveCategories(
     recipeId: RecipeId,
-    categoryIds: RecipeCategoryId[],
+    categoryIds: RecipeCategoryId[] | undefined,
   ): Promise<void> {
-    if (!categoryIds.length) return;
+    if (!categoryIds || !categoryIds.length) return;
 
     await this.queryRunner.manager.save(
       RecipeCategory,
@@ -65,9 +109,9 @@ class SaveRecipeTransactionQuery {
 
   async saveIngredients(
     recipeId: RecipeId,
-    ingredients: ISaveRecipeIngredientDto[],
+    ingredients: ISaveRecipeIngredientDto[] | undefined,
   ): Promise<void> {
-    if (!ingredients.length) return;
+    if (!ingredients || !ingredients.length) return;
 
     await this.queryRunner.manager.save(
       RecipeIngredient,
@@ -106,13 +150,58 @@ export class RecipesRepository {
     );
 
     try {
-      const createdRecipeId = await query.createRecipe(dto, userId);
+      const createdRecipeId = await query.createDraftRecipe(dto, userId);
 
       await query.saveCategories(createdRecipeId, dto.categoryIds);
       await query.saveIngredients(createdRecipeId, dto.ingredients);
       await query.execute();
 
       return createdRecipeId;
+    } catch (err) {
+      console.error(err);
+      await query.rollback();
+
+      throw new BadRequestException();
+    }
+  }
+
+  async createAndPublishRecipe(
+    dto: IPublishRecipeDto,
+    userId: UserId,
+  ): Promise<RecipeId> {
+    const query = await SaveRecipeTransactionQuery.fromQueryRunner(
+      this.dataSource.createQueryRunner(),
+    );
+
+    try {
+      const createdRecipeId = await query.createPublishedRecipe(dto, userId);
+
+      await query.saveCategories(createdRecipeId, dto.categoryIds);
+      await query.saveIngredients(createdRecipeId, dto.ingredients);
+      await query.execute();
+
+      return createdRecipeId;
+    } catch (err) {
+      console.error(err);
+      await query.rollback();
+
+      throw new BadRequestException();
+    }
+  }
+
+  async publishRecipe(
+    recipeId: RecipeId,
+    dto: IPublishRecipeDto,
+  ): Promise<void> {
+    const query = await SaveRecipeTransactionQuery.fromQueryRunner(
+      this.dataSource.createQueryRunner(),
+    );
+
+    try {
+      await query.publishRecipe(recipeId, dto);
+      await query.saveCategories(recipeId, dto.categoryIds);
+      await query.saveIngredients(recipeId, dto.ingredients);
+      await query.execute();
     } catch (err) {
       console.error(err);
       await query.rollback();

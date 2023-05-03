@@ -60,4 +60,8 @@ export class Recipe {
 
   @Column({ default: RecipeState.draft, enum: RecipeState })
   state: RecipeState;
+
+  isCreatedBy(authorId: UserId): boolean {
+    return this.authorId === authorId;
+  }
 }

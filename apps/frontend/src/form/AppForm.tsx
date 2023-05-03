@@ -4,7 +4,7 @@ import {
   FormValidationOrApiError,
   FormValidationSummaryErrorMessage,
 } from '@fe/errors';
-import { PropsWithChildren, ReactNode } from 'react';
+import { ComponentProps, PropsWithChildren, ReactNode } from 'react';
 
 interface AppFormProps {
   onSubmit: (values: any) => void;
@@ -12,6 +12,7 @@ interface AppFormProps {
   error: FormValidationOrApiError | null;
   className?: string;
   footerClassName?: string;
+  form?: ComponentProps<typeof Form>['form'];
 }
 
 export const AppForm = ({
@@ -20,12 +21,14 @@ export const AppForm = ({
   submitBtn,
   className,
   footerClassName,
+  form,
   children,
 }: PropsWithChildren<AppFormProps>) => {
   return (
     <Form
       className={className}
       onFinish={onSubmit}
+      form={form}
       footer={
         <div className={footerClassName}>
           {submitBtn}

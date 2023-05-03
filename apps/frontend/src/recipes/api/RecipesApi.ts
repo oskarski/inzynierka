@@ -5,11 +5,16 @@ import {
   RecipeId,
   IRecipeDto,
   ICreateRecipeDto,
+  IPublishRecipeDto,
 } from '@lib/shared';
 import { HttpClient } from '@fe/utils';
 
 export interface IRecipesApi {
   createRecipe(dto: ICreateRecipeDto): Promise<RecipeId>;
+
+  createAndPublishRecipe(dto: IPublishRecipeDto): Promise<RecipeId>;
+
+  publishRecipe(recipeId: RecipeId, dto: IPublishRecipeDto): Promise<void>;
 
   listRecipesPaginated(
     dto: IListRecipesQueryDto
@@ -25,6 +30,20 @@ export class RecipesApi implements IRecipesApi {
 
   createRecipe(dto: ICreateRecipeDto): Promise<RecipeId> {
     return this.httpClient.post<ICreateRecipeDto, RecipeId>(this.baseUrl, dto);
+  }
+
+  createAndPublishRecipe(dto: IPublishRecipeDto): Promise<RecipeId> {
+    return this.httpClient.post<IPublishRecipeDto, RecipeId>(
+      `${this.baseUrl}/publish`,
+      dto
+    );
+  }
+
+  publishRecipe(recipeId: RecipeId, dto: IPublishRecipeDto): Promise<void> {
+    return this.httpClient.post<IPublishRecipeDto, void>(
+      `${this.baseUrl}/${recipeId}/publish`,
+      dto
+    );
   }
 
   listRecipesPaginated(

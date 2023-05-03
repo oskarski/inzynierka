@@ -1,10 +1,10 @@
 import Head from 'next/head';
-import { headTitle } from '@fe/utils';
+import { headTitle, routes, useRouting } from '@fe/utils';
 import { SectionTitle } from '@fe/components';
 import { HydrateReactQueryState } from '../../../server/server-react-query';
 import { SignedInGuard } from '../../../server/server-guards';
 import { GetServerSideProps } from 'next/types';
-import { CapsuleTabs, Form, List } from 'antd-mobile';
+import { Button, CapsuleTabs, Form, List } from 'antd-mobile';
 import {
   AppForm,
   HiddenField,
@@ -31,14 +31,29 @@ import {
   FormValidationErrorMessage,
   FormValidationOrApiError,
 } from '@fe/errors';
-import { useCreateRecipe } from '@fe/recipes';
+import { useCreateAndPublishRecipe, useCreateRecipe } from '@fe/recipes';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard()
 );
 
 export default function CreateYourRecipePage() {
-  const [createRecipe, loading, error] = useCreateRecipe();
+  const { redirectTo } = useRouting();
+
+  const [
+    createAndPublishRecipe,
+    createAndPublishRecipeLoading,
+    createAndPublishRecipeError,
+  ] = useCreateAndPublishRecipe({
+    onSuccess: () => redirectTo(routes.yourRecipes()),
+  });
+
+  const [createRecipe, createRecipeLoading, createRecipeError] =
+    useCreateRecipe({ onSuccess: () => redirectTo(routes.yourRecipes()) });
+
+  const [form] = Form.useForm();
+
+  const error = createRecipeError || createAndPublishRecipeError;
 
   return (
     <>
@@ -51,6 +66,7 @@ export default function CreateYourRecipePage() {
 
         <AppForm
           className="pb-8"
+          form={form}
           onSubmit={(formValues) =>
             createRecipe({
               ...formValues,
@@ -61,8 +77,34 @@ export default function CreateYourRecipePage() {
           error={error}
           footerClassName="fixed bottom-20 left-4 right-4"
           submitBtn={
-            <div className="bg-white">
-              <SubmitButton loading={loading} block={true} fill="outline">
+            <div className="bg-white space-y-3">
+              <Button
+                type="button"
+                loading={createAndPublishRecipeLoading}
+                disabled={createRecipeLoading}
+                block={true}
+                color="primary"
+                size="middle"
+                onClick={() => {
+                  const formValues = form.getFieldsValue(true);
+
+                  createAndPublishRecipe({
+                    ...formValues,
+                    ingredients:
+                      formValues.ingredients &&
+                      Object.values(formValues.ingredients),
+                  });
+                }}
+              >
+                Opublikuj
+              </Button>
+
+              <SubmitButton
+                loading={createRecipeLoading}
+                disabled={createAndPublishRecipeLoading}
+                fill="outline"
+                size="middle"
+              >
                 Zapisz
               </SubmitButton>
             </div>

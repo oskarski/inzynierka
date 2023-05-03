@@ -5,12 +5,7 @@ import {
   useAdaptedQuery,
   usePaginatedQuery,
 } from '@fe/utils';
-import {
-  ICreateRecipeDto,
-  IRecipeDto,
-  IRecipeListItemDto,
-  RecipeId,
-} from '@lib/shared';
+import { IRecipeDto, IRecipeListItemDto, RecipeId } from '@lib/shared';
 import { RecipeDetailsSelector, RecipeListItemSelector } from './selectors';
 import { IRecipe, IRecipeListItem } from './types';
 import { useListAllRecipesCategories } from '@fe/recipes-categories';
@@ -20,7 +15,14 @@ import {
   FormValidationOrApiError,
 } from '@fe/errors';
 import { useQueryClient } from 'react-query';
-import { CreateRecipeFormSchema } from './schema/create-recipe.schema';
+import {
+  CreateRecipeFormSchema,
+  CreateRecipeFormValues,
+} from './schema/create-recipe.schema';
+import {
+  PublishRecipeFormSchema,
+  PublishRecipeFormValues,
+} from './schema/publish-recipe.schema';
 
 export const ListPaginatedRecipesQueryKey = [
   'recipesApi',
@@ -35,6 +37,34 @@ export const GetRecipeDetailsQueryKey = (id: RecipeId) => [
 
 export const useCreateRecipe = ({
   onSuccess,
+}: {
+  onSuccess?: (recipeId: RecipeId) => void;
+} = {}) => {
+  const queryClient = useQueryClient();
+
+  const { recipesApi } = useRecipesApi();
+
+  return useAdaptedMutation<
+    RecipeId,
+    CreateRecipeFormValues,
+    FormValidationOrApiError
+  >(
+    (formValues) =>
+      CreateRecipeFormSchema.parseAsync(formValues)
+        .then((dto) => recipesApi.createRecipe(dto))
+        .catch(catchFormValidationOrApiError),
+    {
+      onSuccess: (recipeId, d) => {
+        // TODO reset my recipes list
+
+        if (onSuccess) onSuccess(recipeId);
+      },
+    }
+  );
+};
+
+export const useCreateAndPublishRecipe = ({
+  onSuccess,
 }: { onSuccess?: () => void } = {}) => {
   const queryClient = useQueryClient();
 
@@ -42,12 +72,14 @@ export const useCreateRecipe = ({
 
   return useAdaptedMutation<
     RecipeId,
-    ICreateRecipeDto,
+    PublishRecipeFormValues,
     FormValidationOrApiError
   >(
-    (formValues) =>
-      CreateRecipeFormSchema.parseAsync(formValues)
-        .then((dto) => recipesApi.createRecipe({ ...dto, categoryIds: [] }))
+    async (formValues) =>
+      PublishRecipeFormSchema.parseAsync(formValues)
+        .then((dto) =>
+          recipesApi.createAndPublishRecipe({ ...dto, categoryIds: [] })
+        )
         .catch(catchFormValidationOrApiError),
     {
       onSuccess: () => {

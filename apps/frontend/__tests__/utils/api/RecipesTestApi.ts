@@ -6,6 +6,14 @@ export class RecipesTestApi implements IRecipesApi {
     'IRecipesApi.createRecipe'
   );
 
+  publishRecipe = apiMethodMock<IRecipesApi['publishRecipe']>(
+    'IRecipesApi.publishRecipe'
+  );
+
+  createAndPublishRecipe = apiMethodMock<IRecipesApi['createAndPublishRecipe']>(
+    'IRecipesApi.createAndPublishRecipe'
+  );
+
   listRecipesPaginated = apiMethodMock<IRecipesApi['listRecipesPaginated']>(
     'IRecipesApi.listRecipesPaginated'
   );

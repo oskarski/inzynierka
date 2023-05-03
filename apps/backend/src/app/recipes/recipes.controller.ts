@@ -15,7 +15,7 @@ import {
 } from '@lib/shared';
 import { CurrentUser, PrivateApiGuard } from '../auth';
 import { RecipesService } from './services';
-import { CreateRecipeDto, ListRecipesQueryDto } from './dtos';
+import { CreateRecipeDto, ListRecipesQueryDto, PublishRecipeDto } from './dtos';
 import { User } from '../iam/entities';
 
 @Controller('recipes')
@@ -29,6 +29,30 @@ export class RecipesController {
     @CurrentUser() currentUser: User,
   ): Promise<RecipeId> {
     return this.recipesService.createRecipe(createRecipeDto, currentUser.id);
+  }
+
+  @Post('/publish')
+  async createAndPublishRecipe(
+    @Body() publishRecipeDto: PublishRecipeDto,
+    @CurrentUser() currentUser: User,
+  ): Promise<RecipeId> {
+    return this.recipesService.createAndPublishRecipe(
+      publishRecipeDto,
+      currentUser.id,
+    );
+  }
+
+  @Post('/:id/publish')
+  async publishRecipe(
+    @Param('id') recipeId: RecipeId,
+    @Body() publishRecipeDto: PublishRecipeDto,
+    @CurrentUser() currentUser: User,
+  ): Promise<void> {
+    await this.recipesService.publishRecipe(
+      recipeId,
+      publishRecipeDto,
+      currentUser.id,
+    );
   }
 
   @Get()
