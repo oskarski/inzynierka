@@ -1,9 +1,11 @@
 import { assertIsDefined } from '@fe/utils';
 import React, { createContext, PropsWithChildren, useContext } from 'react';
 import { IRecipesApi } from './RecipesApi';
+import { IFavouriteRecipesApi } from './FavouriteRecipesApi';
 
 interface IRecipesApiContext {
   readonly recipesApi: IRecipesApi;
+  readonly favouriteRecipesApi: IFavouriteRecipesApi;
 }
 
 const RecipesApiContext = createContext<Partial<IRecipesApiContext>>({});
@@ -20,9 +22,13 @@ export const RecipesApiProvider = ({
 };
 
 export const useRecipesApi = (): IRecipesApiContext => {
-  const { recipesApi } = useContext(RecipesApiContext);
+  const { recipesApi, favouriteRecipesApi } = useContext(RecipesApiContext);
 
   assertIsDefined(recipesApi, 'IRecipesApiContext.recipesApi must be defined!');
+  assertIsDefined(
+    favouriteRecipesApi,
+    'IRecipesApiContext.favouriteRecipesApi must be defined!'
+  );
 
-  return { recipesApi };
+  return { recipesApi, favouriteRecipesApi };
 };

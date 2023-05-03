@@ -56,3 +56,7 @@ export interface IRecipeDto {
   readonly instructions: IRecipeInstructionDto[];
   readonly ingredients: IRecipeIngredientDto[];
 }
+
+export interface IAddRecipeToFavouritesDto {
+  readonly recipeId: RecipeId;
+}

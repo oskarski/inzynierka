@@ -1,6 +1,5 @@
 import { useRecipesApi } from './RecipesApi.context';
 import {
-  ListSelector,
   PaginationSelector,
   useAdaptedMutation,
   useAdaptedQuery,
@@ -17,14 +16,11 @@ import { IRecipe, IRecipeListItem } from './types';
 import { useListAllRecipesCategories } from '@fe/recipes-categories';
 import { useCallback } from 'react';
 import {
-  ApiError,
   catchFormValidationOrApiError,
   FormValidationOrApiError,
 } from '@fe/errors';
 import { useQueryClient } from 'react-query';
-import { ISignedInUserDto, ISignInDto, SignedInUserQueryKey } from '@fe/iam';
-import { SignInFormSchema } from '@fe/iam/api/schema/sign-in.schema';
-import { CreateRecipeFormSchema } from '@fe/recipes/api/schema/create-recipe.schema';
+import { CreateRecipeFormSchema } from './schema/create-recipe.schema';
 
 export const ListPaginatedRecipesQueryKey = [
   'recipesApi',
@@ -35,11 +31,6 @@ export const GetRecipeDetailsQueryKey = (id: RecipeId) => [
   'recipesApi',
   'getRecipeDetails',
   id,
-];
-
-export const ListFavouriteRecipesQueryKey = [
-  'recipesApi',
-  'listFavouriteRecipes',
 ];
 
 export const useCreateRecipe = ({
@@ -113,46 +104,6 @@ export const useRecipeDetails = (id: RecipeId) => {
     () => recipesApi.getRecipeDetails(id),
     {
       select: RecipeDetailsSelector,
-    }
-  );
-};
-
-export const useAddRecipeToFavourites = (id: RecipeId) => {
-  const queryClient = useQueryClient();
-
-  const { recipesApi } = useRecipesApi();
-
-  return useAdaptedMutation<void, void, ApiError>(
-    () => recipesApi.addRecipeToFavorites(id),
-    {
-      onSuccess: () =>
-        queryClient.invalidateQueries(ListFavouriteRecipesQueryKey),
-    }
-  );
-};
-
-export const useListFavouriteRecipes = () => {
-  const { recipesApi } = useRecipesApi();
-
-  return useAdaptedQuery<IRecipeListItemDto[], IRecipeListItem[]>(
-    ListFavouriteRecipesQueryKey,
-    () => recipesApi.listFavouriteRecipes(),
-    {
-      select: ListSelector(RecipeListItemSelector),
-    }
-  );
-};
-
-export const useRemoveRecipeFromFavourites = (id: RecipeId) => {
-  const queryClient = useQueryClient();
-
-  const { recipesApi } = useRecipesApi();
-
-  return useAdaptedMutation<void, void>(
-    () => recipesApi.removeRecipeFromFavorites(id),
-    {
-      onSuccess: () =>
-        queryClient.invalidateQueries(ListFavouriteRecipesQueryKey),
     }
   );
 };

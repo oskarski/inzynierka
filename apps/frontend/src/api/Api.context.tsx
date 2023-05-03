@@ -13,7 +13,11 @@ import {
   useSignOut,
 } from '@fe/iam';
 import { IngredientsApi, IngredientsApiProvider } from '@fe/ingredients';
-import { RecipesApi, RecipesApiProvider } from '@fe/recipes';
+import {
+  FavouriteRecipesApi,
+  RecipesApi,
+  RecipesApiProvider,
+} from '@fe/recipes';
 import { useRouter } from 'next/router';
 
 const publicHttpClient = HttpClient.publicHttpClient(env().apiUrl);
@@ -67,6 +71,8 @@ function PrivateApiProvider({
         api?.recipesCategoriesApi || new RecipesCategoriesApi(httpClient),
       ingredientsApi: api?.ingredientsApi || new IngredientsApi(httpClient),
       recipesApi: api?.recipesApi || new RecipesApi(httpClient),
+      favouriteRecipesApi:
+        api?.favouriteRecipesApi || new FavouriteRecipesApi(httpClient),
     };
   }, [api, signedInUser]);
 
@@ -77,7 +83,10 @@ function PrivateApiProvider({
       recipesCategoriesApi={httpBasedApi.recipesCategoriesApi}
     >
       <IngredientsApiProvider ingredientsApi={httpBasedApi.ingredientsApi}>
-        <RecipesApiProvider recipesApi={httpBasedApi.recipesApi}>
+        <RecipesApiProvider
+          recipesApi={httpBasedApi.recipesApi}
+          favouriteRecipesApi={httpBasedApi.favouriteRecipesApi}
+        >
           {children}
         </RecipesApiProvider>
       </IngredientsApiProvider>

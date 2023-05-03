@@ -57,7 +57,7 @@ describe(RecipeDetailsPage.name, () => {
     await findAllByText(testContext.container, /^Obiad$/);
 
     expect(testContext.container.textContent).toMatchInlineSnapshot(
-      `"ObiadPizza margaritaKrólowa gatunku, czyli margherita!0:25Składniki:Mąka - 320 gDrożdże - 5 gSos pomidorowy - 1 szt.Mozarella - 250 gKrok 1:Zrób ciastoKrok 2:Dodaj składnikiKrok 3:Wsadź do piekarnika na 10min"`
+      `"ObiadPizza margaritaKrólowa gatunku, czyli margherita!0:25Składniki:Mąka - 320 gDrożdże - 5 gSos pomidorowy - 1 szt.Mozarella - 250 gKrok 1:Zrób ciastoKrok 2:Dodaj składnikiKrok 3:Wsadź do piekarnika na 10minGotujemy!"`
     );
   });
 });

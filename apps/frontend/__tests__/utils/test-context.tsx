@@ -52,7 +52,7 @@ export class TestContext {
   }
 
   withoutFavouriteRecipes(): this {
-    this.api.recipesApi.listFavouriteRecipes.mockResolvedValue([]);
+    this.api.favouriteRecipesApi.listFavouriteRecipes.mockResolvedValue([]);
 
     return this;
   }

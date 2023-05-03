@@ -7,9 +7,10 @@ import {
   RecipeCategory,
   RecipeDetailsViewEntity,
 } from './entities';
-import { RecipesService } from './services';
+import { FavouriteRecipesService, RecipesService } from './services';
 import { RecipesRepository } from './repositories';
 import { IamModule } from '../iam';
+import { FavouriteRecipesController } from './favourite-recipes.controller';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { IamModule } from '../iam';
     ]),
     IamModule,
   ],
-  controllers: [RecipesController],
-  providers: [RecipesService, RecipesRepository],
+  controllers: [RecipesController, FavouriteRecipesController],
+  providers: [RecipesService, FavouriteRecipesService, RecipesRepository],
 })
 export class RecipesModule {}

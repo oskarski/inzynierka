@@ -5,9 +5,9 @@ import { SignedInGuard } from '../server/server-guards';
 import { HydrateReactQueryState } from '../server/server-react-query';
 import { Loader, SectionTitle } from '@fe/components';
 import {
+  FavouriteRecipesApi,
   ListFavouriteRecipesQueryKey,
   RecipeCard,
-  RecipesApi,
   useConnectedCategories,
   useListFavouriteRecipes,
 } from '@fe/recipes';
@@ -16,14 +16,14 @@ import React from 'react';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard(async (ctx, queryClient, user) => {
-    const recipesApi = new RecipesApi(
+    const favouriteRecipesApi = new FavouriteRecipesApi(
       HttpClient.privateHttpClient(env().apiUrl, {
         accessToken: user.accessToken,
       })
     );
 
     await queryClient.prefetchQuery(ListFavouriteRecipesQueryKey, () =>
-      recipesApi.listFavouriteRecipes()
+      favouriteRecipesApi.listFavouriteRecipes()
     );
 
     return { props: {} };
