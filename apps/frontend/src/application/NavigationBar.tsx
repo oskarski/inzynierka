@@ -58,7 +58,7 @@ const NavigationBar = AppPopup.withAppPopup(
             key={searchKey}
             title="Szukaj"
             icon={<SearchOutlined />}
-            badge={selectedIngredients.length}
+            badge={selectedIngredients.length === 0 ? null : selectedIngredients.length}
           />
 
           <TabBar.Item
