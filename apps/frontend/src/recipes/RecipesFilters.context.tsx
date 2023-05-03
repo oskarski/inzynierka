@@ -8,6 +8,7 @@ interface IRecipesFiltersContext {
   selectIngredient: (ingredient: IIngredientListItemDto) => void;
   unselectIngredient: (ingredientId: IngredientId) => void;
   isIngredientSelected: (ingredientId: IngredientId) => boolean;
+  clearSelection: () => void;
 }
 
 const RecipesFiltersContext = createContext<Partial<IRecipesFiltersContext>>(
@@ -20,6 +21,7 @@ export const RecipesFiltersProvider = ({ children }: PropsWithChildren<{}>) => {
     selectIngredient,
     unselectIngredient,
     isIngredientSelected,
+    clearSelection,
   } = useIngredientsSelection();
 
   const ctx: IRecipesFiltersContext = {
@@ -27,6 +29,7 @@ export const RecipesFiltersProvider = ({ children }: PropsWithChildren<{}>) => {
     selectIngredient,
     unselectIngredient,
     isIngredientSelected,
+    clearSelection,
   };
 
   return (
@@ -42,6 +45,7 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     selectIngredient,
     unselectIngredient,
     isIngredientSelected,
+    clearSelection,
   } = useContext(RecipesFiltersContext);
 
   assertIsDefined(
@@ -60,11 +64,16 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     isIngredientSelected,
     'IRecipesFiltersContext.isIngredientSelected must be defined!'
   );
+  assertIsDefined(
+    clearSelection,
+    'IRecipesFiltersContext.clearSelection must be defined!'
+  );
 
   return {
     selectedIngredients,
     selectIngredient,
     unselectIngredient,
     isIngredientSelected,
+    clearSelection,
   };
 };

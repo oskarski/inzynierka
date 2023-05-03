@@ -1,4 +1,4 @@
-import { AppPopup } from '@fe/components';
+import { AppPopup, LinkButton } from '@fe/components';
 import { Button, List } from 'antd-mobile';
 import React from 'react';
 import { useRecipesFilters } from '../RecipesFilters.context';
@@ -18,6 +18,7 @@ export const SearchRecipesByIngredientsPopupContent =
       selectIngredient,
       unselectIngredient,
       isIngredientSelected,
+      clearSelection,
     } = useRecipesFilters();
 
     const closePopup = AppPopup.useClosePopup();
@@ -42,9 +43,13 @@ export const SearchRecipesByIngredientsPopupContent =
 
             {selectedIngredients.length > 0 && (
               <>
-                <h5 className="text-2xl text-default font-medium mt-7 mb-3">
-                  Twoje składniki
-                </h5>
+                <div className="flex items-center justify-between mt-7 mb-3">
+                  <h5 className="text-2xl text-default font-medium">
+                    Twoje składniki
+                  </h5>
+
+                  <LinkButton onClick={clearSelection}>Wyczyść</LinkButton>
+                </div>
 
                 <List>
                   {selectedIngredients.map((ingredient) => (

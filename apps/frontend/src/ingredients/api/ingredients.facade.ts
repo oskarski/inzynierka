@@ -40,6 +40,11 @@ export const useIngredientsSelection = () => {
     []
   );
 
+  const clearSelection = useCallback(
+    () => setSelectedIngredients(new Map()),
+    []
+  );
+
   const isIngredientSelected = useCallback(
     (ingredientId: IngredientId) => selectedIngredients.has(ingredientId),
     [selectedIngredients]
@@ -50,5 +55,6 @@ export const useIngredientsSelection = () => {
     selectIngredient,
     unselectIngredient,
     isIngredientSelected,
+    clearSelection,
   };
 };
