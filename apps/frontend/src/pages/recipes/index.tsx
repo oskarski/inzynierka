@@ -5,6 +5,7 @@ import {
   RecipeCard,
   useConnectedCategories,
   useListPaginatedRecipes,
+  useRecipesFilters,
 } from '@fe/recipes';
 import { HydrateReactQueryState } from '../../server/server-react-query';
 import { SignedInGuard } from '../../server/server-guards';
@@ -18,8 +19,14 @@ export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
 );
 
 export default function RecipesPage() {
+  const { selectedIngredients } = useRecipesFilters();
+
   const [recipes, loading, error, { loadMore, hasMore }] =
-    useListPaginatedRecipes();
+    useListPaginatedRecipes({
+      ingredients: selectedIngredients.map((ingredient) => ({
+        id: ingredient.id,
+      })),
+    });
 
   const connectedCategories = useConnectedCategories();
 

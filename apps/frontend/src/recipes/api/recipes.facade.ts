@@ -4,16 +4,20 @@ import {
   useAdaptedQuery,
   usePaginatedQuery,
 } from '@fe/utils';
-import { IRecipeDto, IRecipeListItemDto, RecipeId } from '@lib/shared';
+import {
+  IListRecipesQueryDto,
+  IRecipeDto,
+  IRecipeListItemDto,
+  RecipeId,
+} from '@lib/shared';
 import { RecipeDetailsSelector, RecipeListItemSelector } from './selectors';
 import { IRecipe, IRecipeListItem } from './types';
 import { useListAllRecipesCategories } from '@fe/recipes-categories';
 import { useCallback } from 'react';
 
-export const ListPaginatedRecipesQueryKey = [
-  'recipesApi',
-  'listRecipesPaginated',
-];
+export const ListPaginatedRecipesQueryKey = (
+  queryDto: Omit<IListRecipesQueryDto, 'page' | 'perPage'>
+) => ['recipesApi', 'listRecipesPaginated', queryDto];
 
 export const GetRecipeDetailsQueryKey = (id: RecipeId) => [
   'recipesApi',
@@ -21,16 +25,18 @@ export const GetRecipeDetailsQueryKey = (id: RecipeId) => [
   id,
 ];
 
-export const useListPaginatedRecipes = () => {
+export const useListPaginatedRecipes = (
+  queryDto: Omit<IListRecipesQueryDto, 'page' | 'perPage'>
+) => {
   const { recipesApi } = useRecipesApi();
 
   return usePaginatedQuery<IRecipeListItemDto, IRecipeListItem>(
-    ListPaginatedRecipesQueryKey,
+    ListPaginatedRecipesQueryKey(queryDto),
     ({ pageParam = 0 }) =>
       recipesApi.listRecipesPaginated({
+        ...queryDto,
         page: pageParam,
         perPage: 20,
-        ingredients: [],
       }),
     20,
     {
