@@ -20,6 +20,10 @@
   @apply block;
 }
 
+div.adm-badge-fixed {
+  --top: 4px;
+}
+
 div.adm-list {
   --border-top: 0;
 }

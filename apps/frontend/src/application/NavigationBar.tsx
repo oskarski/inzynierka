@@ -10,7 +10,10 @@ import classNames from 'classnames';
 import { routes, useRouting } from '@fe/utils';
 import { useSignedInUser } from '@fe/iam';
 import { AppPopup } from '@fe/components';
-import { SearchRecipesByIngredientsPopupContent } from '@fe/recipes';
+import {
+  SearchRecipesByIngredientsPopupContent,
+  useRecipesFilters,
+} from '@fe/recipes';
 
 interface NavigationBarProps {
   className?: string;
@@ -20,6 +23,7 @@ const NavigationBar = AppPopup.withAppPopup(
   ({ className }: NavigationBarProps) => {
     const { currentRoute, redirectTo } = useRouting();
     const [signedInUser] = useSignedInUser();
+    const { selectedIngredients } = useRecipesFilters();
 
     const openSearchPopup = AppPopup.useOpenPopup();
 
@@ -54,6 +58,7 @@ const NavigationBar = AppPopup.withAppPopup(
             key={searchKey}
             title="Szukaj"
             icon={<SearchOutlined />}
+            badge={selectedIngredients.length}
           />
 
           <TabBar.Item
