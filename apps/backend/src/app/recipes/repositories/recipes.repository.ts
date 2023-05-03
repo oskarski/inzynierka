@@ -1,4 +1,9 @@
-import { DataSource, QueryRunner, Repository } from 'typeorm';
+import {
+  DataSource,
+  QueryRunner,
+  Repository,
+  SelectQueryBuilder,
+} from 'typeorm';
 import { Recipe, RecipeCategory, RecipeIngredient } from '../entities';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { BadRequestException, Injectable } from '@nestjs/common';
@@ -13,15 +18,6 @@ import {
   UserId,
 } from '@lib/shared';
 import { ListRecipesQueryDto } from '../dtos';
-
-interface FindAllSelect {
-  id: RecipeId;
-  name: string;
-  description: string;
-  preparationTime: number;
-  portions: number;
-  categoryIds: RecipeCategoryId[];
-}
 
 class SaveRecipeTransactionQuery {
   constructor(private readonly queryRunner: QueryRunner) {}
@@ -136,6 +132,57 @@ class SaveRecipeTransactionQuery {
   }
 }
 
+interface ListRecipesQueryResult {
+  id: RecipeId;
+  name: string;
+  description: string;
+  preparationTime: number;
+  portions: number;
+  categoryIds: RecipeCategoryId[];
+}
+
+class ListRecipesQuery {
+  constructor(private readonly queryBuilder: SelectQueryBuilder<Recipe>) {
+    this.queryBuilder
+      .select([
+        'recipes.id id',
+        'recipes.name name',
+        'recipes.description description',
+        'recipes.portions portions',
+      ])
+      .addSelect('recipes.preparation_time', 'preparationTime')
+      .addSelect('array_agg(category.category_id)', 'categoryIds')
+      .leftJoin('recipes.categories', 'category')
+      .groupBy('recipes.id')
+      .orderBy('recipes.id');
+  }
+
+  favourite(userId: UserId): this {
+    this.queryBuilder
+      .innerJoin('users_favourite_recipes', 'ufr', 'ufr.recipe_id = recipes.id')
+      .where('ufr.user_id = :userId', { userId });
+
+    return this;
+  }
+
+  paginate(pagination: Pagination): this {
+    this.queryBuilder.offset(pagination.skip).limit(pagination.take);
+
+    return this;
+  }
+
+  async getRawManyAndCount(): Promise<[ListRecipesQueryResult[], number]> {
+    const recipes = await this.queryBuilder.getRawMany();
+    const count = await this.queryBuilder.getCount();
+
+    return [recipes, count];
+  }
+
+  getRawMany(): Promise<ListRecipesQueryResult[]> {
+    return this.queryBuilder.getRawMany();
+  }
+}
+
 @Injectable()
 export class RecipesRepository {
   constructor(
@@ -211,37 +258,18 @@ export class RecipesRepository {
     }
   }
 
-  private listRecipesQuery() {
-    return this.repository
-      .createQueryBuilder('recipes')
-      .select([
-        'recipes.id id',
-        'recipes.name name',
-        'recipes.description description',
-        'recipes.portions portions',
-      ])
-      .addSelect('recipes.preparation_time', 'preparationTime')
-      .addSelect('array_agg(category.category_id)', 'categoryIds')
-      .leftJoin('recipes.categories', 'category')
-      .groupBy('recipes.id')
-      .orderBy('recipes.id');
-  }
-
-  async findAll(pagination: Pagination): Promise<[FindAllSelect[], number]> {
-    const query = this.listRecipesQuery()
-      .offset(pagination.skip)
-      .limit(pagination.take);
-
-    const recipes = await query.getRawMany();
-    const count = await query.getCount();
-
-    return [recipes, count];
+  async findAll(
+    pagination: Pagination,
+  ): Promise<[ListRecipesQueryResult[], number]> {
+    return new ListRecipesQuery(this.repository.createQueryBuilder('recipes'))
+      .paginate(pagination)
+      .getRawManyAndCount();
   }
 
   async findByFilters(
     queryDto: ListRecipesQueryDto,
     pagination: Pagination,
-  ): Promise<[FindAllSelect[], number]> {
+  ): Promise<[ListRecipesQueryResult[], number]> {
     const ingredientIds = queryDto.ingredients.map(
       (ingredient) => ingredient.id,
     );
@@ -303,10 +331,9 @@ export class RecipesRepository {
       .getOne();
   }
 
-  findAllFavourite(userId: UserId): Promise<FindAllSelect[]> {
-    return this.listRecipesQuery()
-      .innerJoin('users_favourite_recipes', 'ufr', 'ufr.recipe_id = recipes.id')
-      .where('ufr.user_id = :userId', { userId })
+  findAllFavourite(userId: UserId): Promise<ListRecipesQueryResult[]> {
+    return new ListRecipesQuery(this.repository.createQueryBuilder('recipes'))
+      .favourite(userId)
       .getRawMany();
   }
 }
