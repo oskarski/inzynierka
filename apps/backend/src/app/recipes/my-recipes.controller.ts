@@ -1,5 +1,5 @@
-import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
-import { RecipeId } from '@lib/shared';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { IRecipeListItemDto, RecipeId } from '@lib/shared';
 import { CurrentUser, PrivateApiGuard } from '../auth';
 import { MyRecipesService } from './services';
 import { CreateRecipeDto, PublishRecipeDto } from './dtos';
@@ -27,6 +27,13 @@ export class MyRecipesController {
       publishRecipeDto,
       currentUser.id,
     );
+  }
+
+  @Get()
+  async listRecipes(
+    @CurrentUser() currentUser: User,
+  ): Promise<IRecipeListItemDto[]> {
+    return this.myRecipesService.listRecipes(currentUser.id);
   }
 
   @Post('/:id/publish')

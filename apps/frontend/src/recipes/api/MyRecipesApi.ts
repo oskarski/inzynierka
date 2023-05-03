@@ -1,10 +1,17 @@
-import { RecipeId, ICreateRecipeDto, IPublishRecipeDto } from '@lib/shared';
+import {
+  RecipeId,
+  ICreateRecipeDto,
+  IPublishRecipeDto,
+  IRecipeListItemDto,
+} from '@lib/shared';
 import { HttpClient } from '@fe/utils';
 
 export interface IMyRecipesApi {
   createRecipe(dto: ICreateRecipeDto): Promise<RecipeId>;
 
   createAndPublishRecipe(dto: IPublishRecipeDto): Promise<RecipeId>;
+
+  listMyRecipes(): Promise<IRecipeListItemDto[]>;
 
   publishRecipe(recipeId: RecipeId, dto: IPublishRecipeDto): Promise<void>;
 }
@@ -23,6 +30,10 @@ export class MyRecipesApi implements IMyRecipesApi {
       `${this.baseUrl}/publish`,
       dto
     );
+  }
+
+  listMyRecipes(): Promise<IRecipeListItemDto[]> {
+    return this.httpClient.get<IRecipeListItemDto[]>(this.baseUrl);
   }
 
   publishRecipe(recipeId: RecipeId, dto: IPublishRecipeDto): Promise<void> {

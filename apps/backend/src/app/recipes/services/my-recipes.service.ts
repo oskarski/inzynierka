@@ -6,6 +6,7 @@ import {
 import {
   ICreateRecipeDto,
   IPublishRecipeDto,
+  IRecipeListItemDto,
   RecipeId,
   UserId,
 } from '@lib/shared';
@@ -20,6 +21,10 @@ export class MyRecipesService {
     userId: UserId,
   ): Promise<RecipeId> {
     return this.recipesRepository.createRecipe(createRecipeDto, userId);
+  }
+
+  async listRecipes(userId: UserId): Promise<IRecipeListItemDto[]> {
+    return this.recipesRepository.findUserRecipes(userId);
   }
 
   async createAndPublishRecipe(

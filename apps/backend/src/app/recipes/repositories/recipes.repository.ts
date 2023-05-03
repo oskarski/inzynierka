@@ -165,6 +165,12 @@ class ListRecipesQuery {
     return this;
   }
 
+  createdBy(userId: UserId): this {
+    this.queryBuilder.where('recipes.author_id = :userId', { userId });
+
+    return this;
+  }
+
   paginate(pagination: Pagination): this {
     this.queryBuilder.offset(pagination.skip).limit(pagination.take);
 
@@ -334,6 +340,12 @@ export class RecipesRepository {
   findAllFavourite(userId: UserId): Promise<ListRecipesQueryResult[]> {
     return new ListRecipesQuery(this.repository.createQueryBuilder('recipes'))
       .favourite(userId)
+      .getRawMany();
+  }
+
+  findUserRecipes(userId: UserId): Promise<ListRecipesQueryResult[]> {
+    return new ListRecipesQuery(this.repository.createQueryBuilder('recipes'))
+      .createdBy(userId)
       .getRawMany();
   }
 }

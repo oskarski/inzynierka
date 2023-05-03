@@ -1,17 +1,42 @@
 import Head from 'next/head';
-import { headTitle, routes } from '@fe/utils';
-import { SectionTitle } from '@fe/components';
+import { env, headTitle, HttpClient, routes } from '@fe/utils';
+import { Loader, SectionTitle } from '@fe/components';
 import { HydrateReactQueryState } from '../../../server/server-react-query';
 import { SignedInGuard } from '../../../server/server-guards';
 import { GetServerSideProps } from 'next/types';
 import { PlusSquareOutlined } from '@ant-design/icons';
 import Link from 'next/link';
+import {
+  ListMyRecipesQueryKey,
+  MyRecipesApi,
+  RecipeCard,
+  useConnectedCategories,
+  useListMyRecipes,
+} from '@fe/recipes';
+import { ApiErrorMessage } from '@fe/errors';
+import React from 'react';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
-  SignedInGuard()
+  SignedInGuard(async (ctx, queryClient, user) => {
+    const myRecipesApi = new MyRecipesApi(
+      HttpClient.privateHttpClient(env().apiUrl, {
+        accessToken: user.accessToken,
+      })
+    );
+
+    await queryClient.prefetchQuery(ListMyRecipesQueryKey, () =>
+      myRecipesApi.listMyRecipes()
+    );
+
+    return { props: {} };
+  })
 );
 
 export default function YourRecipesPage() {
+  const [myRecipes, loading, error] = useListMyRecipes();
+
+  const connectedCategories = useConnectedCategories();
+
   return (
     <>
       <Head>
@@ -26,8 +51,18 @@ export default function YourRecipesPage() {
             <PlusSquareOutlined className="text-2xl" />
           </Link>
         </div>
-        {/* TODO List user recipes here */}
-        Your recipes will be here ...
+
+        {loading && <Loader />}
+        {error && <ApiErrorMessage size="base" error={error} />}
+
+        {myRecipes?.map((recipe) => (
+          <RecipeCard
+            key={recipe.id}
+            recipe={recipe}
+            categories={connectedCategories(recipe)}
+            className="mb-4"
+          />
+        ))}
       </main>
     </>
   );

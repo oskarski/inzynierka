@@ -1,5 +1,5 @@
 import { useRecipesApi } from './RecipesApi.context';
-import { useAdaptedMutation } from '@fe/utils';
+import { ListSelector, useAdaptedMutation, useAdaptedQuery } from '@fe/utils';
 import { RecipeId } from '@lib/shared';
 import {
   catchFormValidationOrApiError,
@@ -14,6 +14,9 @@ import {
   PublishRecipeFormSchema,
   PublishRecipeFormValues,
 } from './schema/publish-recipe.schema';
+import { RecipeListItemSelector } from '@fe/recipes/api/selectors';
+
+export const ListMyRecipesQueryKey = ['myRecipesApi.listMyRecipes'];
 
 export const useCreateRecipe = ({
   onSuccess,
@@ -68,5 +71,15 @@ export const useCreateAndPublishRecipe = ({
         if (onSuccess) onSuccess();
       },
     }
+  );
+};
+
+export const useListMyRecipes = () => {
+  const { myRecipesApi } = useRecipesApi();
+
+  return useAdaptedQuery(
+    ListMyRecipesQueryKey,
+    () => myRecipesApi.listMyRecipes(),
+    { select: ListSelector(RecipeListItemSelector) }
   );
 };

@@ -6,11 +6,15 @@ export class MyRecipesTestApi implements IMyRecipesApi {
     'IMyRecipesApi.createRecipe'
   );
 
-  publishRecipe = apiMethodMock<IMyRecipesApi['publishRecipe']>(
-    'IMyRecipesApi.publishRecipe'
-  );
-
   createAndPublishRecipe = apiMethodMock<
     IMyRecipesApi['createAndPublishRecipe']
   >('IMyRecipesApi.createAndPublishRecipe');
+
+  listMyRecipes = apiMethodMock<IMyRecipesApi['listMyRecipes']>(
+    'IMyRecipesApi.listMyRecipes'
+  );
+
+  publishRecipe = apiMethodMock<IMyRecipesApi['publishRecipe']>(
+    'IMyRecipesApi.publishRecipe'
+  );
 }
