@@ -3,6 +3,11 @@ import { IngredientId } from './ingredients';
 
 export type RecipeId = string & { readonly __type: unique symbol };
 
+export enum RecipeState {
+  draft = 'draft',
+  published = 'published',
+}
+
 export interface ISaveRecipeIngredientDto {
   readonly id: IngredientId;
   readonly quantity: number;

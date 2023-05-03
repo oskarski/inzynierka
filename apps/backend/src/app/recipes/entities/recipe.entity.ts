@@ -11,6 +11,7 @@ import {
   IRecipeInstructionDto,
   RecipeCategoryId,
   RecipeId,
+  RecipeState,
   UserId,
 } from '@lib/shared';
 import { RecipeIngredient } from './recipe-ingredient.entity';
@@ -56,4 +57,7 @@ export class Recipe {
   @ManyToOne(() => User, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'author_id' })
   author: User | null;
+
+  @Column({ default: RecipeState.draft, enum: RecipeState })
+  state: RecipeState;
 }
