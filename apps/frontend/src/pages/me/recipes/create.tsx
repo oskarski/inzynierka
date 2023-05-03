@@ -65,7 +65,7 @@ export default function CreateYourRecipePage() {
         <SectionTitle className="mb-6">Dodaj przepis</SectionTitle>
 
         <AppForm
-          className="pb-8"
+          className="pb-24"
           form={form}
           onSubmit={(formValues) =>
             createRecipe({
