@@ -2,7 +2,6 @@ import React from 'react';
 import { TeamOutlined } from '@ant-design/icons';
 import { RecipeCategoryTag } from '@fe/recipes-categories';
 import Link from 'next/link';
-import { ProgressCircle } from 'antd-mobile';
 import classNames from 'classnames';
 import { IRecipeListItem } from '../api';
 import { IRecipeCategoryListItemDto } from '@lib/shared';
@@ -11,6 +10,7 @@ import { RecipeRate } from './RecipeRate';
 import { RecipePreparationTime } from './RecipePreparationTime';
 import { RecipeImage } from '@fe/recipes';
 import { routes } from '@fe/utils';
+import { RecipeIngredientsCoverageIndicator } from './RecipeIngredientsCoverageIndicator';
 
 interface RecipeCardProps {
   recipe: IRecipeListItem;
@@ -52,16 +52,13 @@ export const RecipeCard = ({
             <h3 className="text-xl text-default mb-2">{recipe.name}</h3>
           </div>
 
-          {/* TODO Add recipe coverage to recipe */}
-          {/*<div>*/}
-          {/*  <ProgressCircle*/}
-          {/*    className="text-xs"*/}
-          {/*    percent={recipe.coverage}*/}
-          {/*    style={{ '--size': '2.5rem', '--fill-color': '#00B578' }}*/}
-          {/*  >*/}
-          {/*    {recipe.coverage}%*/}
-          {/*  </ProgressCircle>*/}
-          {/*</div>*/}
+          {recipe.ingredientsPercentageCoverage !== undefined && (
+            <div>
+              <RecipeIngredientsCoverageIndicator
+                percentageCoverage={recipe.ingredientsPercentageCoverage}
+              />
+            </div>
+          )}
         </div>
 
         <p className="text-sm text-secondary mb-2">{recipe.description}</p>

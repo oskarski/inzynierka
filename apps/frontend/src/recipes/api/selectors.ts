@@ -11,6 +11,8 @@ export const RecipeListItemSelector = (
     ...dto,
     formattedPreparationTime: duration.format('H:MM'),
     isPublished: dto.state === RecipeState.published,
+    ingredientsPercentageCoverage:
+      dto.ingredientsCoverage && Math.round(dto.ingredientsCoverage * 100),
   };
 };
 

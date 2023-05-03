@@ -53,6 +53,7 @@ export interface IRecipeListItemDto {
   readonly portions: number;
   readonly categoryIds: RecipeCategoryId[];
   readonly state: RecipeState;
+  readonly ingredientsCoverage?: number;
 }
 
 export interface IRecipeInstructionDto {
