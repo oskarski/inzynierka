@@ -176,6 +176,14 @@ class ListRecipesQuery {
     return this;
   }
 
+  published(): this {
+    this.queryBuilder.where('recipes.state = :state', {
+      state: RecipeState.published,
+    });
+
+    return this;
+  }
+
   paginate(pagination: Pagination): this {
     this.queryBuilder.offset(pagination.skip).limit(pagination.take);
 
@@ -274,6 +282,7 @@ export class RecipesRepository {
   ): Promise<[ListRecipesQueryResult[], number]> {
     return new ListRecipesQuery(this.repository.createQueryBuilder('recipes'))
       .paginate(pagination)
+      .published()
       .getRawManyAndCount();
   }
 
@@ -325,6 +334,7 @@ export class RecipesRepository {
         'matching_recipes',
         'recipes.id = matching_recipes.recipe_id',
       )
+      .where('recipes.state = :state', { state: RecipeState.published })
       .orderBy('matching_recipes.ingredients_coverage', 'DESC')
       .offset(pagination.skip)
       .limit(pagination.take);
