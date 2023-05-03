@@ -15,10 +15,10 @@ import {
 import { IngredientsApi, IngredientsApiProvider } from '@fe/ingredients';
 import {
   FavouriteRecipesApi,
+  MyRecipesApi,
   RecipesApi,
   RecipesApiProvider,
 } from '@fe/recipes';
-import { useRouter } from 'next/router';
 
 const publicHttpClient = HttpClient.publicHttpClient(env().apiUrl);
 
@@ -73,6 +73,7 @@ function PrivateApiProvider({
       recipesApi: api?.recipesApi || new RecipesApi(httpClient),
       favouriteRecipesApi:
         api?.favouriteRecipesApi || new FavouriteRecipesApi(httpClient),
+      myRecipesApi: api?.myRecipesApi || new MyRecipesApi(httpClient),
     };
   }, [api, signedInUser]);
 
@@ -86,6 +87,7 @@ function PrivateApiProvider({
         <RecipesApiProvider
           recipesApi={httpBasedApi.recipesApi}
           favouriteRecipesApi={httpBasedApi.favouriteRecipesApi}
+          myRecipesApi={httpBasedApi.myRecipesApi}
         >
           {children}
         </RecipesApiProvider>

@@ -1,7 +1,6 @@
 import { useRecipesApi } from './RecipesApi.context';
 import {
   PaginationSelector,
-  useAdaptedMutation,
   useAdaptedQuery,
   usePaginatedQuery,
 } from '@fe/utils';
@@ -10,19 +9,6 @@ import { RecipeDetailsSelector, RecipeListItemSelector } from './selectors';
 import { IRecipe, IRecipeListItem } from './types';
 import { useListAllRecipesCategories } from '@fe/recipes-categories';
 import { useCallback } from 'react';
-import {
-  catchFormValidationOrApiError,
-  FormValidationOrApiError,
-} from '@fe/errors';
-import { useQueryClient } from 'react-query';
-import {
-  CreateRecipeFormSchema,
-  CreateRecipeFormValues,
-} from './schema/create-recipe.schema';
-import {
-  PublishRecipeFormSchema,
-  PublishRecipeFormValues,
-} from './schema/publish-recipe.schema';
 
 export const ListPaginatedRecipesQueryKey = [
   'recipesApi',
@@ -34,62 +20,6 @@ export const GetRecipeDetailsQueryKey = (id: RecipeId) => [
   'getRecipeDetails',
   id,
 ];
-
-export const useCreateRecipe = ({
-  onSuccess,
-}: {
-  onSuccess?: (recipeId: RecipeId) => void;
-} = {}) => {
-  const queryClient = useQueryClient();
-
-  const { recipesApi } = useRecipesApi();
-
-  return useAdaptedMutation<
-    RecipeId,
-    CreateRecipeFormValues,
-    FormValidationOrApiError
-  >(
-    (formValues) =>
-      CreateRecipeFormSchema.parseAsync(formValues)
-        .then((dto) => recipesApi.createRecipe(dto))
-        .catch(catchFormValidationOrApiError),
-    {
-      onSuccess: (recipeId, d) => {
-        // TODO reset my recipes list
-
-        if (onSuccess) onSuccess(recipeId);
-      },
-    }
-  );
-};
-
-export const useCreateAndPublishRecipe = ({
-  onSuccess,
-}: { onSuccess?: () => void } = {}) => {
-  const queryClient = useQueryClient();
-
-  const { recipesApi } = useRecipesApi();
-
-  return useAdaptedMutation<
-    RecipeId,
-    PublishRecipeFormValues,
-    FormValidationOrApiError
-  >(
-    async (formValues) =>
-      PublishRecipeFormSchema.parseAsync(formValues)
-        .then((dto) =>
-          recipesApi.createAndPublishRecipe({ ...dto, categoryIds: [] })
-        )
-        .catch(catchFormValidationOrApiError),
-    {
-      onSuccess: () => {
-        // TODO reset my recipes list
-
-        if (onSuccess) onSuccess();
-      },
-    }
-  );
-};
 
 export const useListPaginatedRecipes = () => {
   const { recipesApi } = useRecipesApi();

@@ -4,6 +4,7 @@ import { IngredientsTestApi } from './IngredientsTestApi';
 import { RecipesCategoriesTestApi } from './RecipesCategoriesTestApi';
 import { RecipesTestApi } from './RecipesTestApi';
 import { FavouriteRecipesTestApi } from './FavouriteRecipesTestApi';
+import { MyRecipesTestApi } from './MyRecipesTestApi';
 
 export class TestApi implements IApi {
   readonly iamApi = new IamTestApi();
@@ -11,4 +12,5 @@ export class TestApi implements IApi {
   readonly ingredientsApi = new IngredientsTestApi();
   readonly recipesApi = new RecipesTestApi();
   readonly favouriteRecipesApi = new FavouriteRecipesTestApi();
+  readonly myRecipesApi = new MyRecipesTestApi();
 }

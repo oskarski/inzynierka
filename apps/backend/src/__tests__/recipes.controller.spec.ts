@@ -358,8 +358,4 @@ describe(RecipesController.name, () => {
       });
     });
   });
-
-  describe('createRecipe()', () => {
-    it.todo('creates recipe');
-  });
 });

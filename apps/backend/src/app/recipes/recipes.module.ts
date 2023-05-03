@@ -11,6 +11,7 @@ import { FavouriteRecipesService, RecipesService } from './services';
 import { RecipesRepository } from './repositories';
 import { IamModule } from '../iam';
 import { FavouriteRecipesController } from './favourite-recipes.controller';
+import { MyRecipesController } from './my-recipes.controller';
 
 @Module({
   imports: [
@@ -22,7 +23,11 @@ import { FavouriteRecipesController } from './favourite-recipes.controller';
     ]),
     IamModule,
   ],
-  controllers: [RecipesController, FavouriteRecipesController],
+  controllers: [
+    RecipesController,
+    MyRecipesController,
+    FavouriteRecipesController,
+  ],
   providers: [RecipesService, FavouriteRecipesService, RecipesRepository],
 })
 export class RecipesModule {}
