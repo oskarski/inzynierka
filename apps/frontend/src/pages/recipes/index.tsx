@@ -21,7 +21,7 @@ export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
 export default function RecipesPage() {
   const { selectedIngredients } = useRecipesFilters();
 
-  const [recipes, loading, error, { loadMore, hasMore }] =
+  const [recipes, loading, error, { loadMore, hasMore }, { isFetching }] =
     useListPaginatedRecipes({
       ingredients: selectedIngredients.map((ingredient) => ({
         id: ingredient.id,
@@ -55,7 +55,7 @@ export default function RecipesPage() {
             ))}
 
             <InfiniteScroll loadMore={loadMore} hasMore={hasMore}>
-              {loading && <Loader />}
+              {isFetching && <Loader />}
             </InfiniteScroll>
           </>
         )}
