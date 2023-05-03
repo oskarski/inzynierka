@@ -12,14 +12,6 @@ conn = psycopg2.connect(
 # create a cursor object to execute SQL statements
 cur = conn.cursor()
 
-
-# commands to clean tables if needed
-#cur.execute("TRUNCATE TABLE recipes CASCADE")
-#cur.execute("TRUNCATE TABLE ingredients CASCADE")
-#cur.execute("TRUNCATE TABLE crawler_recipes  CASCADE")
-#cur.execute("TRUNCATE TABLE crawler_recipeType  CASCADE")
-#cur.execute("TRUNCATE TABLE recipe_Category   CASCADE")
-
 # insert new data into the recipes table
 cur.execute("""
     INSERT INTO recipes (name, description, preparation_time, portions, instructions)
@@ -48,7 +40,16 @@ UPDATE crawler_recipeType SET name = CASE WHEN type = 'dania-glowne' THEN 'dania
 ''')
 
 #insert new data into the recipe_category table
-cur.execute("INSERT INTO recipe_category (name) SELECT DISTINCT name FROM crawler_recipeType;")
+cur.execute('''
+INSERT INTO recipe_category (name)
+SELECT DISTINCT name
+FROM crawler_recipeType
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM recipe_category
+  WHERE recipe_category.name = crawler_recipeType.name
+);
+''')
 
 #update crawler_ingredients with link
 cur.execute('''
@@ -101,10 +102,6 @@ cur.execute('''
           );
 
 ''')
-
-
-
-
 
 # commit the changes to the database and close the cursor and connection
 conn.commit()
