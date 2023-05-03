@@ -39,15 +39,15 @@ ALTER TABLE crawler_recipeType ADD COLUMN IF NOT EXISTS name varchar(255);
 UPDATE crawler_recipeType SET name = CASE WHEN type = 'dania-glowne' THEN 'dania główne' WHEN type = 'zupy' THEN 'zupy' WHEN type = 'salatki' THEN 'sałatki' WHEN type = 'napoje' THEN 'napoje' WHEN type = 'przetwory' THEN 'przetwory' WHEN type = 'sniadania' THEN 'śniadania' WHEN type = 'fast-food' THEN 'fast-food' WHEN type = 'przekaski-na-impreze' THEN 'przekąski' WHEN type = 'desery' THEN 'desery' WHEN type = 'ciastka' THEN 'ciastka' WHEN type = 'ciasteczka' THEN 'ciasteczka' END WHERE name IS NULL;
 ''')
 
-#insert new data into the recipe_category table
+#insert new data into the categories table
 cur.execute('''
-INSERT INTO recipe_category (name)
+INSERT INTO categories (name)
 SELECT DISTINCT name
 FROM crawler_recipeType
 WHERE NOT EXISTS (
   SELECT 1
-  FROM recipe_category
-  WHERE recipe_category.name = crawler_recipeType.name
+  FROM categories
+  WHERE categories.name = crawler_recipeType.name
 );
 ''')
 
@@ -74,33 +74,33 @@ FROM crawler_recipeType cr
 WHERE crawler_recipes.link = cr.link;
 ''')
 
-#insert new data into recipe_recipes_categories
-#cur.execute('''
-#INSERT INTO recipes_recipes_categories (recipesId, recipeCategoryId)
-#SELECT r.id, rc.id FROM recipes r
-#JOIN crawler_recipes cr ON r.name = cr.title
-#JOIN crawler_recipeType crt ON cr.categoryName = crt.name
-#JOIN recipe_Category rc ON crt.name = rc.name ON CONFLICT DO NOTHING;
-#''')
+#insert new data into recipe_categories
+cur.execute('''
+INSERT INTO recipe_categories (recipe_id, category_id)
+SELECT r.id, c.id FROM recipes r
+JOIN crawler_recipes cr ON r.name = cr.title
+JOIN crawler_recipeType crt ON cr.categoryName = crt.name
+JOIN categories c ON crt.name = c.name
+ON CONFLICT DO NOTHING;
+''')
 
 #insert data into recipe_ingredients
 
 cur.execute('''
-    INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit)
-        SELECT DISTINCT r.id AS recipe_id, i.id AS ingredient_id,
-            CASE WHEN ci.amount ~ '^-?[0-9]+([,.][0-9]+)?$'
-                THEN REPLACE(ci.amount, ',', '.')::numeric
-                ELSE REPLACE(ci.amount, '-', '0')::numeric END AS quantity,
-           ci.unit AS unit
-        FROM crawler_ingredients ci
-        JOIN crawler_recipes cr ON ci.recipe_id = cr.id
-        JOIN recipes r ON cr.title = r.name
-        JOIN ingredients i ON ci.name = i.name
-        WHERE ci.amount <> ''
-          AND NOT EXISTS (
-            SELECT 1 FROM recipe_ingredients WHERE recipe_id = r.id AND ingredient_id = i.id
-          );
-
+INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit)
+    SELECT DISTINCT r.id AS recipe_id, i.id AS ingredient_id,
+        CASE WHEN ci.amount ~ '^-?[0-9]+([,.][0-9]+)?$'
+            THEN REPLACE(ci.amount, ',', '.')::numeric
+            ELSE REPLACE(ci.amount, '-', '0')::numeric END AS quantity,
+       ci.unit AS unit
+    FROM crawler_ingredients ci
+    JOIN crawler_recipes cr ON ci.recipe_id = cr.id
+    JOIN recipes r ON cr.title = r.name
+    JOIN ingredients i ON ci.name = i.name
+    WHERE ci.amount <> ''
+      AND NOT EXISTS (
+        SELECT 1 FROM recipe_ingredients WHERE recipe_id = r.id AND ingredient_id = i.id
+      );
 ''')
 
 # commit the changes to the database and close the cursor and connection
