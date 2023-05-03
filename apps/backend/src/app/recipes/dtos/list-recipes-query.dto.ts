@@ -11,6 +11,7 @@ import {
   IsArray,
   ValidateNested,
   IsUUID,
+  IsOptional,
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 
@@ -36,7 +37,8 @@ export class ListRecipesQueryDto implements IListRecipesQueryDto {
   readonly perPage: number;
 
   @IsArray()
+  @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => ListRecipesIngredientFilterDto)
-  readonly ingredients: ListRecipesIngredientFilterDto[];
+  readonly ingredients?: ListRecipesIngredientFilterDto[];
 }

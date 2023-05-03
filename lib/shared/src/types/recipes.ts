@@ -44,7 +44,7 @@ export interface IListRecipesIngredientFilterDto {
 export interface IListRecipesQueryDto {
   readonly page: number;
   readonly perPage: number;
-  readonly ingredients: IListRecipesIngredientFilterDto[];
+  readonly ingredients?: IListRecipesIngredientFilterDto[];
 }
 
 export interface IRecipeListItemDto {
