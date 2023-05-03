@@ -303,6 +303,7 @@ export class RecipesRepository {
       .addSelect('recipes.description', 'description')
       .addSelect('recipes.portions', 'portions')
       .addSelect('recipes.preparation_time', 'preparationTime')
+      .addSelect('recipes.state', 'state')
       .innerJoin(
         (subQuery) =>
           subQuery
