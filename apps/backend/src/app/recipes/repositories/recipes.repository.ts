@@ -1,10 +1,11 @@
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, QueryRunner, Repository } from 'typeorm';
 import { Recipe, RecipeCategory, RecipeIngredient } from '../entities';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Pagination } from '../../utils';
 import {
   ICreateRecipeDto,
+  ISaveRecipeIngredientDto,
   RecipeCategoryId,
   RecipeId,
   UserId,
@@ -19,6 +20,77 @@ interface FindAllSelect {
   categoryIds: RecipeCategoryId[];
 }
 
+class SaveRecipeTransactionQuery {
+  constructor(private readonly queryRunner: QueryRunner) {}
+
+  static async fromQueryRunner(
+    queryRunner: QueryRunner,
+  ): Promise<SaveRecipeTransactionQuery> {
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    return new SaveRecipeTransactionQuery(queryRunner);
+  }
+
+  async createRecipe(
+    dto: ICreateRecipeDto,
+    authorId: UserId,
+  ): Promise<RecipeId> {
+    const createdRecipe = await this.queryRunner.manager.save(Recipe, {
+      name: dto.name,
+      description: dto.description,
+      preparationTime: dto.preparationTime,
+      portions: dto.portions,
+      instructions: dto.instructions,
+      authorId,
+    });
+
+    return createdRecipe.id;
+  }
+
+  async saveCategories(
+    recipeId: RecipeId,
+    categoryIds: RecipeCategoryId[],
+  ): Promise<void> {
+    if (!categoryIds.length) return;
+
+    await this.queryRunner.manager.save(
+      RecipeCategory,
+      categoryIds.map((categoryId) => ({
+        recipeId,
+        categoryId,
+      })),
+    );
+  }
+
+  async saveIngredients(
+    recipeId: RecipeId,
+    ingredients: ISaveRecipeIngredientDto[],
+  ): Promise<void> {
+    if (!ingredients.length) return;
+
+    await this.queryRunner.manager.save(
+      RecipeIngredient,
+      ingredients.map((ingredient) => ({
+        recipeId,
+        ingredientId: ingredient.id,
+        quantity: ingredient.quantity,
+        unit: ingredient.unit,
+      })),
+    );
+  }
+
+  async execute(): Promise<void> {
+    await this.queryRunner.commitTransaction();
+    await this.queryRunner.release();
+  }
+
+  async rollback(): Promise<void> {
+    await this.queryRunner.rollbackTransaction();
+    await this.queryRunner.release();
+  }
+}
+
 @Injectable()
 export class RecipesRepository {
   constructor(
@@ -29,48 +101,21 @@ export class RecipesRepository {
   ) {}
 
   async createRecipe(dto: ICreateRecipeDto, userId: UserId): Promise<RecipeId> {
-    const queryRunner = this.dataSource.createQueryRunner();
-
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
+    const query = await SaveRecipeTransactionQuery.fromQueryRunner(
+      this.dataSource.createQueryRunner(),
+    );
 
     try {
-      const createdRecipe = await queryRunner.manager.save(Recipe, {
-        name: dto.name,
-        description: dto.description,
-        preparationTime: dto.preparationTime,
-        portions: dto.portions,
-        instructions: dto.instructions,
-        authorId: userId,
-      });
+      const createdRecipeId = await query.createRecipe(dto, userId);
 
-      if (dto.categoryIds.length)
-        await queryRunner.manager.save(
-          RecipeCategory,
-          dto.categoryIds.map((categoryId) => ({
-            recipeId: createdRecipe.id,
-            categoryId,
-          })),
-        );
+      await query.saveCategories(createdRecipeId, dto.categoryIds);
+      await query.saveIngredients(createdRecipeId, dto.ingredients);
+      await query.execute();
 
-      await queryRunner.manager.save(
-        RecipeIngredient,
-        dto.ingredients.map((ingredient) => ({
-          recipeId: createdRecipe.id,
-          ingredientId: ingredient.id,
-          quantity: ingredient.quantity,
-          unit: ingredient.unit,
-        })),
-      );
-
-      await queryRunner.commitTransaction();
-      await queryRunner.release();
-
-      return createdRecipe.id;
+      return createdRecipeId;
     } catch (err) {
       console.error(err);
-      await queryRunner.rollbackTransaction();
-      await queryRunner.release();
+      await query.rollback();
 
       throw new BadRequestException();
     }
