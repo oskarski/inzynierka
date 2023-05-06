@@ -33,16 +33,49 @@ cur.execute("""
         AND NOT EXISTS (SELECT 1 FROM ingredients WHERE name = regexp_replace(trim(crawler_ingredients.name), '\s{2,}', ' ', 'g'))
 """)
 
-# add column name to crawler_recipes
+# add column name to crawler_recipeType
 cur.execute('''
 ALTER TABLE crawler_recipeType ADD COLUMN IF NOT EXISTS name varchar(255);
-UPDATE crawler_recipeType SET name = CASE WHEN type = 'dania-glowne' THEN 'dania główne' WHEN type = 'zupy' THEN 'zupy' WHEN type = 'salatki' THEN 'sałatki' WHEN type = 'napoje' THEN 'napoje' WHEN type = 'przetwory' THEN 'przetwory' WHEN type = 'sniadania' THEN 'śniadania' WHEN type = 'fast-food' THEN 'fast-food' WHEN type = 'przekaski-na-impreze' THEN 'przekąski' WHEN type = 'desery' THEN 'desery' WHEN type = 'ciastka' THEN 'ciastka' WHEN type = 'ciasteczka' THEN 'ciasteczka' END WHERE name IS NULL;
+UPDATE crawler_recipeType SET name = CASE
+WHEN type = 'dania-glowne' THEN 'dania główne'
+WHEN type = 'zupy' THEN 'zupy'
+WHEN type = 'salatki' THEN 'sałatki'
+WHEN type = 'napoje' THEN 'napoje'
+WHEN type = 'przetwory' THEN 'przetwory'
+WHEN type = 'sniadania' THEN 'śniadania'
+WHEN type = 'fast-food' THEN 'fast-food'
+WHEN type = 'przekaski-na-impreze' THEN 'przekąski'
+WHEN type = 'desery' THEN 'desery'
+WHEN type = 'ciastka' THEN 'ciastka'
+WHEN type = 'ciasteczka' THEN 'ciasteczka'
+END WHERE name IS NULL;
 ''')
 
-#insert new data into the categories table
+# add column name to crawler_recipeCuisine
 cur.execute('''
-INSERT INTO categories (name)
-SELECT DISTINCT name
+ALTER TABLE crawler_recipeCuisine ADD COLUMN IF NOT EXISTS name varchar(255);
+UPDATE crawler_recipeCuisine SET name = CASE
+WHEN cuisine = 'kuchnia-amerykanska' THEN 'dania amerykańska'
+WHEN cuisine = 'kuchnia-azjatycka' THEN 'azjatycka'
+WHEN cuisine = 'kuchnia-czeska' THEN 'czeska'
+WHEN cuisine = 'kuchnia-francuska' THEN 'francuska'
+WHEN cuisine = 'kuchnia-grecka' THEN 'grecka'
+WHEN cuisine = 'kuchnia-hiszpanska-i-portugalska' THEN 'iberyjska'
+WHEN cuisine = 'kuchnia-polska' THEN 'polska'
+WHEN cuisine = 'kuchnia-wloska' THEN 'włoska'
+WHEN cuisine = 'brytyjska' THEN 'brytyjska'
+WHEN cuisine = 'kuchnia-orientalna' THEN 'orientala'
+WHEN cuisine = 'kuchnia-alpejska' THEN 'alpejska'
+WHEN cuisine = 'kuchnia-tajska' THEN 'tajska'
+WHEN cuisine = 'kuchnia-meksykanska' THEN 'meksykańska'
+END WHERE name IS NULL;
+''')
+
+
+#insert new data into the categories table - dish-type
+cur.execute('''
+INSERT INTO categories (name, type)
+SELECT DISTINCT name, 'dish-type'::categories_type_enum
 FROM crawler_recipeType
 WHERE NOT EXISTS (
   SELECT 1
@@ -50,6 +83,20 @@ WHERE NOT EXISTS (
   WHERE categories.name = crawler_recipeType.name
 );
 ''')
+
+#insert new data into the categories table - cuisine-type
+cur.execute('''
+INSERT INTO categories (name, type)
+SELECT DISTINCT name, 'cuisine-type'::categories_type_enum
+FROM crawler_recipeCuisine
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM categories
+  WHERE categories.name = crawler_recipeCuisine.name
+);
+''')
+
+
 
 #update crawler_ingredients with link
 cur.execute('''
