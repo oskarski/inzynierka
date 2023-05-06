@@ -105,19 +105,23 @@ UPDATE crawler_ingredients AS ci SET link = cr.link
 FROM crawler_recipes AS cr WHERE ci.recipe_id = cr.id;
 ''')
 
-#update crawler_recipes with type and name
-cur.execute('''
-ALTER TABLE crawler_recipes
-ADD COLUMN IF NOT EXISTS type varchar(255);
-UPDATE crawler_recipes SET type = cr.type FROM crawler_recipeType cr
-WHERE crawler_recipes.link = cr.link;
-''')
+#update crawler_recipes with type of the dish
 
 cur.execute('''
 ALTER TABLE crawler_recipes
-ADD COLUMN IF NOT EXISTS categoryName varchar(255);
-UPDATE crawler_recipes SET categoryName = cr.name
+ADD COLUMN IF NOT EXISTS dish_type varchar(255);
+UPDATE crawler_recipes SET dish_type = cr.name
 FROM crawler_recipeType cr
+WHERE crawler_recipes.link = cr.link;
+''')
+
+#update crawler_recipes with cuisine of the dish
+
+cur.execute('''
+ALTER TABLE crawler_recipes
+ADD COLUMN IF NOT EXISTS cuisine_type varchar(255);
+UPDATE crawler_recipes SET cuisine_type = cr.name
+FROM crawler_recipeCuisine cr
 WHERE crawler_recipes.link = cr.link;
 ''')
 
