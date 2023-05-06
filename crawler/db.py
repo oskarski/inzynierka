@@ -126,24 +126,29 @@ WHERE crawler_recipes.link = cr.link;
 ''')
 
 
-
-
 #insert new data into recipe_categories
 cur.execute('''
 INSERT INTO recipe_categories (recipe_id, category_id)
-SELECT r.id, c.id
+SELECT DISTINCT r.id, c.id
 FROM recipes r
 JOIN crawler_recipes cr ON r.name = cr.title
 JOIN crawler_recipeType crt ON cr.dish_type = crt.name
 JOIN crawler_recipeCuisine crc ON cr.cuisine_type = crc.name
-JOIN categories c ON crt.name = c.name
-JOIN categories c ON crc.name = c.name
-ON CONFLICT DO NOTHING;
+JOIN categories c ON crt.name = c.name OR crc.name = c.name;
 ''')
 
-
-
-
+cur.execute('''
+INSERT INTO recipe_categories (recipe_id, category_id)
+SELECT DISTINCT r.id as recipe_id, c.id as category_id
+FROM recipes r
+LEFT JOIN recipe_categories rc ON r.id = rc.recipe_id
+LEFT JOIN crawler_recipes cr ON r.name = cr.title
+LEFT JOIN crawler_recipeType crt ON cr.dish_type = crt.name
+LEFT JOIN crawler_recipeCuisine crc ON cr.cuisine_type = crc.name
+LEFT JOIN categories c ON crt.name = c.name OR crc.name = c.name
+WHERE rc.recipe_id IS NULL
+AND COALESCE(cr.dish_type, cr.cuisine_type) IS NOT NULL;
+''')
 
 #insert data into recipe_ingredients
 
