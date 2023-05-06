@@ -14,14 +14,14 @@ cur = conn.cursor()
 
 # insert new data into the recipes table
 cur.execute("""
-    INSERT INTO recipes (name, description, preparation_time, portions, instructions)
-    SELECT title, description,
-        (substring(time from 1 for 1)::INTEGER * 3600) + (substring(time from 3)::INTEGER * 60),
-        CAST(size AS INTEGER), to_json(jsondescription)
-    FROM crawler_recipes
-    INNER JOIN crawler_recipeinstruction ON crawler_recipes.link = crawler_recipeinstruction.link
-    WHERE trim(time) <> '' AND trim(size) <> ''
-    AND NOT EXISTS (SELECT 1 FROM recipes WHERE name = title)
+INSERT INTO recipes (name, description, preparation_time, portions, instructions)
+SELECT title, description,
+    CASE WHEN trim(time) = '' THEN 3600 ELSE (substring(time from 1 for 1)::INTEGER * 3600) + (substring(time from 3)::INTEGER * 60) END,
+    CASE WHEN trim(size) = '' THEN 4 ELSE CAST(size AS INTEGER) END,
+    to_json(jsondescription)
+FROM crawler_recipes
+INNER JOIN crawler_recipeinstruction ON crawler_recipes.link = crawler_recipeinstruction.link
+WHERE NOT EXISTS (SELECT 1 FROM recipes WHERE name = title);
 """)
 
 # insert new data into the ingredients table
@@ -125,15 +125,25 @@ FROM crawler_recipeCuisine cr
 WHERE crawler_recipes.link = cr.link;
 ''')
 
+
+
+
 #insert new data into recipe_categories
 cur.execute('''
 INSERT INTO recipe_categories (recipe_id, category_id)
-SELECT r.id, c.id FROM recipes r
+SELECT r.id, c.id
+FROM recipes r
 JOIN crawler_recipes cr ON r.name = cr.title
-JOIN crawler_recipeType crt ON cr.categoryName = crt.name
+JOIN crawler_recipeType crt ON cr.dish_type = crt.name
+JOIN crawler_recipeCuisine crc ON cr.cuisine_type = crc.name
 JOIN categories c ON crt.name = c.name
+JOIN categories c ON crc.name = c.name
 ON CONFLICT DO NOTHING;
 ''')
+
+
+
+
 
 #insert data into recipe_ingredients
 
