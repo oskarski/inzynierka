@@ -20,6 +20,7 @@ export class RecipeListItemDtoBuilder extends DtoBuilder<IRecipeListItemDto> {
       portions: true,
       categoryIds: true,
       state: true,
+      ingredientsCoverage: false,
     };
   }
 
