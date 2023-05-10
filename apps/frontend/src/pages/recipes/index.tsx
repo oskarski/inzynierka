@@ -20,13 +20,14 @@ export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
 );
 
 export default function RecipesPage() {
-  const { selectedIngredients } = useRecipesFilters();
+  const { selectedIngredients, filters } = useRecipesFilters();
 
   const [recipes, loading, error, { loadMore, hasMore }, { isFetching }] =
     useListPaginatedRecipes({
       ingredients: selectedIngredients.map((ingredient) => ({
         id: ingredient.id,
       })),
+      ...filters,
     });
 
   const connectedCategories = useConnectedCategories();

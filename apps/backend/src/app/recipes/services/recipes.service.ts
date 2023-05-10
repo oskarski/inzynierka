@@ -37,7 +37,10 @@ export class RecipesService {
       };
     }
 
-    const [data, total] = await this.recipesRepository.findAll(pagination);
+    const [data, total] = await this.recipesRepository.findAll(
+      pagination,
+      queryDto,
+    );
 
     return {
       data,

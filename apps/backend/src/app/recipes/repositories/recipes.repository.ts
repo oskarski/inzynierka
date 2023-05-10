@@ -10,6 +10,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Pagination } from '../../utils';
 import {
   ICreateRecipeDto,
+  IListRecipesFiltersDto,
+  IListRecipesPreparationTimeFiltersDto,
   IListRecipesQueryDto,
   IPublishRecipeDto,
   ISaveRecipeIngredientDto,
@@ -184,6 +186,23 @@ class ListRecipesQuery {
     return this;
   }
 
+  filterByPreparationTime(
+    filters: IListRecipesPreparationTimeFiltersDto,
+  ): this {
+    if (filters.maxPreparationTime)
+      this.queryBuilder.andWhere(
+        'recipes.preparation_time <= :maxPreparationTime',
+        { maxPreparationTime: filters.maxPreparationTime },
+      );
+    if (filters.minPreparationTime)
+      this.queryBuilder.andWhere(
+        'recipes.preparation_time >= :minPreparationTime',
+        { minPreparationTime: filters.minPreparationTime },
+      );
+
+    return this;
+  }
+
   paginate(pagination: Pagination): this {
     this.queryBuilder.offset(pagination.skip).limit(pagination.take);
 
@@ -279,10 +298,12 @@ export class RecipesRepository {
 
   async findAll(
     pagination: Pagination,
+    filters: IListRecipesFiltersDto,
   ): Promise<[ListRecipesQueryResult[], number]> {
     return new ListRecipesQuery(this.repository.createQueryBuilder('recipes'))
       .paginate(pagination)
       .published()
+      .filterByPreparationTime(filters)
       .getRawManyAndCount();
   }
 
@@ -290,7 +311,7 @@ export class RecipesRepository {
     queryDto: IListRecipesQueryDto,
     pagination: Pagination,
   ): Promise<[ListRecipesQueryResult[], number]> {
-    const ingredientIds = queryDto.ingredients.map(
+    const ingredientIds = queryDto?.ingredients.map(
       (ingredient) => ingredient.id,
     );
 
@@ -339,6 +360,15 @@ export class RecipesRepository {
       .orderBy('matching_recipes.ingredients_coverage', 'DESC')
       .offset(pagination.skip)
       .limit(pagination.take);
+
+    if (queryDto.maxPreparationTime)
+      query.andWhere('recipes.preparation_time <= :maxPreparationTime', {
+        maxPreparationTime: queryDto.maxPreparationTime,
+      });
+    if (queryDto.minPreparationTime)
+      query.andWhere('recipes.preparation_time >= :minPreparationTime', {
+        minPreparationTime: queryDto.minPreparationTime,
+      });
 
     const recipes = await query.getRawMany();
     const count = await query.getCount();

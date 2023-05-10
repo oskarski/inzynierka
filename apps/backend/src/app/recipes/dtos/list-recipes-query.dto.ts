@@ -3,8 +3,15 @@ import {
   IListRecipesQueryDto,
   IngredientId,
 } from '@lib/shared';
-import { IsArray, ValidateNested, IsUUID, IsOptional } from 'class-validator';
-import { Type } from 'class-transformer';
+import {
+  IsArray,
+  ValidateNested,
+  IsUUID,
+  IsOptional,
+  IsInt,
+  IsPositive,
+} from 'class-validator';
+import { Transform, Type } from 'class-transformer';
 import { PaginationQueryDto } from '../../utils';
 
 class ListRecipesIngredientFilterDto
@@ -23,4 +30,16 @@ export class ListRecipesQueryDto
   @ValidateNested({ each: true })
   @Type(() => ListRecipesIngredientFilterDto)
   readonly ingredients?: ListRecipesIngredientFilterDto[];
+
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  @Transform(({ value }) => parseInt(value, 10))
+  readonly minPreparationTime?: number;
+
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  @Transform(({ value }) => parseInt(value, 10))
+  readonly maxPreparationTime?: number;
 }

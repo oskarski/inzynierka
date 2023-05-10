@@ -49,7 +49,7 @@ export interface IListRecipesPreparationTimeFiltersDto {
 export interface IListRecipesFiltersDto
   extends IListRecipesPreparationTimeFiltersDto {}
 
-export interface IListRecipesQueryDto {
+export interface IListRecipesQueryDto extends IListRecipesFiltersDto {
   readonly ingredients?: IListRecipesIngredientFilterDto[];
 }
 
