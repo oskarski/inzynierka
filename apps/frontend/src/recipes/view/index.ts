@@ -6,3 +6,4 @@ export * from './RecipeImage';
 export * from './SearchRecipesByIngredientsPopupContent';
 export * from './RecipeCookingModeModalButton';
 export * from './EmptyMyRecipesList';
+export * from './RecipeFiltersButton';

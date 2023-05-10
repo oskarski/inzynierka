@@ -3,6 +3,7 @@ import { headTitle } from '@fe/utils';
 import { Loader, SectionTitle } from '@fe/components';
 import {
   RecipeCard,
+  RecipeFiltersButton,
   useConnectedCategories,
   useListPaginatedRecipes,
   useRecipesFilters,
@@ -37,7 +38,11 @@ export default function RecipesPage() {
       </Head>
 
       <main>
-        <SectionTitle className="mb-6">Pasujące przepisy</SectionTitle>
+        <div className="flex items-center justify-between mb-6">
+          <SectionTitle>Pasujące przepisy</SectionTitle>
+
+          <RecipeFiltersButton />
+        </div>
 
         {loading && <Loader />}
 

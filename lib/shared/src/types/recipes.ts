@@ -41,6 +41,14 @@ export interface IListRecipesIngredientFilterDto {
   readonly id: IngredientId;
 }
 
+export interface IListRecipesPreparationTimeFiltersDto {
+  readonly minPreparationTime?: number;
+  readonly maxPreparationTime?: number;
+}
+
+export interface IListRecipesFiltersDto
+  extends IListRecipesPreparationTimeFiltersDto {}
+
 export interface IListRecipesQueryDto {
   readonly ingredients?: IListRecipesIngredientFilterDto[];
 }
