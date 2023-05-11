@@ -1,12 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { RecipeCategoryId } from '@lib/shared';
-
-export enum CategoryType {
-  DishType = 'dish-type',
-  CuisineType = 'cuisine-type',
-  DietType = 'diet-type',
-  Other = 'other',
-}
+import { CategoryType, RecipeCategoryId } from '@lib/shared';
 
 @Entity({ name: 'categories' })
 export class Category {
