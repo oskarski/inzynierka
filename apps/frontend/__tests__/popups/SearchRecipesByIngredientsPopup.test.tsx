@@ -30,7 +30,7 @@ describe(SearchRecipesByIngredientsPopupContent.name, () => {
     await selectIngredient(/^Papryka$/);
 
     expect(testContext.container.textContent).toMatchInlineSnapshot(
-      `"Jakie masz składniki?PomidorDodajPaprykaDodanoPierś kurczakaDodajTwoje składnikiPaprykaUsuńSzukamy!"`
+      `"Jakie masz składniki?PomidorDodajPaprykaDodanoPierś kurczakaDodajTwoje składnikiWyczyśćPaprykaUsuńSzukamy!"`
     );
 
     testContext.api.ingredientsApi.listIngredients.mockResolvedValueOnce([
@@ -49,13 +49,13 @@ describe(SearchRecipesByIngredientsPopupContent.name, () => {
       .then(() => findByText(testContext.container, /^Marchewka$/));
 
     expect(testContext.container.textContent).toMatchInlineSnapshot(
-      `"Jakie masz składniki?MarchewkaDodajMangoDodajMajonezDodajTwoje składnikiPaprykaUsuńSzukamy!"`
+      `"Jakie masz składniki?MarchewkaDodajMangoDodajMajonezDodajTwoje składnikiWyczyśćPaprykaUsuńSzukamy!"`
     );
 
     await selectIngredient(/^Marchewka$/);
 
     expect(testContext.container.textContent).toMatchInlineSnapshot(
-      `"Jakie masz składniki?MarchewkaDodanoMangoDodajMajonezDodajTwoje składnikiPaprykaUsuńMarchewkaUsuńSzukamy!"`
+      `"Jakie masz składniki?MarchewkaDodanoMangoDodajMajonezDodajTwoje składnikiWyczyśćPaprykaUsuńMarchewkaUsuńSzukamy!"`
     );
 
     ButtonHandle.fromText(testContext.container, /^Szukamy!$/).click();
