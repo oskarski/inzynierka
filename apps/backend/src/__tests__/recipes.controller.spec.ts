@@ -6,7 +6,7 @@ import {
 } from '../app/recipes/entities';
 import { TestContext } from './utils';
 import { Category } from '../app/recipe-categories/entities';
-import { Id } from '@lib/shared';
+import { Id, RecipeState } from '@lib/shared';
 import { Ingredient } from '../app/ingredients/entities';
 
 const testCtx = new TestContext();
@@ -100,6 +100,7 @@ describe(RecipesController.name, () => {
 
     const firstRecipe = new Recipe();
     firstRecipe.id = Id('3fe1b69b-3970-42e7-aa31-982f58472163');
+    firstRecipe.state = RecipeState.published;
     firstRecipe.name = 'Pizza margarita';
     firstRecipe.description = 'Królowa gatunku, czyli margherita!';
     firstRecipe.preparationTime = 1500;
@@ -112,6 +113,7 @@ describe(RecipesController.name, () => {
 
     const secondRecipe = new Recipe();
     secondRecipe.id = Id('88271d4c-ed68-446b-a135-e89521b1718e');
+    secondRecipe.state = RecipeState.published;
     secondRecipe.name = 'Kanapka z szynką';
     secondRecipe.description = 'Klasyka gatunku!';
     secondRecipe.preparationTime = 300;
@@ -119,6 +121,7 @@ describe(RecipesController.name, () => {
 
     const thirdRecipe = new Recipe();
     thirdRecipe.id = Id('e4d81d15-4ad6-4f21-aec1-8a24af414aa4');
+    thirdRecipe.state = RecipeState.published;
     thirdRecipe.name = 'Hot Dog';
     thirdRecipe.description = 'Bardzo dobry!';
     thirdRecipe.preparationTime = 900;
@@ -243,6 +246,7 @@ describe(RecipesController.name, () => {
         expect(firstPage.data).toEqual([
           {
             id: expect.any(String),
+            state: RecipeState.published,
             name: 'Pizza margarita',
             description: 'Królowa gatunku, czyli margherita!',
             preparationTime: 1500,
@@ -251,6 +255,7 @@ describe(RecipesController.name, () => {
           },
           {
             id: expect.any(String),
+            state: RecipeState.published,
             name: 'Kanapka z szynką',
             description: 'Klasyka gatunku!',
             preparationTime: 300,
@@ -263,6 +268,7 @@ describe(RecipesController.name, () => {
         expect(secondPage.data).toEqual([
           {
             id: expect.any(String),
+            state: RecipeState.published,
             name: 'Hot Dog',
             description: 'Bardzo dobry!',
             preparationTime: 900,
@@ -291,6 +297,7 @@ describe(RecipesController.name, () => {
           // Matches 1/2 = 50% ingredient
           {
             id: expect.any(String),
+            state: RecipeState.published,
             name: 'Kanapka z szynką',
             description: 'Klasyka gatunku!',
             preparationTime: 300,
@@ -301,6 +308,7 @@ describe(RecipesController.name, () => {
           // Matches 2/5 = 40% ingredients
           {
             id: expect.any(String),
+            state: RecipeState.published,
             name: 'Hot Dog',
             description: 'Bardzo dobry!',
             preparationTime: 900,
