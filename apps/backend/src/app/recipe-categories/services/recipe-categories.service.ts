@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IRecipeCategoryListItemDto } from '@lib/shared';
 import { RecipeCategoryRepository } from '../repositories';
+import { ListCategoriesQueryDto } from '../dtos';
 
 @Injectable()
 export class RecipeCategoriesService {
@@ -8,7 +9,9 @@ export class RecipeCategoriesService {
     private readonly recipeCategoryRepository: RecipeCategoryRepository,
   ) {}
 
-  listAll(): Promise<IRecipeCategoryListItemDto[]> {
-    return this.recipeCategoryRepository.listAll()
+  listCategories(
+    queryDto: ListCategoriesQueryDto,
+  ): Promise<IRecipeCategoryListItemDto[]> {
+    return this.recipeCategoryRepository.findAll(queryDto);
   }
 }

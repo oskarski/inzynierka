@@ -1,6 +1,6 @@
 import { Loader } from '@fe/components';
 import React, { createContext, PropsWithChildren, useContext } from 'react';
-import { useListAllRecipesCategories } from '../api';
+import { useListCategories } from '../api';
 import { IRecipeCategoryListItemDto } from '@lib/shared';
 import { assertIsDefined } from '@fe/utils';
 import { RecipeCategoryCard } from './RecipeCategoryCard';
@@ -28,7 +28,7 @@ const useRecipesCategoriesListing = (): IRecipesCategoriesListingContext => {
 export const RecipesCategoriesListing = ({
   children,
 }: PropsWithChildren<{}>) => {
-  const [recipesCategories, loading, error] = useListAllRecipesCategories();
+  const [recipesCategories, loading, error] = useListCategories();
 
   if (loading) return <Loader />;
   if (error) return <ApiErrorMessage size="base" error={error} />;

@@ -12,7 +12,7 @@ import {
 } from '@lib/shared';
 import { RecipeDetailsSelector, RecipeListItemSelector } from './selectors';
 import { IRecipe, IRecipeListItem } from './types';
-import { useListAllRecipesCategories } from '@fe/recipes-categories';
+import { useListCategories } from '@fe/recipes-categories';
 import { useCallback } from 'react';
 
 export const ListPaginatedRecipesQueryKey = (
@@ -44,7 +44,7 @@ export const useListPaginatedRecipes = (queryDto: IListRecipesQueryDto) => {
 };
 
 export const useConnectedCategories = () => {
-  const [categories] = useListAllRecipesCategories();
+  const [categories] = useListCategories();
 
   return useCallback(
     (recipe: IRecipeListItem | IRecipe) => {

@@ -7,6 +7,10 @@ export enum CategoryType {
   Other = 'other',
 }
 
+export interface IListCategoriesQueryDto {
+  readonly type?: CategoryType;
+}
+
 export interface IRecipeCategoryListItemDto {
   readonly id: RecipeCategoryId;
   readonly name: string;

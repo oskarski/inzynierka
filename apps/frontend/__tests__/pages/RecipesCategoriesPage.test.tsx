@@ -6,7 +6,7 @@ import { findByText } from '@testing-library/react';
 
 const testContext = new TestContext();
 
-testContext.api.recipesCategoriesApi.listAllCategories.mockResolvedValue([
+testContext.api.recipesCategoriesApi.listCategories.mockResolvedValue([
   RecipeCategoryListItemDtoBuilder.prefilled().named('Kuchnia Włoska').build(),
   RecipeCategoryListItemDtoBuilder.prefilled()
     .named('Kuchnia Hiszpańska')

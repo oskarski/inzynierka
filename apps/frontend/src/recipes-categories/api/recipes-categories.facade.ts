@@ -1,14 +1,15 @@
 import { useRecipesCategoriesApi } from './RecipesCategoriesApi.context';
 import { useAdaptedQuery } from '@fe/utils';
+import { IListCategoriesQueryDto } from '@lib/shared';
 
 export const ListAllRecipesCategoriesQueryKey = [
-  'recipesCategoriesApi.listAllCategories',
+  'recipesCategoriesApi.listCategories',
 ];
 
-export const useListAllRecipesCategories = () => {
+export const useListCategories = (queryDto: IListCategoriesQueryDto = {}) => {
   const { recipesCategoriesApi } = useRecipesCategoriesApi();
 
   return useAdaptedQuery(ListAllRecipesCategoriesQueryKey, () =>
-    recipesCategoriesApi.listAllCategories()
+    recipesCategoriesApi.listCategories(queryDto)
   );
 };

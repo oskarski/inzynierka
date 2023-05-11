@@ -1,8 +1,13 @@
-import { IRecipeCategoryListItemDto } from '@lib/shared';
+import {
+  IListCategoriesQueryDto,
+  IRecipeCategoryListItemDto,
+} from '@lib/shared';
 import { HttpClient } from '@fe/utils';
 
 export interface IRecipesCategoriesApi {
-  listAllCategories(): Promise<IRecipeCategoryListItemDto[]>;
+  listCategories(
+    queryDto: IListCategoriesQueryDto
+  ): Promise<IRecipeCategoryListItemDto[]>;
 }
 
 export class RecipesCategoriesApi implements IRecipesCategoriesApi {
@@ -10,7 +15,12 @@ export class RecipesCategoriesApi implements IRecipesCategoriesApi {
 
   constructor(private readonly httpClient: HttpClient) {}
 
-  listAllCategories(): Promise<IRecipeCategoryListItemDto[]> {
-    return this.httpClient.get<IRecipeCategoryListItemDto[]>(this.baseUrl);
+  listCategories(
+    queryDto: IListCategoriesQueryDto
+  ): Promise<IRecipeCategoryListItemDto[]> {
+    return this.httpClient.get<IRecipeCategoryListItemDto[]>(
+      this.baseUrl,
+      queryDto
+    );
   }
 }

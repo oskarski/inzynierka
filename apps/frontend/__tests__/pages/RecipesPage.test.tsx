@@ -10,7 +10,7 @@ import RecipesPage from '@fe/pages/recipes';
 
 const testContext = new TestContext();
 
-testContext.api.recipesCategoriesApi.listAllCategories.mockResolvedValue([
+testContext.api.recipesCategoriesApi.listCategories.mockResolvedValue([
   RecipeCategoryListItemDtoBuilder.prefilled()
     .havingId(Id('49062c6f-401e-4fb1-a3de-9bec74df8081'))
     .named('Lekkie i Fit')
