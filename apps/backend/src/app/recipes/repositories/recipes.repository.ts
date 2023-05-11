@@ -10,6 +10,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Pagination } from '../../utils';
 import {
   ICreateRecipeDto,
+  IListRecipesCategoryFiltersDto,
   IListRecipesFiltersDto,
   IListRecipesPreparationTimeFiltersDto,
   IListRecipesQueryDto,
@@ -203,6 +204,16 @@ class ListRecipesQuery {
     return this;
   }
 
+  filterByDishType(filters: IListRecipesCategoryFiltersDto): this {
+    if (filters.dishTypeCategoryIds)
+      this.queryBuilder.andWhere(
+        'category.category_id IN (:...dishTypeCategoryIds)',
+        { dishTypeCategoryIds: filters.dishTypeCategoryIds },
+      );
+
+    return this;
+  }
+
   paginate(pagination: Pagination): this {
     this.queryBuilder.offset(pagination.skip).limit(pagination.take);
 
@@ -304,6 +315,7 @@ export class RecipesRepository {
       .paginate(pagination)
       .published()
       .filterByPreparationTime(filters)
+      .filterByDishType(filters)
       .getRawManyAndCount();
   }
 
@@ -369,6 +381,11 @@ export class RecipesRepository {
       query.andWhere('recipes.preparation_time >= :minPreparationTime', {
         minPreparationTime: queryDto.minPreparationTime,
       });
+    if (queryDto.dishTypeCategoryIds)
+      query.andWhere(
+        'matching_recipes.category_ids && ARRAY[:...dishTypeCategoryIds]::uuid[]',
+        { dishTypeCategoryIds: queryDto.dishTypeCategoryIds },
+      );
 
     const recipes = await query.getRawMany();
     const count = await query.getCount();

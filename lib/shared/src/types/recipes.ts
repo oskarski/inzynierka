@@ -46,8 +46,13 @@ export interface IListRecipesPreparationTimeFiltersDto {
   readonly maxPreparationTime?: number;
 }
 
+export interface IListRecipesCategoryFiltersDto {
+  readonly dishTypeCategoryIds?: RecipeCategoryId[];
+}
+
 export interface IListRecipesFiltersDto
-  extends IListRecipesPreparationTimeFiltersDto {}
+  extends IListRecipesPreparationTimeFiltersDto,
+    IListRecipesCategoryFiltersDto {}
 
 export interface IListRecipesQueryDto extends IListRecipesFiltersDto {
   readonly ingredients?: IListRecipesIngredientFilterDto[];

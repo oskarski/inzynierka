@@ -11,13 +11,26 @@ import {
   IListRecipesFiltersDto,
   IListRecipesPreparationTimeFiltersDto,
   IngredientId,
+  RecipeCategoryId,
 } from '@lib/shared';
 import { useIngredientsSelection } from '@fe/ingredients';
 
-type FiltersAction = {
-  type: 'select-preparation-time-filter';
-  value: IListRecipesPreparationTimeFiltersDto;
-};
+type FiltersAction =
+  | {
+      type: 'select-preparation-time-filter';
+      value: IListRecipesPreparationTimeFiltersDto;
+    }
+  | {
+      type: 'select-dish-type-filter';
+      categoryId: RecipeCategoryId;
+    }
+  | {
+      type: 'unselect-dish-type-filter';
+      categoryId: RecipeCategoryId;
+    }
+  | {
+      type: 'clear-dish-type-filter';
+    };
 
 const filtersReducer = (
   state: IListRecipesFiltersDto,
@@ -29,6 +42,30 @@ const filtersReducer = (
         ...state,
         minPreparationTime: action.value.minPreparationTime,
         maxPreparationTime: action.value.maxPreparationTime,
+      };
+    case 'select-dish-type-filter':
+      return {
+        ...state,
+        dishTypeCategoryIds: [
+          ...(state.dishTypeCategoryIds || []),
+          action.categoryId,
+        ],
+      };
+    case 'unselect-dish-type-filter': {
+      const dishTypeCategoryIds = state.dishTypeCategoryIds?.filter(
+        (categoryId) => categoryId !== action.categoryId
+      );
+
+      return {
+        ...state,
+        dishTypeCategoryIds:
+          dishTypeCategoryIds?.length === 0 ? undefined : dishTypeCategoryIds,
+      };
+    }
+    case 'clear-dish-type-filter':
+      return {
+        ...state,
+        dishTypeCategoryIds: undefined,
       };
     default:
       return state;
@@ -45,6 +82,9 @@ interface IRecipesFiltersContext {
   setPreparationTimeFilter: (
     filter: IListRecipesPreparationTimeFiltersDto
   ) => void;
+  clearDishTypeFilter: () => void;
+  selectDishTypeFilter: (categoryId: RecipeCategoryId) => void;
+  unselectDishTypeFilter: (categoryId: RecipeCategoryId) => void;
 }
 
 const RecipesFiltersContext = createContext<Partial<IRecipesFiltersContext>>(
@@ -68,6 +108,23 @@ export const RecipesFiltersProvider = ({ children }: PropsWithChildren<{}>) => {
     []
   );
 
+  const clearDishTypeFilter = useCallback(
+    () => dispatch({ type: 'clear-dish-type-filter' }),
+    []
+  );
+
+  const selectDishTypeFilter = useCallback(
+    (categoryId: RecipeCategoryId) =>
+      dispatch({ type: 'select-dish-type-filter', categoryId }),
+    []
+  );
+
+  const unselectDishTypeFilter = useCallback(
+    (categoryId: RecipeCategoryId) =>
+      dispatch({ type: 'unselect-dish-type-filter', categoryId }),
+    []
+  );
+
   const ctx: IRecipesFiltersContext = {
     selectedIngredients,
     selectIngredient,
@@ -76,6 +133,9 @@ export const RecipesFiltersProvider = ({ children }: PropsWithChildren<{}>) => {
     clearSelection,
     filters,
     setPreparationTimeFilter,
+    clearDishTypeFilter,
+    selectDishTypeFilter,
+    unselectDishTypeFilter,
   };
 
   return (
@@ -94,6 +154,9 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     clearSelection,
     filters,
     setPreparationTimeFilter,
+    clearDishTypeFilter,
+    selectDishTypeFilter,
+    unselectDishTypeFilter,
   } = useContext(RecipesFiltersContext);
 
   assertIsDefined(
@@ -121,6 +184,18 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     setPreparationTimeFilter,
     'IRecipesFiltersContext.setPreparationTimeFilter must be defined!'
   );
+  assertIsDefined(
+    clearDishTypeFilter,
+    'IRecipesFiltersContext.clearDishTypeFilter must be defined!'
+  );
+  assertIsDefined(
+    selectDishTypeFilter,
+    'IRecipesFiltersContext.selectDishTypeFilter must be defined!'
+  );
+  assertIsDefined(
+    unselectDishTypeFilter,
+    'IRecipesFiltersContext.unselectDishTypeFilter must be defined!'
+  );
 
   return {
     selectedIngredients,
@@ -130,5 +205,8 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     clearSelection,
     filters,
     setPreparationTimeFilter,
+    clearDishTypeFilter,
+    selectDishTypeFilter,
+    unselectDishTypeFilter,
   };
 };

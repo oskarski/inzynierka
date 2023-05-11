@@ -95,6 +95,7 @@ export function usePaginatedQuery<ApiReturnType, ReturnType = ApiReturnType>(
     ...options,
     staleTime: options.staleTime || 5 * 60 * 1000, // 5 min by default,
     getNextPageParam: (lastPage, allPages) => {
+      console.log(lastPage, allPages);
       const page = allPages.length - 1;
 
       if ((page + 1) * perPage >= lastPage.total) return undefined;

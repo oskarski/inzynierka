@@ -1,8 +1,10 @@
 import { AppPopup } from '@fe/components';
 import { ControlOutlined } from '@ant-design/icons';
-import { Button, Radio } from 'antd-mobile';
+import { Button, Checkbox, Radio } from 'antd-mobile';
 import React from 'react';
 import { useRecipesFilters } from '@fe/recipes';
+import { useListCategories } from '@fe/recipes-categories';
+import { CategoryType } from '@lib/shared';
 
 export const RecipeFiltersButton = () => {
   return (
@@ -24,6 +26,8 @@ const RecipeFiltersPopupContent = AppPopup.withAppPopupContent(() => {
   return (
     <>
       <AppPopup.Title>Filtruj przepisy</AppPopup.Title>
+
+      <DishTypeFilters />
 
       <div className="space-y-3">
         <h5 className="text-lg text-default font-medium">Czas przygotowania</h5>
@@ -79,3 +83,53 @@ const RecipeFiltersPopupContent = AppPopup.withAppPopupContent(() => {
     </>
   );
 });
+
+function DishTypeFilters() {
+  const {
+    filters,
+    selectDishTypeFilter,
+    unselectDishTypeFilter,
+    clearDishTypeFilter,
+  } = useRecipesFilters();
+
+  const [dishTypeCategories, loading, error] = useListCategories({
+    type: CategoryType.DishType,
+  });
+
+  if (error) return null;
+
+  return (
+    <div className="space-y-3">
+      <h5 className="text-lg text-default font-medium">Typ dania</h5>
+
+      <div className="-mx-1">
+        <Checkbox.Group value={filters.dishTypeCategoryIds || ['any']}>
+          <Checkbox
+            className="px-1 mb-3"
+            checked={!filters.dishTypeCategoryIds}
+            value={'any'}
+            onChange={(checked) => checked && clearDishTypeFilter()}
+          >
+            Dowolny
+          </Checkbox>
+
+          {dishTypeCategories &&
+            dishTypeCategories.map((category) => (
+              <Checkbox
+                key={category.id}
+                className="px-1 mb-3"
+                value={category.id}
+                onChange={(checked) =>
+                  checked
+                    ? selectDishTypeFilter(category.id)
+                    : unselectDishTypeFilter(category.id)
+                }
+              >
+                {category.name}
+              </Checkbox>
+            ))}
+        </Checkbox.Group>
+      </div>
+    </div>
+  );
+}
