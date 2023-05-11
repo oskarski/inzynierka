@@ -14,4 +14,5 @@ export interface IListCategoriesQueryDto {
 export interface IRecipeCategoryListItemDto {
   readonly id: RecipeCategoryId;
   readonly name: string;
+  readonly type: CategoryType;
 }

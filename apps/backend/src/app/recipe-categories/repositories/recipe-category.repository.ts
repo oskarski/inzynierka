@@ -6,7 +6,6 @@ import {
   InjectRepository,
 } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
-import { ListCategoriesQueryDto } from '../dtos';
 
 @Injectable()
 export class RecipeCategoryRepository {
@@ -16,13 +15,7 @@ export class RecipeCategoryRepository {
     @InjectDataSource() private dataSource: DataSource,
   ) {}
 
-  findAll(queryDto: ListCategoriesQueryDto): Promise<Category[]> {
-    let where = {};
-
-    if (queryDto.type) where['type'] = queryDto.type;
-
-    return this.repository.find({
-      where,
-    });
+  findAll(): Promise<Category[]> {
+    return this.repository.find();
   }
 }
