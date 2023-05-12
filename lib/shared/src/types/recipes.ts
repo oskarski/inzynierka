@@ -7,6 +7,11 @@ export enum RecipeState {
   draft = 'draft',
   published = 'published',
 }
+export enum RecipeDifficulty {
+  easy = 100,
+  medium = 200,
+  difficult = 300,
+}
 
 export interface ISaveRecipeIngredientDto {
   readonly id: IngredientId;

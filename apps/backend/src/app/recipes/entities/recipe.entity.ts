@@ -10,6 +10,7 @@ import {
 import {
   IRecipeInstructionDto,
   RecipeCategoryId,
+  RecipeDifficulty,
   RecipeId,
   RecipeState,
   UserId,
@@ -60,6 +61,13 @@ export class Recipe {
 
   @Column({ default: RecipeState.draft, enum: RecipeState })
   state: RecipeState;
+
+  @Column({
+    type: 'enum',
+    default: RecipeDifficulty.medium,
+    enum: RecipeDifficulty,
+  })
+  difficulty: RecipeDifficulty;
 
   isCreatedBy(authorId: UserId): boolean {
     return this.authorId === authorId;
