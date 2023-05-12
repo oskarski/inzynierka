@@ -3,6 +3,7 @@ import {
   IListRecipesQueryDto,
   IngredientId,
   RecipeCategoryId,
+  RecipeDifficulty,
 } from '@lib/shared';
 import {
   IsArray,
@@ -11,6 +12,7 @@ import {
   IsOptional,
   IsInt,
   IsPositive,
+  IsEnum,
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { PaginationQueryDto } from '../../utils';
@@ -58,4 +60,10 @@ export class ListRecipesQueryDto
   @IsArray()
   @IsUUID(undefined, { each: true })
   readonly dietTypeCategoryIds?: RecipeCategoryId[];
+
+  @IsOptional()
+  @IsArray()
+  @IsEnum(RecipeDifficulty, { each: true })
+  @Transform(({ value }) => value.map((el) => parseInt(el, 10)))
+  readonly difficulty?: RecipeDifficulty[];
 }

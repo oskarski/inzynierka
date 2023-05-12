@@ -18,7 +18,7 @@ export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
       })
     );
 
-    await queryClient.prefetchQuery(ListAllRecipesCategoriesQueryKey({}), () =>
+    await queryClient.prefetchQuery(ListAllRecipesCategoriesQueryKey, () =>
       recipesCategoriesApi.listCategories({})
     );
 

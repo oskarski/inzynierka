@@ -7,6 +7,7 @@ export enum RecipeState {
   draft = 'draft',
   published = 'published',
 }
+
 export enum RecipeDifficulty {
   easy = 100,
   medium = 200,
@@ -57,9 +58,14 @@ export interface IListRecipesCategoryFiltersDto {
   readonly dietTypeCategoryIds?: RecipeCategoryId[];
 }
 
+export interface IListRecipesDifficultyFiltersDto {
+  readonly difficulty?: RecipeDifficulty[];
+}
+
 export interface IListRecipesFiltersDto
   extends IListRecipesPreparationTimeFiltersDto,
-    IListRecipesCategoryFiltersDto {}
+    IListRecipesCategoryFiltersDto,
+    IListRecipesDifficultyFiltersDto {}
 
 export interface IListRecipesQueryDto extends IListRecipesFiltersDto {
   readonly ingredients?: IListRecipesIngredientFilterDto[];

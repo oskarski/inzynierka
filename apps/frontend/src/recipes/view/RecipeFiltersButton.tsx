@@ -4,7 +4,8 @@ import { Badge, Button, Checkbox, Radio } from 'antd-mobile';
 import React, { useMemo } from 'react';
 import { useRecipesFilters } from '@fe/recipes';
 import { useListCategories } from '@fe/recipes-categories';
-import { CategoryType } from '@lib/shared';
+import { CategoryType, RecipeDifficulty } from '@lib/shared';
+import { RecipeDifficultyText } from '@fe/recipes/view/RecipeDifficultyText';
 
 export const RecipeFiltersButton = () => {
   const { filters } = useRecipesFilters();
@@ -43,13 +44,17 @@ const RecipeFiltersPopupContent = AppPopup.withAppPopupContent(() => {
     <>
       <AppPopup.Title>Filtruj przepisy</AppPopup.Title>
 
-      <DishTypeFilters />
+      <div className="overflow-y-auto px-1">
+        <DishTypeFilters />
 
-      <CuisineTypeFilters />
+        <CuisineTypeFilters />
 
-      <PreparationTimeFilters />
+        <DifficultyFilters />
 
-      <DietTypeFilters />
+        <PreparationTimeFilters />
+
+        <DietTypeFilters />
+      </div>
 
       <div className="pt-4">
         <Button block={true} color="primary" onClick={closePopup}>
@@ -154,6 +159,74 @@ function CuisineTypeFilters() {
                 {category.name}
               </Checkbox>
             ))}
+        </Checkbox.Group>
+      </div>
+    </div>
+  );
+}
+
+function DifficultyFilters() {
+  const {
+    filters,
+    selectDifficultyFilter,
+    unselectDifficultyFilter,
+    clearDifficultyFilter,
+  } = useRecipesFilters();
+
+  return (
+    <div className="space-y-3">
+      <h5 className="text-lg text-default font-medium">Trudność</h5>
+
+      <div className="-mx-1">
+        <Checkbox.Group
+          value={
+            filters.difficulty ? filters.difficulty.map((d) => `${d}`) : ['any']
+          }
+        >
+          <Checkbox
+            className="px-1 mb-3"
+            checked={!filters.difficulty}
+            value={'any'}
+            onChange={(checked) => checked && clearDifficultyFilter()}
+          >
+            Dowolna
+          </Checkbox>
+
+          <Checkbox
+            className="px-1 mb-3"
+            value={`${RecipeDifficulty.easy}`}
+            onChange={(checked) =>
+              checked
+                ? selectDifficultyFilter(RecipeDifficulty.easy)
+                : unselectDifficultyFilter(RecipeDifficulty.easy)
+            }
+          >
+            <RecipeDifficultyText difficulty={RecipeDifficulty.easy} />
+          </Checkbox>
+
+          <Checkbox
+            className="px-1 mb-3"
+            value={`${RecipeDifficulty.medium}`}
+            onChange={(checked) =>
+              checked
+                ? selectDifficultyFilter(RecipeDifficulty.medium)
+                : unselectDifficultyFilter(RecipeDifficulty.medium)
+            }
+          >
+            <RecipeDifficultyText difficulty={RecipeDifficulty.medium} />
+          </Checkbox>
+
+          <Checkbox
+            className="px-1 mb-3"
+            value={`${RecipeDifficulty.difficult}`}
+            onChange={(checked) =>
+              checked
+                ? selectDifficultyFilter(RecipeDifficulty.difficult)
+                : unselectDifficultyFilter(RecipeDifficulty.difficult)
+            }
+          >
+            <RecipeDifficultyText difficulty={RecipeDifficulty.difficult} />
+          </Checkbox>
         </Checkbox.Group>
       </div>
     </div>

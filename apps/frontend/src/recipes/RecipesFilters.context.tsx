@@ -12,6 +12,7 @@ import {
   IListRecipesPreparationTimeFiltersDto,
   IngredientId,
   RecipeCategoryId,
+  RecipeDifficulty,
 } from '@lib/shared';
 import { useIngredientsSelection } from '@fe/ingredients';
 
@@ -52,6 +53,17 @@ type FiltersAction =
     }
   | {
       type: 'clear-diet-type-filter';
+    }
+  | {
+      type: 'select-difficulty-filter';
+      difficulty: RecipeDifficulty;
+    }
+  | {
+      type: 'unselect-difficulty-filter';
+      difficulty: RecipeDifficulty;
+    }
+  | {
+      type: 'clear-difficulty-filter';
     };
 
 const filtersReducer = (
@@ -139,6 +151,26 @@ const filtersReducer = (
         ...state,
         dietTypeCategoryIds: undefined,
       };
+    case 'select-difficulty-filter':
+      return {
+        ...state,
+        difficulty: [...(state.difficulty || []), action.difficulty],
+      };
+    case 'unselect-difficulty-filter': {
+      const difficulty = state.difficulty?.filter(
+        (difficulty) => difficulty !== action.difficulty
+      );
+
+      return {
+        ...state,
+        difficulty: difficulty?.length === 0 ? undefined : difficulty,
+      };
+    }
+    case 'clear-difficulty-filter':
+      return {
+        ...state,
+        difficulty: undefined,
+      };
     default:
       return state;
   }
@@ -163,6 +195,9 @@ interface IRecipesFiltersContext {
   clearDietTypeFilter: () => void;
   selectDietTypeFilter: (categoryId: RecipeCategoryId) => void;
   unselectDietTypeFilter: (categoryId: RecipeCategoryId) => void;
+  clearDifficultyFilter: () => void;
+  selectDifficultyFilter: (difficulty: RecipeDifficulty) => void;
+  unselectDifficultyFilter: (difficulty: RecipeDifficulty) => void;
 }
 
 const RecipesFiltersContext = createContext<Partial<IRecipesFiltersContext>>(
@@ -237,6 +272,23 @@ export const RecipesFiltersProvider = ({ children }: PropsWithChildren<{}>) => {
     []
   );
 
+  const clearDifficultyFilter = useCallback(
+    () => dispatch({ type: 'clear-difficulty-filter' }),
+    []
+  );
+
+  const selectDifficultyFilter = useCallback(
+    (difficulty: RecipeDifficulty) =>
+      dispatch({ type: 'select-difficulty-filter', difficulty }),
+    []
+  );
+
+  const unselectDifficultyFilter = useCallback(
+    (difficulty: RecipeDifficulty) =>
+      dispatch({ type: 'unselect-difficulty-filter', difficulty }),
+    []
+  );
+
   const ctx: IRecipesFiltersContext = {
     selectedIngredients,
     selectIngredient,
@@ -254,6 +306,9 @@ export const RecipesFiltersProvider = ({ children }: PropsWithChildren<{}>) => {
     clearDietTypeFilter,
     selectDietTypeFilter,
     unselectDietTypeFilter,
+    clearDifficultyFilter,
+    selectDifficultyFilter,
+    unselectDifficultyFilter,
   };
 
   return (
@@ -281,6 +336,9 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     clearDietTypeFilter,
     selectDietTypeFilter,
     unselectDietTypeFilter,
+    clearDifficultyFilter,
+    selectDifficultyFilter,
+    unselectDifficultyFilter,
   } = useContext(RecipesFiltersContext);
 
   assertIsDefined(
@@ -344,6 +402,18 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     unselectDietTypeFilter,
     'IRecipesFiltersContext.unselectDietTypeFilter must be defined!'
   );
+  assertIsDefined(
+    clearDifficultyFilter,
+    'IRecipesFiltersContext.clearDifficultyFilter must be defined!'
+  );
+  assertIsDefined(
+    selectDifficultyFilter,
+    'IRecipesFiltersContext.selectDifficultyFilter must be defined!'
+  );
+  assertIsDefined(
+    unselectDifficultyFilter,
+    'IRecipesFiltersContext.unselectDifficultyFilter must be defined!'
+  );
 
   return {
     selectedIngredients,
@@ -362,5 +432,8 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     clearDietTypeFilter,
     selectDietTypeFilter,
     unselectDietTypeFilter,
+    clearDifficultyFilter,
+    selectDifficultyFilter,
+    unselectDifficultyFilter,
   };
 };

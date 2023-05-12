@@ -11,6 +11,7 @@ import { Pagination } from '../../utils';
 import {
   ICreateRecipeDto,
   IListRecipesCategoryFiltersDto,
+  IListRecipesDifficultyFiltersDto,
   IListRecipesFiltersDto,
   IListRecipesPreparationTimeFiltersDto,
   IListRecipesQueryDto,
@@ -234,6 +235,15 @@ class ListRecipesQuery {
     return this;
   }
 
+  filterByDifficulty(filters: IListRecipesDifficultyFiltersDto): this {
+    if (filters.difficulty)
+      this.queryBuilder.andWhere('recipes.difficulty IN (:...difficulty)', {
+        difficulty: filters.difficulty,
+      });
+
+    return this;
+  }
+
   paginate(pagination: Pagination): this {
     this.queryBuilder.offset(pagination.skip).limit(pagination.take);
 
@@ -338,6 +348,7 @@ export class RecipesRepository {
       .filterByDishType(filters)
       .filterByCuisineType(filters)
       .filterByDietType(filters)
+      .filterByDifficulty(filters)
       .getRawManyAndCount();
   }
 
@@ -413,12 +424,15 @@ export class RecipesRepository {
         'matching_recipes.category_ids && ARRAY[:...cuisineTypeCategoryIds]::uuid[]',
         { cuisineTypeCategoryIds: queryDto.cuisineTypeCategoryIds },
       );
-
     if (queryDto.dietTypeCategoryIds)
       query.andWhere(
         'matching_recipes.category_ids && ARRAY[:...dietTypeCategoryIds]::uuid[]',
         { dietTypeCategoryIds: queryDto.dietTypeCategoryIds },
       );
+    if (queryDto.difficulty)
+      query.andWhere('recipes.difficulty && ARRAY[:...difficulty]::uuid[]', {
+        difficulty: queryDto.difficulty,
+      });
 
     const recipes = await query.getRawMany();
     const count = await query.getCount();
