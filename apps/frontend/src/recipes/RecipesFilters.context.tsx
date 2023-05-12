@@ -30,6 +30,17 @@ type FiltersAction =
     }
   | {
       type: 'clear-dish-type-filter';
+    }
+  | {
+      type: 'select-cuisine-type-filter';
+      categoryId: RecipeCategoryId;
+    }
+  | {
+      type: 'unselect-cuisine-type-filter';
+      categoryId: RecipeCategoryId;
+    }
+  | {
+      type: 'clear-cuisine-type-filter';
     };
 
 const filtersReducer = (
@@ -67,6 +78,32 @@ const filtersReducer = (
         ...state,
         dishTypeCategoryIds: undefined,
       };
+    case 'select-cuisine-type-filter':
+      return {
+        ...state,
+        cuisineTypeCategoryIds: [
+          ...(state.cuisineTypeCategoryIds || []),
+          action.categoryId,
+        ],
+      };
+    case 'unselect-cuisine-type-filter': {
+      const cuisineTypeCategoryIds = state.cuisineTypeCategoryIds?.filter(
+        (categoryId) => categoryId !== action.categoryId
+      );
+
+      return {
+        ...state,
+        cuisineTypeCategoryIds:
+          cuisineTypeCategoryIds?.length === 0
+            ? undefined
+            : cuisineTypeCategoryIds,
+      };
+    }
+    case 'clear-cuisine-type-filter':
+      return {
+        ...state,
+        cuisineTypeCategoryIds: undefined,
+      };
     default:
       return state;
   }
@@ -85,6 +122,9 @@ interface IRecipesFiltersContext {
   clearDishTypeFilter: () => void;
   selectDishTypeFilter: (categoryId: RecipeCategoryId) => void;
   unselectDishTypeFilter: (categoryId: RecipeCategoryId) => void;
+  clearCuisineTypeFilter: () => void;
+  selectCuisineTypeFilter: (categoryId: RecipeCategoryId) => void;
+  unselectCuisineTypeFilter: (categoryId: RecipeCategoryId) => void;
 }
 
 const RecipesFiltersContext = createContext<Partial<IRecipesFiltersContext>>(
@@ -125,6 +165,23 @@ export const RecipesFiltersProvider = ({ children }: PropsWithChildren<{}>) => {
     []
   );
 
+  const clearCuisineTypeFilter = useCallback(
+    () => dispatch({ type: 'clear-cuisine-type-filter' }),
+    []
+  );
+
+  const selectCuisineTypeFilter = useCallback(
+    (categoryId: RecipeCategoryId) =>
+      dispatch({ type: 'select-cuisine-type-filter', categoryId }),
+    []
+  );
+
+  const unselectCuisineTypeFilter = useCallback(
+    (categoryId: RecipeCategoryId) =>
+      dispatch({ type: 'unselect-cuisine-type-filter', categoryId }),
+    []
+  );
+
   const ctx: IRecipesFiltersContext = {
     selectedIngredients,
     selectIngredient,
@@ -136,6 +193,9 @@ export const RecipesFiltersProvider = ({ children }: PropsWithChildren<{}>) => {
     clearDishTypeFilter,
     selectDishTypeFilter,
     unselectDishTypeFilter,
+    clearCuisineTypeFilter,
+    selectCuisineTypeFilter,
+    unselectCuisineTypeFilter,
   };
 
   return (
@@ -157,6 +217,9 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     clearDishTypeFilter,
     selectDishTypeFilter,
     unselectDishTypeFilter,
+    clearCuisineTypeFilter,
+    selectCuisineTypeFilter,
+    unselectCuisineTypeFilter,
   } = useContext(RecipesFiltersContext);
 
   assertIsDefined(
@@ -197,6 +260,19 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     'IRecipesFiltersContext.unselectDishTypeFilter must be defined!'
   );
 
+  assertIsDefined(
+    clearCuisineTypeFilter,
+    'IRecipesFiltersContext.clearCuisineTypeFilter must be defined!'
+  );
+  assertIsDefined(
+    selectCuisineTypeFilter,
+    'IRecipesFiltersContext.selectCuisineTypeFilter must be defined!'
+  );
+  assertIsDefined(
+    unselectCuisineTypeFilter,
+    'IRecipesFiltersContext.unselectCuisineTypeFilter must be defined!'
+  );
+
   return {
     selectedIngredients,
     selectIngredient,
@@ -208,5 +284,8 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     clearDishTypeFilter,
     selectDishTypeFilter,
     unselectDishTypeFilter,
+    clearCuisineTypeFilter,
+    selectCuisineTypeFilter,
+    unselectCuisineTypeFilter,
   };
 };

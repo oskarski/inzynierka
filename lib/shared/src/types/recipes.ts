@@ -48,6 +48,7 @@ export interface IListRecipesPreparationTimeFiltersDto {
 
 export interface IListRecipesCategoryFiltersDto {
   readonly dishTypeCategoryIds?: RecipeCategoryId[];
+  readonly cuisineTypeCategoryIds?: RecipeCategoryId[];
 }
 
 export interface IListRecipesFiltersDto

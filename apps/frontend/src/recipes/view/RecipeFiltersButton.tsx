@@ -29,6 +29,8 @@ const RecipeFiltersPopupContent = AppPopup.withAppPopupContent(() => {
 
       <DishTypeFilters />
 
+      <CuisineTypeFilters />
+
       <div className="space-y-3">
         <h5 className="text-lg text-default font-medium">Czas przygotowania</h5>
 
@@ -92,7 +94,7 @@ function DishTypeFilters() {
     clearDishTypeFilter,
   } = useRecipesFilters();
 
-  const [dishTypeCategories, loading, error] = useListCategories({
+  const [dishTypeCategories, , error] = useListCategories({
     type: CategoryType.DishType,
   });
 
@@ -123,6 +125,56 @@ function DishTypeFilters() {
                   checked
                     ? selectDishTypeFilter(category.id)
                     : unselectDishTypeFilter(category.id)
+                }
+              >
+                {category.name}
+              </Checkbox>
+            ))}
+        </Checkbox.Group>
+      </div>
+    </div>
+  );
+}
+
+function CuisineTypeFilters() {
+  const {
+    filters,
+    selectCuisineTypeFilter,
+    unselectCuisineTypeFilter,
+    clearCuisineTypeFilter,
+  } = useRecipesFilters();
+
+  const [cuisineTypeCategories, , error] = useListCategories({
+    type: CategoryType.CuisineType,
+  });
+
+  if (error) return null;
+
+  return (
+    <div className="space-y-3">
+      <h5 className="text-lg text-default font-medium">Kuchnia</h5>
+
+      <div className="-mx-1">
+        <Checkbox.Group value={filters.cuisineTypeCategoryIds || ['any']}>
+          <Checkbox
+            className="px-1 mb-3"
+            checked={!filters.cuisineTypeCategoryIds}
+            value={'any'}
+            onChange={(checked) => checked && clearCuisineTypeFilter()}
+          >
+            Dowolna
+          </Checkbox>
+
+          {cuisineTypeCategories &&
+            cuisineTypeCategories.map((category) => (
+              <Checkbox
+                key={category.id}
+                className="px-1 mb-3"
+                value={category.id}
+                onChange={(checked) =>
+                  checked
+                    ? selectCuisineTypeFilter(category.id)
+                    : unselectCuisineTypeFilter(category.id)
                 }
               >
                 {category.name}
