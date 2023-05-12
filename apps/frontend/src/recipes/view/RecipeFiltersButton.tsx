@@ -1,17 +1,35 @@
 import { AppPopup } from '@fe/components';
 import { ControlOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Radio } from 'antd-mobile';
-import React from 'react';
+import { Badge, Button, Checkbox, Radio } from 'antd-mobile';
+import React, { useMemo } from 'react';
 import { useRecipesFilters } from '@fe/recipes';
 import { useListCategories } from '@fe/recipes-categories';
 import { CategoryType } from '@lib/shared';
 
 export const RecipeFiltersButton = () => {
+  const { filters } = useRecipesFilters();
+
+  const selectedFiltersCount = useMemo(() => {
+    let selectedFiltersCount = 0;
+    if (filters.dishTypeCategoryIds)
+      selectedFiltersCount += filters.dishTypeCategoryIds.length;
+    if (filters.cuisineTypeCategoryIds)
+      selectedFiltersCount += filters.cuisineTypeCategoryIds.length;
+    if (filters.dietTypeCategoryIds)
+      selectedFiltersCount += filters.dietTypeCategoryIds.length;
+    if (filters.minPreparationTime !== undefined) selectedFiltersCount += 1;
+    if (filters.maxPreparationTime !== undefined) selectedFiltersCount += 1;
+
+    return selectedFiltersCount;
+  }, [filters]);
+
   return (
     <AppPopup>
-      <AppPopup.TriggerButton className="text-3xl text-secondary">
-        <ControlOutlined />
-      </AppPopup.TriggerButton>
+      <Badge content={selectedFiltersCount || null}>
+        <AppPopup.TriggerButton className="text-3xl text-secondary">
+          <ControlOutlined />
+        </AppPopup.TriggerButton>
+      </Badge>
 
       <RecipeFiltersPopupContent />
     </AppPopup>
