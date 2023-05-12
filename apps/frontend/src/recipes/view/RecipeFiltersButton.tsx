@@ -31,6 +31,8 @@ const RecipeFiltersPopupContent = AppPopup.withAppPopupContent(() => {
 
       <PreparationTimeFilters />
 
+      <DietTypeFilters />
+
       <div className="pt-4">
         <Button block={true} color="primary" onClick={closePopup}>
           Filtruj
@@ -129,6 +131,56 @@ function CuisineTypeFilters() {
                   checked
                     ? selectCuisineTypeFilter(category.id)
                     : unselectCuisineTypeFilter(category.id)
+                }
+              >
+                {category.name}
+              </Checkbox>
+            ))}
+        </Checkbox.Group>
+      </div>
+    </div>
+  );
+}
+
+function DietTypeFilters() {
+  const {
+    filters,
+    selectDietTypeFilter,
+    unselectDietTypeFilter,
+    clearDietTypeFilter,
+  } = useRecipesFilters();
+
+  const [dietTypeCategories, , error] = useListCategories({
+    type: CategoryType.DietType,
+  });
+
+  if (error) return null;
+
+  return (
+    <div className="space-y-3">
+      <h5 className="text-lg text-default font-medium">Dieta</h5>
+
+      <div className="-mx-1">
+        <Checkbox.Group value={filters.dietTypeCategoryIds || ['any']}>
+          <Checkbox
+            className="px-1 mb-3"
+            checked={!filters.dietTypeCategoryIds}
+            value={'any'}
+            onChange={(checked) => checked && clearDietTypeFilter()}
+          >
+            Dowolna
+          </Checkbox>
+
+          {dietTypeCategories &&
+            dietTypeCategories.map((category) => (
+              <Checkbox
+                key={category.id}
+                className="px-1 mb-3"
+                value={category.id}
+                onChange={(checked) =>
+                  checked
+                    ? selectDietTypeFilter(category.id)
+                    : unselectDietTypeFilter(category.id)
                 }
               >
                 {category.name}

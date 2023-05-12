@@ -41,6 +41,17 @@ type FiltersAction =
     }
   | {
       type: 'clear-cuisine-type-filter';
+    }
+  | {
+      type: 'select-diet-type-filter';
+      categoryId: RecipeCategoryId;
+    }
+  | {
+      type: 'unselect-diet-type-filter';
+      categoryId: RecipeCategoryId;
+    }
+  | {
+      type: 'clear-diet-type-filter';
     };
 
 const filtersReducer = (
@@ -104,6 +115,30 @@ const filtersReducer = (
         ...state,
         cuisineTypeCategoryIds: undefined,
       };
+    case 'select-diet-type-filter':
+      return {
+        ...state,
+        dietTypeCategoryIds: [
+          ...(state.dietTypeCategoryIds || []),
+          action.categoryId,
+        ],
+      };
+    case 'unselect-diet-type-filter': {
+      const dietTypeCategoryIds = state.dietTypeCategoryIds?.filter(
+        (categoryId) => categoryId !== action.categoryId
+      );
+
+      return {
+        ...state,
+        dietTypeCategoryIds:
+          dietTypeCategoryIds?.length === 0 ? undefined : dietTypeCategoryIds,
+      };
+    }
+    case 'clear-diet-type-filter':
+      return {
+        ...state,
+        dietTypeCategoryIds: undefined,
+      };
     default:
       return state;
   }
@@ -125,6 +160,9 @@ interface IRecipesFiltersContext {
   clearCuisineTypeFilter: () => void;
   selectCuisineTypeFilter: (categoryId: RecipeCategoryId) => void;
   unselectCuisineTypeFilter: (categoryId: RecipeCategoryId) => void;
+  clearDietTypeFilter: () => void;
+  selectDietTypeFilter: (categoryId: RecipeCategoryId) => void;
+  unselectDietTypeFilter: (categoryId: RecipeCategoryId) => void;
 }
 
 const RecipesFiltersContext = createContext<Partial<IRecipesFiltersContext>>(
@@ -182,6 +220,23 @@ export const RecipesFiltersProvider = ({ children }: PropsWithChildren<{}>) => {
     []
   );
 
+  const clearDietTypeFilter = useCallback(
+    () => dispatch({ type: 'clear-diet-type-filter' }),
+    []
+  );
+
+  const selectDietTypeFilter = useCallback(
+    (categoryId: RecipeCategoryId) =>
+      dispatch({ type: 'select-diet-type-filter', categoryId }),
+    []
+  );
+
+  const unselectDietTypeFilter = useCallback(
+    (categoryId: RecipeCategoryId) =>
+      dispatch({ type: 'unselect-diet-type-filter', categoryId }),
+    []
+  );
+
   const ctx: IRecipesFiltersContext = {
     selectedIngredients,
     selectIngredient,
@@ -196,6 +251,9 @@ export const RecipesFiltersProvider = ({ children }: PropsWithChildren<{}>) => {
     clearCuisineTypeFilter,
     selectCuisineTypeFilter,
     unselectCuisineTypeFilter,
+    clearDietTypeFilter,
+    selectDietTypeFilter,
+    unselectDietTypeFilter,
   };
 
   return (
@@ -220,6 +278,9 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     clearCuisineTypeFilter,
     selectCuisineTypeFilter,
     unselectCuisineTypeFilter,
+    clearDietTypeFilter,
+    selectDietTypeFilter,
+    unselectDietTypeFilter,
   } = useContext(RecipesFiltersContext);
 
   assertIsDefined(
@@ -259,7 +320,6 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     unselectDishTypeFilter,
     'IRecipesFiltersContext.unselectDishTypeFilter must be defined!'
   );
-
   assertIsDefined(
     clearCuisineTypeFilter,
     'IRecipesFiltersContext.clearCuisineTypeFilter must be defined!'
@@ -271,6 +331,18 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
   assertIsDefined(
     unselectCuisineTypeFilter,
     'IRecipesFiltersContext.unselectCuisineTypeFilter must be defined!'
+  );
+  assertIsDefined(
+    clearDietTypeFilter,
+    'IRecipesFiltersContext.clearDietTypeFilter must be defined!'
+  );
+  assertIsDefined(
+    selectDietTypeFilter,
+    'IRecipesFiltersContext.selectDietTypeFilter must be defined!'
+  );
+  assertIsDefined(
+    unselectDietTypeFilter,
+    'IRecipesFiltersContext.unselectDietTypeFilter must be defined!'
   );
 
   return {
@@ -287,5 +359,8 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     clearCuisineTypeFilter,
     selectCuisineTypeFilter,
     unselectCuisineTypeFilter,
+    clearDietTypeFilter,
+    selectDietTypeFilter,
+    unselectDietTypeFilter,
   };
 };

@@ -53,4 +53,9 @@ export class ListRecipesQueryDto
   @IsArray()
   @IsUUID(undefined, { each: true })
   readonly cuisineTypeCategoryIds?: RecipeCategoryId[];
+
+  @IsOptional()
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  readonly dietTypeCategoryIds?: RecipeCategoryId[];
 }

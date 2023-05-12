@@ -224,6 +224,16 @@ class ListRecipesQuery {
     return this;
   }
 
+  filterByDietType(filters: IListRecipesCategoryFiltersDto): this {
+    if (filters.dietTypeCategoryIds)
+      this.queryBuilder.andWhere(
+        'category.category_id IN (:...dietTypeCategoryIds)',
+        { dietTypeCategoryIds: filters.dietTypeCategoryIds },
+      );
+
+    return this;
+  }
+
   paginate(pagination: Pagination): this {
     this.queryBuilder.offset(pagination.skip).limit(pagination.take);
 
@@ -327,6 +337,7 @@ export class RecipesRepository {
       .filterByPreparationTime(filters)
       .filterByDishType(filters)
       .filterByCuisineType(filters)
+      .filterByDietType(filters)
       .getRawManyAndCount();
   }
 
@@ -401,6 +412,12 @@ export class RecipesRepository {
       query.andWhere(
         'matching_recipes.category_ids && ARRAY[:...cuisineTypeCategoryIds]::uuid[]',
         { cuisineTypeCategoryIds: queryDto.cuisineTypeCategoryIds },
+      );
+
+    if (queryDto.dietTypeCategoryIds)
+      query.andWhere(
+        'matching_recipes.category_ids && ARRAY[:...dietTypeCategoryIds]::uuid[]',
+        { dietTypeCategoryIds: queryDto.dietTypeCategoryIds },
       );
 
     const recipes = await query.getRawMany();
