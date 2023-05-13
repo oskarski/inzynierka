@@ -37,8 +37,8 @@ export const useCreateRecipe = ({
         .then((dto) => myRecipesApi.createRecipe(dto))
         .catch(catchFormValidationOrApiError),
     {
-      onSuccess: (recipeId, d) => {
-        // TODO reset my recipes list
+      onSuccess: (recipeId) => {
+        queryClient.invalidateQueries(ListMyRecipesQueryKey);
 
         if (onSuccess) onSuccess(recipeId);
       },
@@ -64,7 +64,7 @@ export const useCreateAndPublishRecipe = ({
         .catch(catchFormValidationOrApiError),
     {
       onSuccess: () => {
-        // TODO reset my recipes list
+        queryClient.invalidateQueries(ListMyRecipesQueryKey);
 
         if (onSuccess) onSuccess();
       },
