@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { headTitle } from '@fe/utils';
 import { Loader, SectionTitle } from '@fe/components';
 import {
+  EmptyRecipesList,
   RecipeCard,
   RecipeFiltersButton,
   useConnectedCategories,
@@ -14,6 +15,7 @@ import { GetServerSideProps } from 'next/types';
 import { ApiErrorMessage } from '@fe/errors';
 import React from 'react';
 import { InfiniteScroll } from 'antd-mobile';
+import { FrownOutlined } from '@ant-design/icons';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard()
@@ -48,6 +50,10 @@ export default function RecipesPage() {
         {loading && <Loader />}
 
         <ApiErrorMessage size="base" error={error} />
+
+        {!loading && (!recipes || recipes.length === 0) && (
+          <EmptyRecipesList className="mt-16" />
+        )}
 
         {recipes && (
           <>

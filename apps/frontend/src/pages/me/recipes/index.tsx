@@ -65,7 +65,9 @@ export default function YourRecipesPage() {
           />
         ))}
 
-        {myRecipes && myRecipes.length === 0 && <EmptyMyRecipesList />}
+        {myRecipes && myRecipes.length === 0 && (
+          <EmptyMyRecipesList className="mt-16" />
+        )}
       </main>
     </>
   );

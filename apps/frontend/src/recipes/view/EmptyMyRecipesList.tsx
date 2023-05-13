@@ -2,19 +2,34 @@ import { Button } from 'antd-mobile';
 import Link from 'next/link';
 import React from 'react';
 import { routes } from '@fe/utils';
+import { Empty } from '@fe/components';
+import { FrownOutlined } from '@ant-design/icons';
 
-export const EmptyMyRecipesList = () => {
+interface EmptyMyRecipesListProps {
+  className?: string;
+}
+
+export const EmptyMyRecipesList = ({ className }: EmptyMyRecipesListProps) => {
   return (
-    <div className="text-center">
-      <p className="text-secondary mb-6">
-        Wygląda na to, że nie masz dodałeś jeszcze żadnego swojego przepisu.
-      </p>
-
-      <Link href={routes.createRecipe()}>
-        <Button color="primary" fill="outline">
-          Dodaj swój pierwszy przepis!
-        </Button>
-      </Link>
-    </div>
+    <Empty
+      className={className}
+      icon={<FrownOutlined />}
+      title="Ach ..."
+      description={
+        <>
+          Mamy już prawie wszystkie przepisy, ale brakuje nam jeszcze Twojego.
+          <br />
+          <br />
+          Podziel się z nami swoim ulubionym przepisem!
+        </>
+      }
+      cta={
+        <Link href={routes.createRecipe()}>
+          <Button color="primary" fill="outline">
+            Dodaj swój pierwszy przepis!
+          </Button>
+        </Link>
+      }
+    />
   );
 };

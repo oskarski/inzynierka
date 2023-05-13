@@ -5,6 +5,7 @@ import { SignedInGuard } from '../server/server-guards';
 import { HydrateReactQueryState } from '../server/server-react-query';
 import { Loader, SectionTitle } from '@fe/components';
 import {
+  EmptyFavouriteRecipesList,
   FavouriteRecipesApi,
   ListFavouriteRecipesQueryKey,
   RecipeCard,
@@ -46,6 +47,10 @@ export default function FavouriteRecipesPage() {
 
         {loading && <Loader />}
         {error && <ApiErrorMessage size="base" error={error} />}
+
+        {favouriteRecipes && favouriteRecipes.length === 0 && (
+          <EmptyFavouriteRecipesList className="mt-16" />
+        )}
 
         {favouriteRecipes?.map((recipe) => (
           <RecipeCard
