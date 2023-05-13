@@ -35,6 +35,14 @@ export const CreateRecipeFormSchema = z.object({
         .transform((id) => Id<RecipeCategoryId>(id))
     )
     .optional(),
+  cuisineType: z
+    .array(
+      z
+        .string({ required_error: validationMessages.required })
+        .nonempty(validationMessages.required)
+        .transform((id) => Id<RecipeCategoryId>(id))
+    )
+    .optional(),
   portions: z
     .number()
     .positive(validationMessages.positive)

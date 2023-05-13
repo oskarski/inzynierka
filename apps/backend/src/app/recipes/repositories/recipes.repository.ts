@@ -284,6 +284,7 @@ export class RecipesRepository {
       await query.saveCategories(createdRecipeId, [
         ...(dto.dietType || []),
         ...(dto.dishType || []),
+        ...(dto.cuisineType || []),
       ]);
       await query.saveIngredients(createdRecipeId, dto.ingredients);
       await query.execute();
@@ -310,7 +311,11 @@ export class RecipesRepository {
 
       await query.saveCategories(
         createdRecipeId,
-        uniq([...(dto.dietType || []), ...(dto.dishType || [])]),
+        uniq([
+          ...(dto.dietType || []),
+          ...(dto.dishType || []),
+          ...(dto.cuisineType || []),
+        ]),
       );
       await query.saveIngredients(createdRecipeId, dto.ingredients);
       await query.execute();
