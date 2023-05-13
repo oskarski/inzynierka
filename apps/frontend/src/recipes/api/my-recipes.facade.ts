@@ -14,7 +14,7 @@ import {
   PublishRecipeFormSchema,
   PublishRecipeFormValues,
 } from './schema/publish-recipe.schema';
-import { RecipeListItemSelector } from '@fe/recipes/api/selectors';
+import { RecipeListItemSelector } from './selectors';
 
 export const ListMyRecipesQueryKey = ['myRecipesApi.listMyRecipes'];
 

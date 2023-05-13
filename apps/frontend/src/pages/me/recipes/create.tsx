@@ -9,6 +9,7 @@ import {
   AppForm,
   HiddenField,
   PickerBasedSelectField,
+  RadioField,
   StepperField,
   SubmitButton,
   TextAreaField,
@@ -31,7 +32,12 @@ import {
   FormValidationErrorMessage,
   FormValidationOrApiError,
 } from '@fe/errors';
-import { useCreateAndPublishRecipe, useCreateRecipe } from '@fe/recipes';
+import {
+  useCreateAndPublishRecipe,
+  useCreateRecipe,
+  RecipeDifficultyText,
+} from '@fe/recipes';
+import { RecipeDifficulty } from '@lib/shared';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard()
@@ -149,6 +155,31 @@ function GeneralTab({ error }: GeneralTabProps) {
       <TextField name="name" label="Tytuł" error={error} />
 
       <TextAreaField name="description" label="Opis" rows={3} error={error} />
+
+      <RadioField
+        name="difficulty"
+        label="Trudność"
+        error={error}
+        defaultValue={RecipeDifficulty.medium}
+        options={[
+          {
+            value: RecipeDifficulty.easy,
+            label: <RecipeDifficultyText difficulty={RecipeDifficulty.easy} />,
+          },
+          {
+            value: RecipeDifficulty.medium,
+            label: (
+              <RecipeDifficultyText difficulty={RecipeDifficulty.medium} />
+            ),
+          },
+          {
+            value: RecipeDifficulty.difficult,
+            label: (
+              <RecipeDifficultyText difficulty={RecipeDifficulty.difficult} />
+            ),
+          },
+        ]}
+      />
     </>
   );
 }

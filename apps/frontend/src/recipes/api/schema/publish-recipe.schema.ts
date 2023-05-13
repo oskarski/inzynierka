@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { validationMessages } from '@fe/utils';
-import { Id, IngredientId } from '@lib/shared';
+import { Id, IngredientId, RecipeDifficulty } from '@lib/shared';
 
 export const PublishRecipeFormSchema = z.object({
   name: z
@@ -9,6 +9,14 @@ export const PublishRecipeFormSchema = z.object({
   description: z
     .string({ required_error: validationMessages.required })
     .nonempty(validationMessages.required),
+  difficulty: z.enum(
+    [
+      RecipeDifficulty.easy,
+      RecipeDifficulty.medium,
+      RecipeDifficulty.difficult,
+    ],
+    { required_error: validationMessages.required }
+  ),
   portions: z
     .number({ required_error: validationMessages.required })
     .positive(validationMessages.positive)

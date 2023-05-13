@@ -23,6 +23,7 @@ export interface ISaveRecipeIngredientDto {
 interface ISaveRecipeDto {
   readonly name: string;
   readonly description: string;
+  readonly difficulty: RecipeDifficulty;
   readonly preparationTime: number;
   readonly portions: number;
   readonly categoryIds: RecipeCategoryId[];
@@ -31,17 +32,16 @@ interface ISaveRecipeDto {
 
 export type ICreateRecipeInstructionDto = Partial<IRecipeInstructionDto>;
 
-export type ICreateRecipeDto = Partial<
-  ISaveRecipeDto & { readonly instructions: ICreateRecipeInstructionDto[] }
-> & {
+export interface ICreateRecipeDto extends Partial<ISaveRecipeDto> {
+  readonly instructions?: ICreateRecipeInstructionDto[];
   readonly name: string;
-};
+}
 
 export type IPublishRecipeInstructionDto = Partial<IRecipeInstructionDto>;
 
-export type IPublishRecipeDto = ISaveRecipeDto & {
+export interface IPublishRecipeDto extends ISaveRecipeDto {
   readonly instructions: IPublishRecipeInstructionDto[];
-};
+}
 
 export interface IListRecipesIngredientFilterDto {
   readonly id: IngredientId;

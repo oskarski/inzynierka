@@ -9,3 +9,4 @@ export * from './EmptyMyRecipesList';
 export * from './RecipeFiltersButton';
 export * from './EmptyRecipesList';
 export * from './EmptyFavouriteRecipesList';
+export * from './RecipeDifficultyText';

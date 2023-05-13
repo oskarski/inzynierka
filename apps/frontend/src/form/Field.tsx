@@ -1,4 +1,4 @@
-import { Form, Input, Stepper, TextArea } from 'antd-mobile';
+import { Form, Input, Radio, Stepper, TextArea } from 'antd-mobile';
 import {
   FormValidationErrorMessage,
   FormValidationOrApiError,
@@ -140,5 +140,48 @@ export const HiddenField = ({ ...props }: HiddenProps) => {
     <Form.Item {...props}>
       <input type="hidden" />
     </Form.Item>
+  );
+};
+
+interface RadioFieldProps extends ComponentProps<typeof Form.Item> {
+  error: FormValidationOrApiError | null;
+  name: string;
+  options: Array<{ value: string | number; label: ReactNode }>;
+  defaultValue?: string | number;
+}
+
+export const RadioField = ({
+  error,
+  options,
+  defaultValue,
+  ...props
+}: RadioFieldProps) => {
+  return (
+    <>
+      <Form.Item {...props}>
+        <Radio.Group defaultValue={defaultValue}>
+          <div className="px-2 -mx-2">
+            {options.map((option) => (
+              <Radio
+                key={option.value}
+                className="px-2 mb-3"
+                value={option.value}
+              >
+                {option.label}
+              </Radio>
+            ))}
+          </div>
+        </Radio.Group>
+      </Form.Item>
+
+      <div className="px-2 -mx-2"></div>
+
+      <FormValidationErrorMessage
+        error={error}
+        name={props.name}
+        block={true}
+        className="-mt-2 relative"
+      />
+    </>
   );
 };

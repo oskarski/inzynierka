@@ -6,10 +6,12 @@ import {
   IPublishRecipeInstructionDto,
   ISaveRecipeIngredientDto,
   RecipeCategoryId,
+  RecipeDifficulty,
 } from '@lib/shared';
 import {
   ArrayNotEmpty,
   IsArray,
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsNumber,
@@ -49,6 +51,10 @@ export class CreateRecipeDto implements ICreateRecipeDto {
   @IsString()
   @IsOptional()
   readonly description?: string;
+
+  @IsEnum(RecipeDifficulty)
+  @IsOptional()
+  readonly difficulty?: RecipeDifficulty;
 
   @IsNumber()
   @IsOptional()
@@ -100,6 +106,9 @@ export class PublishRecipeDto implements IPublishRecipeDto {
   @IsString()
   @IsNotEmpty()
   readonly description: string;
+
+  @IsEnum(RecipeDifficulty)
+  readonly difficulty: RecipeDifficulty;
 
   @IsNumber()
   @IsPositive()

@@ -68,6 +68,7 @@ class SaveRecipeTransactionQuery {
     const createdRecipe = await this.queryRunner.manager.save(Recipe, {
       name: dto.name,
       description: dto.description,
+      difficulty: dto.difficulty,
       preparationTime: dto.preparationTime,
       portions: dto.portions,
       instructions: dto.instructions,
