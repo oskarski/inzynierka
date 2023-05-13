@@ -18,9 +18,11 @@ import {
   RecipesApi,
   useConnectedCategories,
   useRecipeDetails,
+  RecipeStateTag,
 } from '@fe/recipes';
 import { RecipeId } from '@lib/shared';
 import { ApiErrorMessage } from '@fe/errors';
+import { useSignedInUser } from '@fe/iam';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard(async ({ params }, queryClient, user) => {
@@ -53,11 +55,15 @@ export default function RecipeDetailsPage({
 }: RecipeDetailsPageProps) {
   const getRecipeCategories = useConnectedCategories();
 
+  const [currentUser] = useSignedInUser();
   const [recipe, loading, error] = useRecipeDetails(recipeId);
 
   const categories = recipe && getRecipeCategories(recipe);
 
   const [portionsProportion, setPortionsProportion] = useState(1);
+
+  const isAuthoredByCurrentUser =
+    recipe && currentUser ? recipe.authorId === currentUser.id : false;
 
   return (
     <>
@@ -82,13 +88,19 @@ export default function RecipeDetailsPage({
             {/*)}*/}
 
             <div className="pb-12">
-              {categories && categories.length > 0 && (
+              {((categories && categories.length > 0) ||
+                isAuthoredByCurrentUser) && (
                 <div className="flex items-center space-x-2 mb-3">
-                  {categories.map((category) => (
-                    <RecipeCategoryTag key={category.id}>
-                      {category.name}
-                    </RecipeCategoryTag>
-                  ))}
+                  {isAuthoredByCurrentUser && (
+                    <RecipeStateTag recipeState={recipe.state} />
+                  )}
+
+                  {categories &&
+                    categories.map((category) => (
+                      <RecipeCategoryTag key={category.id}>
+                        {category.name}
+                      </RecipeCategoryTag>
+                    ))}
                 </div>
               )}
 

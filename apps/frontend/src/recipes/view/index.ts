@@ -11,3 +11,4 @@ export * from './EmptyRecipesList';
 export * from './EmptyFavouriteRecipesList';
 export * from './RecipeDifficultyText';
 export * from './RecipeForm';
+export * from './RecipeStateTag';
