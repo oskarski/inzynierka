@@ -27,8 +27,6 @@ interface ISaveRecipeDto {
   readonly dietType?: RecipeCategoryId[];
   readonly preparationTime: number;
   readonly portions: number;
-  // TODO Probably should be dropped
-  readonly categoryIds: RecipeCategoryId[];
   readonly ingredients: ISaveRecipeIngredientDto[];
 }
 

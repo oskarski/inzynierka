@@ -60,9 +60,7 @@ export const useCreateAndPublishRecipe = ({
   >(
     async (formValues) =>
       PublishRecipeFormSchema.parseAsync(formValues)
-        .then((dto) =>
-          myRecipesApi.createAndPublishRecipe({ ...dto, categoryIds: [] })
-        )
+        .then((dto) => myRecipesApi.createAndPublishRecipe(dto))
         .catch(catchFormValidationOrApiError),
     {
       onSuccess: () => {

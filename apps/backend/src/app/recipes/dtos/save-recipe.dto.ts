@@ -81,11 +81,6 @@ export class CreateRecipeDto implements ICreateRecipeDto {
 
   @IsArray()
   @IsOptional()
-  @IsUUID(undefined, { each: true })
-  readonly categoryIds?: RecipeCategoryId[];
-
-  @IsArray()
-  @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => CreateRecipeInstructionDto)
   readonly instructions?: CreateRecipeInstructionDto[];
@@ -131,10 +126,6 @@ export class PublishRecipeDto implements IPublishRecipeDto {
   @IsInt()
   @Transform(({ value }) => parseInt(value, 10))
   readonly portions: number;
-
-  @IsArray()
-  @IsUUID(undefined, { each: true })
-  readonly categoryIds: RecipeCategoryId[];
 
   @IsArray()
   @ArrayNotEmpty()

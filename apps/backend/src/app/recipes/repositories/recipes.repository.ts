@@ -22,6 +22,7 @@ import {
   RecipeState,
   UserId,
 } from '@lib/shared';
+import { uniq } from 'lodash';
 
 class SaveRecipeTransactionQuery {
   constructor(private readonly queryRunner: QueryRunner) {}
@@ -280,10 +281,7 @@ export class RecipesRepository {
     try {
       const createdRecipeId = await query.createDraftRecipe(dto, userId);
 
-      await query.saveCategories(createdRecipeId, [
-        ...(dto.categoryIds || []),
-        ...(dto.dietType || []),
-      ]);
+      await query.saveCategories(createdRecipeId, [...(dto.dietType || [])]);
       await query.saveIngredients(createdRecipeId, dto.ingredients);
       await query.execute();
 
@@ -307,10 +305,10 @@ export class RecipesRepository {
     try {
       const createdRecipeId = await query.createPublishedRecipe(dto, userId);
 
-      await query.saveCategories(createdRecipeId, [
-        ...dto.categoryIds,
-        ...(dto.dietType || []),
-      ]);
+      await query.saveCategories(
+        createdRecipeId,
+        uniq([...(dto.dietType || [])]),
+      );
       await query.saveIngredients(createdRecipeId, dto.ingredients);
       await query.execute();
 
@@ -333,7 +331,7 @@ export class RecipesRepository {
 
     try {
       await query.publishRecipe(recipeId, dto);
-      await query.saveCategories(recipeId, dto.categoryIds);
+      await query.saveCategories(recipeId, uniq([...(dto.dietType || [])]));
       await query.saveIngredients(recipeId, dto.ingredients);
       await query.execute();
     } catch (err) {
