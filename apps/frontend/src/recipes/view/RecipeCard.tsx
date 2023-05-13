@@ -11,16 +11,19 @@ import { RecipePreparationTime } from './RecipePreparationTime';
 import { RecipeImage } from '@fe/recipes';
 import { routes } from '@fe/utils';
 import { RecipeIngredientsCoverageIndicator } from './RecipeIngredientsCoverageIndicator';
+import { RecipeStateTag } from './RecipeStateTag';
 
 interface RecipeCardProps {
   recipe: IRecipeListItem;
   categories: IRecipeCategoryListItemDto[];
+  showStateBadge?: boolean;
   className?: string;
 }
 
 export const RecipeCard = ({
   recipe,
   categories,
+  showStateBadge,
   className,
 }: RecipeCardProps) => {
   return (
@@ -42,6 +45,8 @@ export const RecipeCard = ({
         <div className="flex justify-between">
           <div>
             <div className="flex items-center space-x-2 mb-2">
+              {showStateBadge && <RecipeStateTag recipeState={recipe.state} />}
+
               {categories.map((category) => (
                 <RecipeCategoryTag key={category.id}>
                   {category.name}

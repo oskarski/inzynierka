@@ -61,6 +61,7 @@ export default function YourRecipesPage() {
             key={recipe.id}
             recipe={recipe}
             categories={connectedCategories(recipe)}
+            showStateBadge={true}
             className="mb-4"
           />
         ))}
