@@ -8,4 +8,5 @@ export interface IRecipeListItem extends IRecipeListItemDto {
 
 export interface IRecipe extends IRecipeDto {
   readonly formattedPreparationTime: string;
+  readonly isPublished: boolean;
 }

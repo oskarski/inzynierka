@@ -22,5 +22,6 @@ export const RecipeDetailsSelector = (dto: IRecipeDto): IRecipe => {
   return {
     ...dto,
     formattedPreparationTime: duration.format('H:MM'),
+    isPublished: dto.state === RecipeState.published,
   };
 };
