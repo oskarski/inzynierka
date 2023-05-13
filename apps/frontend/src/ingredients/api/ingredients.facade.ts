@@ -17,10 +17,19 @@ export const useListIngredients = (dto: IListIngredientsDto) => {
   );
 };
 
-export const useIngredientsSelection = () => {
+export const useIngredientsSelection = (
+  defaultSelectedIngredients: IIngredientListItemDto[] = []
+) => {
   const [selectedIngredients, setSelectedIngredients] = useState<
     Map<IngredientId, IIngredientListItemDto>
-  >(new Map());
+  >(
+    new Map(
+      defaultSelectedIngredients.map((selectedIngredient) => [
+        selectedIngredient.id,
+        selectedIngredient,
+      ])
+    )
+  );
 
   const selectIngredient = useCallback(
     (ingredient: IIngredientListItemDto) =>
