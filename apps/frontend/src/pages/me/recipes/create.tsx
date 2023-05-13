@@ -155,6 +155,9 @@ function GeneralTab({ error }: GeneralTabProps) {
   const [dietTypeCategories] = useListCategories({
     type: CategoryType.DietType,
   });
+  const [dishTypeCategories] = useListCategories({
+    type: CategoryType.DishType,
+  });
 
   return (
     <>
@@ -193,6 +196,18 @@ function GeneralTab({ error }: GeneralTabProps) {
         error={error}
         options={
           dietTypeCategories?.map((category) => ({
+            value: category.id,
+            label: category.name,
+          })) || []
+        }
+      />
+
+      <CheckboxField
+        name="dishType"
+        label="Typ Dania"
+        error={error}
+        options={
+          dishTypeCategories?.map((category) => ({
             value: category.id,
             label: category.name,
           })) || []

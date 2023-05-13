@@ -25,6 +25,7 @@ interface ISaveRecipeDto {
   readonly description: string;
   readonly difficulty: RecipeDifficulty;
   readonly dietType?: RecipeCategoryId[];
+  readonly dishType?: RecipeCategoryId[];
   readonly preparationTime: number;
   readonly portions: number;
   readonly ingredients: ISaveRecipeIngredientDto[];

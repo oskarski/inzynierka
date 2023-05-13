@@ -30,6 +30,14 @@ export const PublishRecipeFormSchema = z.object({
         .transform((id) => Id<RecipeCategoryId>(id))
     )
     .optional(),
+  dishType: z
+    .array(
+      z
+        .string({ required_error: validationMessages.required })
+        .nonempty(validationMessages.required)
+        .transform((id) => Id<RecipeCategoryId>(id))
+    )
+    .optional(),
   portions: z
     .number({ required_error: validationMessages.required })
     .positive(validationMessages.positive)

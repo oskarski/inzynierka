@@ -281,7 +281,10 @@ export class RecipesRepository {
     try {
       const createdRecipeId = await query.createDraftRecipe(dto, userId);
 
-      await query.saveCategories(createdRecipeId, [...(dto.dietType || [])]);
+      await query.saveCategories(createdRecipeId, [
+        ...(dto.dietType || []),
+        ...(dto.dishType || []),
+      ]);
       await query.saveIngredients(createdRecipeId, dto.ingredients);
       await query.execute();
 
@@ -307,7 +310,7 @@ export class RecipesRepository {
 
       await query.saveCategories(
         createdRecipeId,
-        uniq([...(dto.dietType || [])]),
+        uniq([...(dto.dietType || []), ...(dto.dishType || [])]),
       );
       await query.saveIngredients(createdRecipeId, dto.ingredients);
       await query.execute();

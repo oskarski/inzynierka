@@ -61,6 +61,11 @@ export class CreateRecipeDto implements ICreateRecipeDto {
   @IsOptional()
   readonly dietType?: RecipeCategoryId[];
 
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  @IsOptional()
+  readonly dishType?: RecipeCategoryId[];
+
   @IsNumber()
   @IsOptional()
   @IsPositive()
