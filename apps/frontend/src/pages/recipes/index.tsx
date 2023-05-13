@@ -15,7 +15,6 @@ import { GetServerSideProps } from 'next/types';
 import { ApiErrorMessage } from '@fe/errors';
 import React from 'react';
 import { InfiniteScroll } from 'antd-mobile';
-import { FrownOutlined } from '@ant-design/icons';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard()
