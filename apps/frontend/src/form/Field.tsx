@@ -174,8 +174,6 @@ export const RadioField = ({
         </Radio.Group>
       </Form.Item>
 
-      <div className="px-2 -mx-2"></div>
-
       <FormValidationErrorMessage
         error={error}
         name={props.name}
