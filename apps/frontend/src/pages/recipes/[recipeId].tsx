@@ -38,7 +38,7 @@ export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
 
     return {
       props: {
-        recipeId: params?.recipeId,
+        recipeId,
       },
     };
   })

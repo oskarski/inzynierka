@@ -10,3 +10,4 @@ export * from './RecipeFiltersButton';
 export * from './EmptyRecipesList';
 export * from './EmptyFavouriteRecipesList';
 export * from './RecipeDifficultyText';
+export * from './RecipeForm';
