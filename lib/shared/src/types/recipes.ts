@@ -1,5 +1,6 @@
 import { RecipeCategoryId } from './recipe-categories';
 import { IngredientId } from './ingredients';
+import { UserId } from './iam';
 
 export type RecipeId = string & { readonly __type: unique symbol };
 
@@ -106,6 +107,7 @@ export interface IRecipeDto {
   readonly ingredients: IRecipeIngredientDto[];
   readonly state: RecipeState;
   readonly difficulty: RecipeDifficulty;
+  readonly authorId: UserId | null;
 }
 
 export interface IAddRecipeToFavouritesDto {
