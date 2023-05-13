@@ -4,6 +4,7 @@ import {
   RecipeCategoryId,
   RecipeId,
   RecipeState,
+  UserId,
 } from '@lib/shared';
 import { Recipe } from './recipe.entity';
 import { RecipeIngredient } from './recipe-ingredient.entity';
@@ -39,6 +40,7 @@ import { RecipeCategory } from './recipe-category.entity';
         'recipe.state state',
       ])
       .addSelect('recipe.preparation_time', 'preparationTime')
+      .addSelect('recipe.author_id', 'authorId')
       .addSelect(
         'array_remove(array_agg(DISTINCT recipeCategories.category_id), NULL)',
         'categoryIds',
@@ -73,6 +75,9 @@ export class RecipeDetailsViewEntity {
 
   @ViewColumn()
   state: RecipeState;
+
+  @ViewColumn()
+  authorId: UserId;
 
   @ViewColumn()
   ingredients: Array<{
