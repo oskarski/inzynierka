@@ -2,6 +2,7 @@ import { DataSource, ViewColumn, ViewEntity } from 'typeorm';
 import {
   IngredientId,
   RecipeCategoryId,
+  RecipeDifficulty,
   RecipeId,
   RecipeState,
   UserId,
@@ -38,6 +39,7 @@ import { RecipeCategory } from './recipe-category.entity';
         'recipe.portions portions',
         'recipe.instructions instructions',
         'recipe.state state',
+        'recipe.difficulty difficulty',
       ])
       .addSelect('recipe.preparation_time', 'preparationTime')
       .addSelect('recipe.author_id', 'authorId')
@@ -92,6 +94,9 @@ export class RecipeDetailsViewEntity {
 
   @ViewColumn()
   state: RecipeState;
+
+  @ViewColumn()
+  difficulty: RecipeDifficulty;
 
   @ViewColumn()
   authorId: UserId;

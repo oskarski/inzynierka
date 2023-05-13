@@ -104,6 +104,8 @@ export interface IRecipeDto {
   readonly categoryIds: RecipeCategoryId[];
   readonly instructions: IRecipeInstructionDto[];
   readonly ingredients: IRecipeIngredientDto[];
+  readonly state: RecipeState;
+  readonly difficulty: RecipeDifficulty;
 }
 
 export interface IAddRecipeToFavouritesDto {
