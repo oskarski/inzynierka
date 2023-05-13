@@ -50,6 +50,7 @@ import { RecipeCategory } from './recipe-category.entity';
       .addSelect(
         `array_remove(
                   array_agg(
+                    DISTINCT
                     CASE
                     WHEN 
                       ingredient.id IS NOT NULL AND
