@@ -103,4 +103,12 @@ export class RecipeDetailsViewEntity {
     quantity: number;
     unit: string;
   }>;
+
+  isPublished(): boolean {
+    return this.state === RecipeState.published;
+  }
+
+  isAuthoredBy(userId: UserId): boolean {
+    return this.authorId === userId;
+  }
 }

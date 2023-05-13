@@ -4,7 +4,7 @@ import {
   IRecipeDto,
   IRecipeListItemDto,
   RecipeId,
-  RecipeState,
+  UserId,
 } from '@lib/shared';
 import { RecipesRepository } from '../repositories';
 import { Pagination } from '../../utils';
@@ -49,13 +49,14 @@ export class RecipesService {
     };
   }
 
-  async getRecipe(id: RecipeId): Promise<IRecipeDto> {
+  async getRecipe(id: RecipeId, currentUserId: UserId): Promise<IRecipeDto> {
     const recipe = await this.recipeDetailsRepository.findOneBy({
       id,
-      state: RecipeState.published,
     });
 
     if (!recipe) throw new NotFoundException();
+    if (!recipe.isPublished() && !recipe.isAuthoredBy(currentUserId))
+      throw new NotFoundException();
 
     return recipe;
   }

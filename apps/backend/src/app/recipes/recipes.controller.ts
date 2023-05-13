@@ -5,9 +5,10 @@ import {
   IRecipeListItemDto,
   RecipeId,
 } from '@lib/shared';
-import { PrivateApiGuard } from '../auth';
+import { CurrentUser, PrivateApiGuard } from '../auth';
 import { RecipesService } from './services';
 import { ListRecipesQueryDto } from './dtos';
+import { User } from '../iam/entities';
 
 @Controller('recipes')
 @UseGuards(PrivateApiGuard)
@@ -22,7 +23,10 @@ export class RecipesController {
   }
 
   @Get('/:id')
-  async getRecipeDetails(@Param('id') id: RecipeId): Promise<IRecipeDto> {
-    return this.recipesService.getRecipe(id);
+  async getRecipeDetails(
+    @Param('id') id: RecipeId,
+    @CurrentUser() currentUser: User,
+  ): Promise<IRecipeDto> {
+    return this.recipesService.getRecipe(id, currentUser.id);
   }
 }
