@@ -1,5 +1,10 @@
 import { ViewEntity, ViewColumn, DataSource } from 'typeorm';
-import { IngredientId, RecipeCategoryId, RecipeId } from '@lib/shared';
+import {
+  IngredientId,
+  RecipeCategoryId,
+  RecipeId,
+  RecipeState,
+} from '@lib/shared';
 import { Recipe } from './recipe.entity';
 import { RecipeIngredient } from './recipe-ingredient.entity';
 import { Ingredient } from '../../ingredients/entities';
@@ -9,8 +14,12 @@ import { RecipeCategory } from './recipe-category.entity';
   expression: (dataSource: DataSource) =>
     dataSource
       .createQueryBuilder()
-      .from(RecipeIngredient, 'recipeIngredients')
-      .innerJoin(Recipe, 'recipe', 'recipeIngredients.recipe_id = recipe.id')
+      .from(Recipe, 'recipe')
+      .innerJoin(
+        RecipeIngredient,
+        'recipeIngredients',
+        'recipe.id = recipeIngredients.recipe_id',
+      )
       .innerJoin(
         Ingredient,
         'ingredient',
@@ -27,6 +36,7 @@ import { RecipeCategory } from './recipe-category.entity';
         'recipe.description description',
         'recipe.portions portions',
         'recipe.instructions instructions',
+        'recipe.state state',
       ])
       .addSelect('recipe.preparation_time', 'preparationTime')
       .addSelect(
@@ -60,6 +70,9 @@ export class RecipeDetailsViewEntity {
 
   @ViewColumn()
   instructions: Array<{ step: string }>;
+
+  @ViewColumn()
+  state: RecipeState;
 
   @ViewColumn()
   ingredients: Array<{

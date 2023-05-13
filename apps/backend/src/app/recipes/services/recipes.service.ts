@@ -4,6 +4,7 @@ import {
   IRecipeDto,
   IRecipeListItemDto,
   RecipeId,
+  RecipeState,
 } from '@lib/shared';
 import { RecipesRepository } from '../repositories';
 import { Pagination } from '../../utils';
@@ -49,7 +50,10 @@ export class RecipesService {
   }
 
   async getRecipe(id: RecipeId): Promise<IRecipeDto> {
-    const recipe = await this.recipeDetailsRepository.findOneBy({ id });
+    const recipe = await this.recipeDetailsRepository.findOneBy({
+      id,
+      state: RecipeState.published,
+    });
 
     if (!recipe) throw new NotFoundException();
 
