@@ -1,4 +1,4 @@
-import { Form, Input, Radio, Stepper, TextArea } from 'antd-mobile';
+import { Checkbox, Form, Input, Radio, Stepper, TextArea } from 'antd-mobile';
 import {
   FormValidationErrorMessage,
   FormValidationOrApiError,
@@ -172,6 +172,45 @@ export const RadioField = ({
             ))}
           </div>
         </Radio.Group>
+      </Form.Item>
+
+      <FormValidationErrorMessage
+        error={error}
+        name={props.name}
+        block={true}
+        className="-mt-2 relative"
+      />
+    </>
+  );
+};
+
+interface CheckboxFieldProps extends ComponentProps<typeof Form.Item> {
+  error: FormValidationOrApiError | null;
+  name: string;
+  options: Array<{ value: string | number; label: string }>;
+}
+
+export const CheckboxField = ({
+  error,
+  options,
+  ...props
+}: CheckboxFieldProps) => {
+  return (
+    <>
+      <Form.Item {...props}>
+        <Checkbox.Group>
+          <div className="px-2 -mx-2">
+            {options.map((option) => (
+              <Checkbox
+                key={option.value}
+                className="px-2 mb-3"
+                value={option.value}
+              >
+                {option.label}
+              </Checkbox>
+            ))}
+          </div>
+        </Checkbox.Group>
       </Form.Item>
 
       <FormValidationErrorMessage

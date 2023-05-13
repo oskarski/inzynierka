@@ -56,6 +56,11 @@ export class CreateRecipeDto implements ICreateRecipeDto {
   @IsOptional()
   readonly difficulty?: RecipeDifficulty;
 
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  @IsOptional()
+  readonly dietType?: RecipeCategoryId[];
+
   @IsNumber()
   @IsOptional()
   @IsPositive()
@@ -109,6 +114,11 @@ export class PublishRecipeDto implements IPublishRecipeDto {
 
   @IsEnum(RecipeDifficulty)
   readonly difficulty: RecipeDifficulty;
+
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  @IsOptional()
+  readonly dietType?: RecipeCategoryId[];
 
   @IsNumber()
   @IsPositive()

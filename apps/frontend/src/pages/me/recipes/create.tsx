@@ -7,6 +7,7 @@ import { GetServerSideProps } from 'next/types';
 import { Button, CapsuleTabs, Form, List } from 'antd-mobile';
 import {
   AppForm,
+  CheckboxField,
   HiddenField,
   PickerBasedSelectField,
   RadioField,
@@ -37,7 +38,8 @@ import {
   useCreateRecipe,
   RecipeDifficultyText,
 } from '@fe/recipes';
-import { RecipeDifficulty } from '@lib/shared';
+import { CategoryType, RecipeDifficulty } from '@lib/shared';
+import { useListCategories } from '@fe/recipes-categories';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard()
@@ -150,6 +152,10 @@ interface GeneralTabProps {
 }
 
 function GeneralTab({ error }: GeneralTabProps) {
+  const [dietTypeCategories] = useListCategories({
+    type: CategoryType.DietType,
+  });
+
   return (
     <>
       <TextField name="name" label="Tytuł" error={error} />
@@ -179,6 +185,18 @@ function GeneralTab({ error }: GeneralTabProps) {
             ),
           },
         ]}
+      />
+
+      <CheckboxField
+        name="dietType"
+        label="Dieta"
+        error={error}
+        options={
+          dietTypeCategories?.map((category) => ({
+            value: category.id,
+            label: category.name,
+          })) || []
+        }
       />
     </>
   );

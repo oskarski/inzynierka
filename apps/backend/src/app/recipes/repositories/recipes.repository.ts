@@ -280,7 +280,10 @@ export class RecipesRepository {
     try {
       const createdRecipeId = await query.createDraftRecipe(dto, userId);
 
-      await query.saveCategories(createdRecipeId, dto.categoryIds);
+      await query.saveCategories(createdRecipeId, [
+        ...(dto.categoryIds || []),
+        ...(dto.dietType || []),
+      ]);
       await query.saveIngredients(createdRecipeId, dto.ingredients);
       await query.execute();
 
@@ -304,7 +307,10 @@ export class RecipesRepository {
     try {
       const createdRecipeId = await query.createPublishedRecipe(dto, userId);
 
-      await query.saveCategories(createdRecipeId, dto.categoryIds);
+      await query.saveCategories(createdRecipeId, [
+        ...dto.categoryIds,
+        ...(dto.dietType || []),
+      ]);
       await query.saveIngredients(createdRecipeId, dto.ingredients);
       await query.execute();
 
