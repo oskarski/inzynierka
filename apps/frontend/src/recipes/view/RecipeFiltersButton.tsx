@@ -194,7 +194,7 @@ function DifficultyFilters() {
 
           <Checkbox
             className="px-1 mb-3"
-            value={`${RecipeDifficulty.easy}`}
+            value={RecipeDifficulty.easy}
             onChange={(checked) =>
               checked
                 ? selectDifficultyFilter(RecipeDifficulty.easy)
@@ -206,7 +206,7 @@ function DifficultyFilters() {
 
           <Checkbox
             className="px-1 mb-3"
-            value={`${RecipeDifficulty.medium}`}
+            value={RecipeDifficulty.medium}
             onChange={(checked) =>
               checked
                 ? selectDifficultyFilter(RecipeDifficulty.medium)
@@ -218,7 +218,7 @@ function DifficultyFilters() {
 
           <Checkbox
             className="px-1 mb-3"
-            value={`${RecipeDifficulty.difficult}`}
+            value={RecipeDifficulty.difficult}
             onChange={(checked) =>
               checked
                 ? selectDifficultyFilter(RecipeDifficulty.difficult)

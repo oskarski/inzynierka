@@ -9,9 +9,9 @@ export enum RecipeState {
 }
 
 export enum RecipeDifficulty {
-  easy = 100,
-  medium = 200,
-  difficult = 300,
+  easy = '100',
+  medium = '200',
+  difficult = '300',
 }
 
 export interface ISaveRecipeIngredientDto {

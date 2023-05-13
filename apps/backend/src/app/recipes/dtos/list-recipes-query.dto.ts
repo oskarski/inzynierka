@@ -64,6 +64,5 @@ export class ListRecipesQueryDto
   @IsOptional()
   @IsArray()
   @IsEnum(RecipeDifficulty, { each: true })
-  @Transform(({ value }) => value.map((el) => parseInt(el, 10)))
   readonly difficulty?: RecipeDifficulty[];
 }
