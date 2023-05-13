@@ -1,4 +1,4 @@
-import { ViewEntity, ViewColumn, DataSource } from 'typeorm';
+import { DataSource, ViewColumn, ViewEntity } from 'typeorm';
 import {
   IngredientId,
   RecipeCategoryId,
@@ -16,12 +16,12 @@ import { RecipeCategory } from './recipe-category.entity';
     dataSource
       .createQueryBuilder()
       .from(Recipe, 'recipe')
-      .innerJoin(
+      .leftJoin(
         RecipeIngredient,
         'recipeIngredients',
         'recipe.id = recipeIngredients.recipe_id',
       )
-      .innerJoin(
+      .leftJoin(
         Ingredient,
         'ingredient',
         'recipeIngredients.ingredient_id = ingredient.id',
@@ -46,7 +46,24 @@ import { RecipeCategory } from './recipe-category.entity';
         'categoryIds',
       )
       .addSelect(
-        "array_agg(json_build_object('id', ingredient.id, 'name', ingredient.name, 'quantity', recipeIngredients.quantity, 'unit', recipeIngredients.unit))",
+        `array_remove(
+                  array_agg(
+                    CASE
+                    WHEN 
+                      ingredient.id IS NOT NULL AND
+                      ingredient.name IS NOT NULL AND 
+                      "recipeIngredients".quantity IS NOT NULL AND
+                      "recipeIngredients".unit IS NOT NULL
+                    THEN jsonb_build_object(
+                      'id', ingredient.id,
+                      'name', ingredient.name,
+                      'quantity',
+                      "recipeIngredients".quantity,
+                      'unit', "recipeIngredients".unit
+                    )
+                    END
+                  ), NULL
+                 )`,
         'ingredients',
       )
       .groupBy('recipe.id'),
