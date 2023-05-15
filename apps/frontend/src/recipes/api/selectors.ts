@@ -1,5 +1,10 @@
 import { Duration } from '@fe/utils';
-import { IRecipeDto, IRecipeListItemDto, RecipeState } from '@lib/shared';
+import {
+  IRecipeDto,
+  IRecipeListItemDto,
+  RecipeState,
+  UserId,
+} from '@lib/shared';
 import { IRecipe, IRecipeListItem } from './types';
 
 export const RecipeListItemSelector = (
@@ -23,5 +28,6 @@ export const RecipeDetailsSelector = (dto: IRecipeDto): IRecipe => {
     ...dto,
     formattedPreparationTime: duration.format('H:MM'),
     isPublished: dto.state === RecipeState.published,
+    isAuthoredBy: (userId: UserId) => dto.authorId === userId,
   };
 };

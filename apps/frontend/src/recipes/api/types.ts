@@ -1,4 +1,4 @@
-import { IRecipeDto, IRecipeListItemDto } from '@lib/shared';
+import { IRecipeDto, IRecipeListItemDto, UserId } from '@lib/shared';
 
 export interface IRecipeListItem extends IRecipeListItemDto {
   readonly formattedPreparationTime: string;
@@ -9,4 +9,6 @@ export interface IRecipeListItem extends IRecipeListItemDto {
 export interface IRecipe extends IRecipeDto {
   readonly formattedPreparationTime: string;
   readonly isPublished: boolean;
+
+  isAuthoredBy(userId: UserId | undefined): boolean;
 }
