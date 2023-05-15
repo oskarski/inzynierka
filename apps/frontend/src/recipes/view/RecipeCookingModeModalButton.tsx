@@ -31,15 +31,9 @@ export const RecipeCookingModeModalButton = ({
         />
       </Mask>
 
-      <div className="fixed bottom-20 left-4 right-4">
-        <Button
-          block={true}
-          color="primary"
-          onClick={() => toggleVisible(true)}
-        >
-          Gotujemy!
-        </Button>
-      </div>
+      <Button block={true} color="primary" onClick={() => toggleVisible(true)}>
+        Gotujemy!
+      </Button>
     </>
   );
 };

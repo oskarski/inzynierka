@@ -164,10 +164,12 @@ export default function RecipeDetailsPage({
               ))}
             </div>
 
-            <RecipeCookingModeModalButton
-              recipe={recipe}
-              portionsProportion={portionsProportion}
-            />
+            <div className="fixed bottom-20 left-4 right-4 space-y-3">
+              <RecipeCookingModeModalButton
+                recipe={recipe}
+                portionsProportion={portionsProportion}
+              />
+            </div>
           </>
         )}
       </main>
