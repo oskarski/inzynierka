@@ -10,6 +10,9 @@ nvm install 16.0
 npm install -g yarn
 yarn config set ignore-engines true
 
+cd ~/inzynierka
+yarn install
+
 cd ~/inzynierka/lib/shared
 yarn build
 
