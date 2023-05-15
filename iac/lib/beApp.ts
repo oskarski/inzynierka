@@ -1,6 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
-import { readFileSync } from 'fs';
 import { Vpc } from './vpc';
 import { CfnEIP } from 'aws-cdk-lib/aws-ec2';
 
@@ -50,10 +49,6 @@ export class BeApp {
       }),
       keyName: 'inzynierka-be-app-key-pair',
     });
-
-    const userDataScript = readFileSync('../apps/backend/ec2.sh', 'utf8');
-
-    this.instance.addUserData(userDataScript);
 
     new CfnEIP(stack, 'inzynierka-be-elastic-ip', {
       instanceId: this.instance.instanceId,
