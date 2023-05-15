@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { env, headTitle, HttpClient } from '@fe/utils';
+import { env, headTitle, HttpClient, routes } from '@fe/utils';
 import { HydrateReactQueryState } from '../../server/server-react-query';
 import { SignedInGuard } from '../../server/server-guards';
 import { GetServerSideProps } from 'next/types';
@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { RecipeCategoryTag } from '@fe/recipes-categories';
 import { Loader, SectionSubTitle, SectionTitle } from '@fe/components';
 import { ShoppingOutlined, TeamOutlined } from '@ant-design/icons';
-import { Stepper } from 'antd-mobile';
+import { Button, Stepper } from 'antd-mobile';
 import {
   FavouriteRecipeButton,
   GetRecipeDetailsQueryKey,
@@ -23,6 +23,7 @@ import {
 import { RecipeId } from '@lib/shared';
 import { ApiErrorMessage } from '@fe/errors';
 import { useSignedInUser } from '@fe/iam';
+import Link from 'next/link';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard(async ({ params }, queryClient, user) => {
@@ -169,6 +170,17 @@ export default function RecipeDetailsPage({
                 recipe={recipe}
                 portionsProportion={portionsProportion}
               />
+
+              {recipe.isAuthoredBy(currentUser?.id) && (
+                <Link
+                  href={routes.editRecipe(recipeId)}
+                  className="block bg-white"
+                >
+                  <Button block={true} color="primary" fill="outline">
+                    Edytuj
+                  </Button>
+                </Link>
+              )}
             </div>
           </>
         )}
