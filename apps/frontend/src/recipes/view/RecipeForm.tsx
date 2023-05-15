@@ -30,9 +30,12 @@ import {
   PlusCircleOutlined,
   TeamOutlined,
 } from '@ant-design/icons';
+import { IRecipe } from '../api';
+import { intersection } from 'lodash';
 
 interface RecipeFormProps {
   error: FormValidationOrApiError | null;
+  defaultValues?: IRecipe;
   primaryAction: {
     onSubmit: (formValues: any) => void;
     loading: boolean;
@@ -46,6 +49,7 @@ interface RecipeFormProps {
 
 export const RecipeForm = ({
   error,
+  defaultValues,
   primaryAction,
   secondaryAction,
 }: RecipeFormProps) => {
@@ -93,11 +97,11 @@ export const RecipeForm = ({
     >
       <CapsuleTabs>
         <CapsuleTabs.Tab title="Ogólne" key="general" forceRender={true}>
-          <GeneralTab error={error} />
+          <GeneralTab error={error} defaultValues={defaultValues} />
         </CapsuleTabs.Tab>
 
         <CapsuleTabs.Tab title="Składniki" key="ingredients" forceRender={true}>
-          <IngredientsTab error={error} />
+          <IngredientsTab error={error} defaultValues={defaultValues} />
         </CapsuleTabs.Tab>
 
         <CapsuleTabs.Tab
@@ -105,7 +109,7 @@ export const RecipeForm = ({
           key="instructions"
           forceRender={true}
         >
-          <InstructionsTab error={error} />
+          <InstructionsTab error={error} defaultValues={defaultValues} />
         </CapsuleTabs.Tab>
       </CapsuleTabs>
     </AppForm>
@@ -114,9 +118,10 @@ export const RecipeForm = ({
 
 interface GeneralTabProps {
   error: FormValidationOrApiError | null;
+  defaultValues?: IRecipe;
 }
 
-function GeneralTab({ error }: GeneralTabProps) {
+function GeneralTab({ error, defaultValues }: GeneralTabProps) {
   const [dietTypeCategories] = useListCategories({
     type: CategoryType.DietType,
   });
@@ -127,17 +132,50 @@ function GeneralTab({ error }: GeneralTabProps) {
     type: CategoryType.CuisineType,
   });
 
+  const initialDietTypes =
+    dietTypeCategories &&
+    defaultValues &&
+    intersection(
+      dietTypeCategories.map((category) => category.id),
+      defaultValues.categoryIds
+    );
+  const initialDishTypes =
+    dishTypeCategories &&
+    defaultValues &&
+    intersection(
+      dishTypeCategories.map((category) => category.id),
+      defaultValues.categoryIds
+    );
+  const initialCuisineTypes =
+    cuisineTypeCategories &&
+    defaultValues &&
+    intersection(
+      cuisineTypeCategories.map((category) => category.id),
+      defaultValues.categoryIds
+    );
+
   return (
     <>
-      <TextField name="name" label="Tytuł" error={error} />
+      <TextField
+        name="name"
+        label="Tytuł"
+        error={error}
+        initialValue={defaultValues?.name}
+      />
 
-      <TextAreaField name="description" label="Opis" rows={3} error={error} />
+      <TextAreaField
+        name="description"
+        label="Opis"
+        rows={3}
+        error={error}
+        initialValue={defaultValues?.description}
+      />
 
       <RadioField
         name="difficulty"
         label="Trudność"
         error={error}
-        defaultValue={RecipeDifficulty.medium}
+        defaultValue={defaultValues?.difficulty || RecipeDifficulty.medium}
         options={[
           {
             value: RecipeDifficulty.easy,
@@ -158,56 +196,66 @@ function GeneralTab({ error }: GeneralTabProps) {
         ]}
       />
 
-      <CheckboxField
-        name="dietType"
-        label="Dieta"
-        error={error}
-        options={
-          dietTypeCategories?.map((category) => ({
-            value: category.id,
-            label: category.name,
-          })) || []
-        }
-      />
+      {dietTypeCategories && (
+        <CheckboxField
+          name="dietType"
+          label="Dieta"
+          error={error}
+          initialValue={initialDietTypes}
+          options={
+            dietTypeCategories?.map((category) => ({
+              value: category.id,
+              label: category.name,
+            })) || []
+          }
+        />
+      )}
 
-      <CheckboxField
-        name="dishType"
-        label="Typ Dania"
-        error={error}
-        options={
-          dishTypeCategories?.map((category) => ({
-            value: category.id,
-            label: category.name,
-          })) || []
-        }
-      />
+      {dietTypeCategories && (
+        <CheckboxField
+          name="dishType"
+          label="Typ Dania"
+          error={error}
+          initialValue={initialDishTypes}
+          options={
+            dishTypeCategories?.map((category) => ({
+              value: category.id,
+              label: category.name,
+            })) || []
+          }
+        />
+      )}
 
-      <CheckboxField
-        name="cuisineType"
-        label="Kuchnia"
-        error={error}
-        options={
-          cuisineTypeCategories?.map((category) => ({
-            value: category.id,
-            label: category.name,
-          })) || []
-        }
-      />
+      {cuisineTypeCategories && (
+        <CheckboxField
+          name="cuisineType"
+          label="Kuchnia"
+          error={error}
+          initialValue={initialCuisineTypes}
+          options={
+            cuisineTypeCategories?.map((category) => ({
+              value: category.id,
+              label: category.name,
+            })) || []
+          }
+        />
+      )}
     </>
   );
 }
 
 interface IngredientsTabProps {
   error: FormValidationOrApiError | null;
+  defaultValues?: IRecipe;
 }
 
-function IngredientsTab({ error }: IngredientsTabProps) {
+function IngredientsTab({ error, defaultValues }: IngredientsTabProps) {
   const {
     selectedIngredients,
     selectIngredient,
     unselectIngredient,
     isIngredientSelected,
-  } = useIngredientsSelection();
+  } = useIngredientsSelection(defaultValues?.ingredients);
 
   return (
     <>
@@ -215,7 +263,7 @@ function IngredientsTab({ error }: IngredientsTabProps) {
         <StepperField
           name="portions"
           min={1}
-          initialValue={4}
+          initialValue={defaultValues?.portions || 4}
           error={error}
           label={
             <div className="flex items-center">
@@ -257,7 +305,11 @@ function IngredientsTab({ error }: IngredientsTabProps) {
                       min={1}
                       error={error}
                       label={ingredient.name}
-                      initialValue={1}
+                      initialValue={
+                        defaultValues?.ingredients.find(
+                          (i) => i.id === ingredient.id
+                        )?.quantity || 1
+                      }
                       noStyle={true}
                       suffix={
                         <div className="ml-2 flex items-center">
@@ -265,7 +317,11 @@ function IngredientsTab({ error }: IngredientsTabProps) {
                             name={['ingredients', ingredient.id, 'unit']}
                             error={error}
                             noStyle={true}
-                            initialValue="szt."
+                            initialValue={
+                              defaultValues?.ingredients.find(
+                                (i) => i.id === ingredient.id
+                              )?.unit || 'szt.'
+                            }
                             // TODO Extract to enum? Or <UnitSelect />
                             options={[
                               { value: 'szt.', label: 'szt.' },
@@ -300,16 +356,17 @@ function IngredientsTab({ error }: IngredientsTabProps) {
 
 interface InstructionsTabProps {
   error: FormValidationOrApiError | null;
+  defaultValues?: IRecipe;
 }
 
-function InstructionsTab({ error }: InstructionsTabProps) {
+function InstructionsTab({ error, defaultValues }: InstructionsTabProps) {
   return (
     <>
       <div className="border-b mb-3">
         <StepperField
           name="preparationTime"
           min={5}
-          initialValue={30}
+          initialValue={defaultValues ? defaultValues.preparationTime / 60 : 30}
           step={5}
           error={error}
           suffix="min"
@@ -328,7 +385,7 @@ function InstructionsTab({ error }: InstructionsTabProps) {
           renderAdd={() => (
             <PlusCircleOutlined className="text-primary text-xl" />
           )}
-          initialValue={[{}]}
+          initialValue={defaultValues?.instructions || [{}]}
         >
           {(fields, { add, remove }) =>
             fields.map(({ index }) => (
