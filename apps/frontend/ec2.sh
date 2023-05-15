@@ -11,7 +11,6 @@ nvm install 16.0
 cd ~/inzynierka/lib/shared
 yarn build
 
-cd ~/inzynierka/apps/backend
+cd ~/inzynierka/apps/frontend
 yarn build
-yarn migration:run
 yarn start

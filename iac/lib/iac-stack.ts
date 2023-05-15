@@ -5,6 +5,7 @@ import { Cognito } from './cognito';
 import { Vpc } from './vpc';
 import { BeApp } from './beApp';
 import { Db } from './db';
+import { FeApp } from './feApp';
 
 export class IacStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -14,6 +15,7 @@ export class IacStack extends cdk.Stack {
 
     const vpc = new Vpc(this);
     const beApp = new BeApp(this, vpc);
+    const feApp = new FeApp(this, vpc);
     const db = new Db(this, vpc);
 
     db.instance.connections.allowFrom(beApp.instance, Port.tcp(5432));
