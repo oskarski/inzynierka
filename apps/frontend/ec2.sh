@@ -8,6 +8,7 @@ sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | 
 . ~/.nvm/nvm.sh
 nvm install 16.0
 npm install -g yarn
+yarn config set ignore-engines true
 
 cd ~/inzynierka/lib/shared
 yarn build
