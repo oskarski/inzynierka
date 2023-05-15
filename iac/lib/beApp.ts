@@ -11,6 +11,7 @@ export class BeApp {
       'be-app-instance-security-group',
       {
         vpc: vpc.instance,
+        allowAllOutbound: true,
       }
     );
 
@@ -18,6 +19,18 @@ export class BeApp {
       ec2.Peer.anyIpv4(),
       ec2.Port.tcp(22),
       'allow SSH connections from anywhere'
+    );
+
+    beAppSecurityGroup.addIngressRule(
+      ec2.Peer.anyIpv4(),
+      ec2.Port.tcp(80),
+      'allow HTTP traffic from anywhere'
+    );
+
+    beAppSecurityGroup.addIngressRule(
+      ec2.Peer.anyIpv4(),
+      ec2.Port.tcp(443),
+      'allow HTTPS traffic from anywhere'
     );
 
     this.instance = new ec2.Instance(stack, 'be-app-ec2-instance', {
