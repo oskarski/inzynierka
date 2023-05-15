@@ -10,7 +10,7 @@ export class Db {
     this.instance = new rds.DatabaseInstance(stack, 'inzynierka-db-instance', {
       vpc: vpc.instance,
       vpcSubnets: {
-        // TODO Change to `PRIVATE_ISOLATED` and allow only connections from BE app
+        // TODO Change to `PRIVATE_ISOLATED`
         subnetType: ec2.SubnetType.PUBLIC,
       },
       engine: rds.DatabaseInstanceEngine.postgres({
