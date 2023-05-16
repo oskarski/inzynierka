@@ -152,11 +152,11 @@ class ListRecipesQuery {
   constructor(private readonly queryBuilder: SelectQueryBuilder<Recipe>) {
     this.queryBuilder
       .select([
-        'recipes.id id',
-        'recipes.name name',
-        'recipes.description description',
-        'recipes.portions portions',
-        'recipes.state state',
+        'recipes.id AS id',
+        'recipes.name AS name',
+        'recipes.description AS description',
+        'recipes.portions AS portions',
+        'recipes.state AS state',
       ])
       .addSelect('recipes.preparation_time', 'preparationTime')
       .addSelect('array_agg(category.category_id)', 'categoryIds')
