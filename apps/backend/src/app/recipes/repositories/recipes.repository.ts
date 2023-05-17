@@ -260,7 +260,7 @@ class ListRecipesQuery {
   }
 
   getRawMany(): Promise<ListRecipesQueryResult[]> {
-    return this.queryBuilder.getRawMany() || Promise.resolve([]);
+    return this.queryBuilder.getRawMany();
   }
 }
 

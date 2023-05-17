@@ -48,7 +48,8 @@ export default function FavouriteRecipesPage() {
         {loading && <Loader />}
         {error && <ApiErrorMessage size="base" error={error} />}
 
-        {favouriteRecipes && favouriteRecipes.length === 0 && (
+        {(favouriteRecipes?.length === 0 ||
+          (!loading && !favouriteRecipes)) && (
           <EmptyFavouriteRecipesList className="mt-16" />
         )}
 
