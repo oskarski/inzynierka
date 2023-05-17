@@ -7,11 +7,17 @@ import {
 } from '@lib/shared';
 import { useCallback, useState } from 'react';
 
+export const ListIngredientsQueryKey = (dto: IListIngredientsDto) => [
+  'ingredientsApi',
+  'listIngredients',
+  dto,
+];
+
 export const useListIngredients = (dto: IListIngredientsDto) => {
   const { ingredientsApi } = useIngredientsApi();
 
   return useAdaptedQuery<IIngredientListItemDto[]>(
-    ['ingredientsApi', 'listIngredients', dto.name],
+    ListIngredientsQueryKey(dto),
     () => ingredientsApi.listIngredients(dto),
     { keepPreviousData: true }
   );

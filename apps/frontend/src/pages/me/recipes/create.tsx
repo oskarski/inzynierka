@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { headTitle, routes, useRouting } from '@fe/utils';
+import { env, headTitle, HttpClient, routes, useRouting } from '@fe/utils';
 import { SectionTitle } from '@fe/components';
 import { HydrateReactQueryState } from '../../../server/server-react-query';
 import { SignedInGuard } from '../../../server/server-guards';
@@ -11,9 +11,32 @@ import {
   useCreateRecipe,
   RecipeForm,
 } from '@fe/recipes';
+import {
+  ListAllRecipesCategoriesQueryKey,
+  RecipesCategoriesApi,
+} from '@fe/recipes-categories';
+import { IngredientsApi, ListIngredientsQueryKey } from '@fe/ingredients';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
-  SignedInGuard()
+  SignedInGuard(async (ctx, queryClient, user) => {
+    const httpClient = HttpClient.privateHttpClient(env().apiUrl, {
+      accessToken: user.accessToken,
+    });
+    const recipesCategoriesApi = new RecipesCategoriesApi(httpClient);
+    const ingredientsApi = new IngredientsApi(httpClient);
+
+    await queryClient.prefetchQuery(ListAllRecipesCategoriesQueryKey, () =>
+      recipesCategoriesApi.listCategories({})
+    );
+
+    const ingredientsQueryDto = { name: '' };
+    await queryClient.prefetchQuery(
+      ListIngredientsQueryKey(ingredientsQueryDto),
+      () => ingredientsApi.listIngredients(ingredientsQueryDto)
+    );
+
+    return { props: {} };
+  })
 );
 
 export default function CreateYourRecipePage() {
