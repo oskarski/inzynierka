@@ -1,9 +1,9 @@
 import {
-  ICreateRecipeDto,
-  ICreateRecipeInstructionDto,
+  IDraftRecipeDto,
+  IDraftRecipeInstructionDto,
   IngredientId,
   IPublishRecipeDto,
-  IPublishRecipeInstructionDto,
+  IRecipeInstructionDto,
   ISaveRecipeIngredientDto,
   RecipeCategoryId,
   RecipeDifficulty,
@@ -37,13 +37,13 @@ class SaveRecipeIngredientDto implements ISaveRecipeIngredientDto {
   readonly unit: string;
 }
 
-class CreateRecipeInstructionDto implements ICreateRecipeInstructionDto {
+class DraftRecipeInstructionDto implements IDraftRecipeInstructionDto {
   @IsString()
   @IsOptional()
   readonly step?: string;
 }
 
-export class CreateRecipeDto implements ICreateRecipeDto {
+abstract class DraftRecipeDto implements IDraftRecipeDto {
   @IsString()
   @IsNotEmpty()
   readonly name: string;
@@ -92,8 +92,8 @@ export class CreateRecipeDto implements ICreateRecipeDto {
   @IsArray()
   @IsOptional()
   @ValidateNested({ each: true })
-  @Type(() => CreateRecipeInstructionDto)
-  readonly instructions?: CreateRecipeInstructionDto[];
+  @Type(() => DraftRecipeInstructionDto)
+  readonly instructions?: DraftRecipeInstructionDto[];
 
   @IsArray()
   @IsOptional()
@@ -102,7 +102,9 @@ export class CreateRecipeDto implements ICreateRecipeDto {
   readonly ingredients?: SaveRecipeIngredientDto[];
 }
 
-class PublishRecipeInstructionDto implements IPublishRecipeInstructionDto {
+export class CreateRecipeDto extends DraftRecipeDto {}
+
+class RecipeInstructionDto implements IRecipeInstructionDto {
   @IsString()
   @IsNotEmpty()
   readonly step: string;
@@ -150,8 +152,8 @@ export class PublishRecipeDto implements IPublishRecipeDto {
   @IsArray()
   @ArrayNotEmpty()
   @ValidateNested({ each: true })
-  @Type(() => PublishRecipeInstructionDto)
-  readonly instructions: PublishRecipeInstructionDto[];
+  @Type(() => RecipeInstructionDto)
+  readonly instructions: RecipeInstructionDto[];
 
   @IsArray()
   @ArrayNotEmpty()

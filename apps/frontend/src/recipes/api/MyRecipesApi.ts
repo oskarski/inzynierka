@@ -1,13 +1,13 @@
 import {
   RecipeId,
-  ICreateRecipeDto,
+  IDraftRecipeDto,
   IPublishRecipeDto,
   IRecipeListItemDto,
 } from '@lib/shared';
 import { HttpClient } from '@fe/utils';
 
 export interface IMyRecipesApi {
-  createRecipe(dto: ICreateRecipeDto): Promise<RecipeId>;
+  createRecipe(dto: IDraftRecipeDto): Promise<RecipeId>;
 
   createAndPublishRecipe(dto: IPublishRecipeDto): Promise<RecipeId>;
 
@@ -21,8 +21,8 @@ export class MyRecipesApi implements IMyRecipesApi {
 
   constructor(private readonly httpClient: HttpClient) {}
 
-  createRecipe(dto: ICreateRecipeDto): Promise<RecipeId> {
-    return this.httpClient.post<ICreateRecipeDto, RecipeId>(this.baseUrl, dto);
+  createRecipe(dto: IDraftRecipeDto): Promise<RecipeId> {
+    return this.httpClient.post<IDraftRecipeDto, RecipeId>(this.baseUrl, dto);
   }
 
   createAndPublishRecipe(dto: IPublishRecipeDto): Promise<RecipeId> {

@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
-  ICreateRecipeDto,
+  IDraftRecipeDto,
   IPublishRecipeDto,
   IRecipeListItemDto,
   RecipeId,
@@ -17,7 +17,7 @@ export class MyRecipesService {
   constructor(private readonly recipesRepository: RecipesRepository) {}
 
   async createRecipe(
-    createRecipeDto: ICreateRecipeDto,
+    createRecipeDto: IDraftRecipeDto,
     userId: UserId,
   ): Promise<RecipeId> {
     return this.recipesRepository.createRecipe(createRecipeDto, userId);

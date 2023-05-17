@@ -9,7 +9,7 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Pagination } from '../../utils';
 import {
-  ICreateRecipeDto,
+  IDraftRecipeDto,
   IListRecipesCategoryFiltersDto,
   IListRecipesDifficultyFiltersDto,
   IListRecipesFiltersDto,
@@ -37,7 +37,7 @@ class SaveRecipeTransactionQuery {
   }
 
   async createDraftRecipe(
-    dto: ICreateRecipeDto,
+    dto: IDraftRecipeDto,
     authorId: UserId,
   ): Promise<RecipeId> {
     return this.createRecipe(
@@ -62,7 +62,7 @@ class SaveRecipeTransactionQuery {
   }
 
   private async createRecipe(
-    dto: ICreateRecipeDto,
+    dto: IDraftRecipeDto,
     authorId: UserId,
     state: RecipeState,
   ): Promise<RecipeId> {
@@ -273,7 +273,7 @@ export class RecipesRepository {
     private readonly dataSource: DataSource,
   ) {}
 
-  async createRecipe(dto: ICreateRecipeDto, userId: UserId): Promise<RecipeId> {
+  async createRecipe(dto: IDraftRecipeDto, userId: UserId): Promise<RecipeId> {
     const query = await SaveRecipeTransactionQuery.fromQueryRunner(
       this.dataSource.createQueryRunner(),
     );
