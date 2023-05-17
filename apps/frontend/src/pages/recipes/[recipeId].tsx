@@ -4,7 +4,11 @@ import { HydrateReactQueryState } from '../../server/server-react-query';
 import { SignedInGuard } from '../../server/server-guards';
 import { GetServerSideProps } from 'next/types';
 import React, { useState } from 'react';
-import { RecipeCategoryTag } from '@fe/recipes-categories';
+import {
+  ListAllRecipesCategoriesQueryKey,
+  RecipeCategoryTag,
+  RecipesCategoriesApi,
+} from '@fe/recipes-categories';
 import { Loader, SectionSubTitle, SectionTitle } from '@fe/components';
 import { ShoppingOutlined, TeamOutlined } from '@ant-design/icons';
 import { Button, Stepper } from 'antd-mobile';
@@ -19,6 +23,8 @@ import {
   useConnectedCategories,
   useRecipeDetails,
   RecipeStateTag,
+  FavouriteRecipesApi,
+  ListFavouriteRecipesQueryKey,
 } from '@fe/recipes';
 import { RecipeId } from '@lib/shared';
 import { ApiErrorMessage } from '@fe/errors';
@@ -29,14 +35,22 @@ export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard(async ({ params }, queryClient, user) => {
     const recipeId: RecipeId = params?.recipeId as RecipeId;
 
-    const recipesApi = new RecipesApi(
-      HttpClient.privateHttpClient(env().apiUrl, {
-        accessToken: user.accessToken,
-      })
-    );
+    const httpClient = HttpClient.privateHttpClient(env().apiUrl, {
+      accessToken: user.accessToken,
+    });
+
+    const recipesApi = new RecipesApi(httpClient);
+    const recipesCategoriesApi = new RecipesCategoriesApi(httpClient);
+    const favouriteRecipesApi = new FavouriteRecipesApi(httpClient);
 
     await queryClient.prefetchQuery(GetRecipeDetailsQueryKey(recipeId), () =>
       recipesApi.getRecipeDetails(recipeId)
+    );
+    await queryClient.prefetchQuery(ListAllRecipesCategoriesQueryKey, () =>
+      recipesCategoriesApi.listCategories({})
+    );
+    await queryClient.prefetchQuery(ListFavouriteRecipesQueryKey, () =>
+      favouriteRecipesApi.listFavouriteRecipes()
     );
 
     return {
