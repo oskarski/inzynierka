@@ -2,6 +2,7 @@ import { useSignIn } from '../api';
 import { AppForm, SubmitButton, TextField } from '@fe/form';
 import { routes, useRouting } from '@fe/utils';
 import Link from 'next/link';
+import { Button } from 'antd-mobile';
 
 export const SignInForm = () => {
   const { redirectTo } = useRouting();
@@ -14,14 +15,23 @@ export const SignInForm = () => {
     <AppForm
       onSubmit={signIn}
       error={error}
-      submitBtn={<SubmitButton loading={loading}>Zaloguj</SubmitButton>}
+      submitBtn={
+        <>
+          <SubmitButton loading={loading}>Zaloguj</SubmitButton>
+
+          <Link href={routes.signUp()} className="block mt-3">
+            <Button fill="outline" block={true} color="primary" size="large">
+              Załóż konto
+            </Button>
+          </Link>
+        </>
+      }
     >
       <TextField type="email" name="email" label="Email" error={error} />
 
       <TextField type="password" name="password" label="Hasło" error={error} />
-      <div>
-        <Link href="/forgot-password">Zapomniałeś hasła?</Link>
-      </div>
+
+      <Link href={routes.forgotPassword()}>Zapomniałeś hasła?</Link>
     </AppForm>
   );
 };
