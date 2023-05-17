@@ -24,10 +24,7 @@ export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
     );
 
     await queryClient.prefetchQuery(ListFavouriteRecipesQueryKey, () =>
-      favouriteRecipesApi.listFavouriteRecipes().then((rec) => {
-        console.log(rec);
-        return rec;
-      })
+      favouriteRecipesApi.listFavouriteRecipes()
     );
 
     return { props: {} };
@@ -35,8 +32,8 @@ export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
 );
 
 export default function FavouriteRecipesPage() {
-  const [favouriteRecipes, loading, error, all] = useListFavouriteRecipes();
-  console.log(favouriteRecipes, all);
+  const [favouriteRecipes, loading, error] = useListFavouriteRecipes();
+
   const connectedCategories = useConnectedCategories();
 
   return (
@@ -51,7 +48,7 @@ export default function FavouriteRecipesPage() {
         {loading && <Loader />}
         {error && <ApiErrorMessage size="base" error={error} />}
 
-        {favouriteRecipes?.length === 0 && (
+        {favouriteRecipes && favouriteRecipes.length === 0 && (
           <EmptyFavouriteRecipesList className="mt-16" />
         )}
 
