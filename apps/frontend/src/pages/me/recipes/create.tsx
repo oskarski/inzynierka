@@ -46,11 +46,13 @@ export default function CreateYourRecipePage() {
     createAndPublishRecipeLoading,
     createAndPublishRecipeError,
   ] = useCreateAndPublishRecipe({
-    onSuccess: () => redirectTo(routes.yourRecipes()),
+    onSuccess: (recipeId) => redirectTo(routes.recipeDetails(recipeId)),
   });
 
   const [createRecipe, createRecipeLoading, createRecipeError] =
-    useCreateRecipe({ onSuccess: () => redirectTo(routes.yourRecipes()) });
+    useCreateRecipe({
+      onSuccess: (recipeId) => redirectTo(routes.recipeDetails(recipeId)),
+    });
 
   const error = createRecipeError || createAndPublishRecipeError;
 

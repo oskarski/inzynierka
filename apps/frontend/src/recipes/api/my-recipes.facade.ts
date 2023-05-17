@@ -15,6 +15,7 @@ import {
   PublishRecipeFormValues,
 } from './schema/publish-recipe.schema';
 import { RecipeListItemSelector } from './selectors';
+import { GetRecipeDetailsQueryKey } from './recipes.facade';
 
 export const ListMyRecipesQueryKey = ['myRecipesApi.listMyRecipes'];
 
@@ -39,6 +40,7 @@ export const useCreateRecipe = ({
     {
       onSuccess: (recipeId) => {
         queryClient.invalidateQueries(ListMyRecipesQueryKey);
+        queryClient.invalidateQueries(GetRecipeDetailsQueryKey(recipeId));
 
         if (onSuccess) onSuccess(recipeId);
       },
@@ -48,7 +50,7 @@ export const useCreateRecipe = ({
 
 export const useCreateAndPublishRecipe = ({
   onSuccess,
-}: { onSuccess?: () => void } = {}) => {
+}: { onSuccess?: (recipeId: RecipeId) => void } = {}) => {
   const queryClient = useQueryClient();
 
   const { myRecipesApi } = useRecipesApi();
@@ -63,10 +65,11 @@ export const useCreateAndPublishRecipe = ({
         .then((dto) => myRecipesApi.createAndPublishRecipe(dto))
         .catch(catchFormValidationOrApiError),
     {
-      onSuccess: () => {
+      onSuccess: (recipeId) => {
         queryClient.invalidateQueries(ListMyRecipesQueryKey);
+        queryClient.invalidateQueries(GetRecipeDetailsQueryKey(recipeId));
 
-        if (onSuccess) onSuccess();
+        if (onSuccess) onSuccess(recipeId);
       },
     }
   );
