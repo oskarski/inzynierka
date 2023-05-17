@@ -18,10 +18,17 @@ INSERT INTO recipes (name, description, preparation_time, portions, instructions
 SELECT title, description,
     CASE WHEN trim(time) = '' THEN 3600 ELSE (substring(time from 1 for 1)::INTEGER * 3600) + (substring(time from 3)::INTEGER * 60) END,
     CASE WHEN trim(size) = '' THEN 4 ELSE CAST(size AS INTEGER) END,
-    to_json(jsondescription)
+    to_json(jsondescription),
+    CASE
+        WHEN difficulty = 'łatwy' THEN '100'
+        WHEN difficulty = 'średni' THEN '200'
+        WHEN difficulty = 'trudny' THEN '300'
+        ELSE 'String 200'
+    END
 FROM crawler_recipes
 INNER JOIN crawler_recipeinstruction ON crawler_recipes.link = crawler_recipeinstruction.link
 WHERE NOT EXISTS (SELECT 1 FROM recipes WHERE name = title);
+
 """)
 
 # insert new data into the ingredients table
