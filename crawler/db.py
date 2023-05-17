@@ -14,7 +14,7 @@ cur = conn.cursor()
 
 # insert new data into the recipes table
 cur.execute("""
-INSERT INTO recipes (name, description, preparation_time, portions, instructions)
+INSERT INTO recipes (name, description, preparation_time, portions, instructions, difficulty)
 SELECT title, description,
     CASE WHEN trim(time) = '' THEN 3600 ELSE (substring(time from 1 for 1)::INTEGER * 3600) + (substring(time from 3)::INTEGER * 60) END,
     CASE WHEN trim(size) = '' THEN 4 ELSE CAST(size AS INTEGER) END,
@@ -164,9 +164,7 @@ INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit)
     JOIN recipes r ON cr.title = r.name
     JOIN ingredients i ON ci.name = i.name
     WHERE ci.amount <> ''
-      AND NOT EXISTS (
-        SELECT 1 FROM recipe_ingredients WHERE recipe_id = r.id AND ingredient_id = i.id
-      );
+    ON CONFLICT (recipe_id, ingredient_id) DO NOTHING;
 ''')
 
 # commit the changes to the database and close the cursor and connection
