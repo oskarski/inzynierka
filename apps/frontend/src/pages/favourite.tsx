@@ -14,17 +14,25 @@ import {
 } from '@fe/recipes';
 import { ApiErrorMessage } from '@fe/errors';
 import React from 'react';
+import {
+  ListAllRecipesCategoriesQueryKey,
+  RecipesCategoriesApi,
+} from '@fe/recipes-categories';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard(async (ctx, queryClient, user) => {
-    const favouriteRecipesApi = new FavouriteRecipesApi(
-      HttpClient.privateHttpClient(env().apiUrl, {
-        accessToken: user.accessToken,
-      })
-    );
+    const httpClient = HttpClient.privateHttpClient(env().apiUrl, {
+      accessToken: user.accessToken,
+    });
+
+    const favouriteRecipesApi = new FavouriteRecipesApi(httpClient);
+    const recipesCategoriesApi = new RecipesCategoriesApi(httpClient);
 
     await queryClient.prefetchQuery(ListFavouriteRecipesQueryKey, () =>
       favouriteRecipesApi.listFavouriteRecipes()
+    );
+    await queryClient.prefetchQuery(ListAllRecipesCategoriesQueryKey, () =>
+      recipesCategoriesApi.listCategories({})
     );
 
     return { props: {} };
