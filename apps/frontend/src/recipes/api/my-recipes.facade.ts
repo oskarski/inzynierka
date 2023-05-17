@@ -7,9 +7,9 @@ import {
 } from '@fe/errors';
 import { useQueryClient } from 'react-query';
 import {
-  CreateRecipeFormSchema,
-  CreateRecipeFormValues,
-} from './schema/create-recipe.schema';
+  DraftRecipeFormSchema,
+  DraftRecipeFormValues,
+} from './schema/draft-recipe.schema';
 import {
   PublishRecipeFormSchema,
   PublishRecipeFormValues,
@@ -30,11 +30,11 @@ export const useCreateRecipe = ({
 
   return useAdaptedMutation<
     RecipeId,
-    CreateRecipeFormValues,
+    DraftRecipeFormValues,
     FormValidationOrApiError
   >(
     (formValues) =>
-      CreateRecipeFormSchema.parseAsync(formValues)
+      DraftRecipeFormSchema.parseAsync(formValues)
         .then((dto) => myRecipesApi.createRecipe(dto))
         .catch(catchFormValidationOrApiError),
     {
@@ -101,6 +101,34 @@ export const usePublishRecipe = (
     async (formValues) =>
       PublishRecipeFormSchema.parseAsync(formValues)
         .then((dto) => myRecipesApi.publishRecipe(recipeId, dto))
+        .catch(catchFormValidationOrApiError),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(ListMyRecipesQueryKey);
+        queryClient.invalidateQueries(GetRecipeDetailsQueryKey(recipeId));
+
+        if (onSuccess) onSuccess();
+      },
+    }
+  );
+};
+
+export const useUnpublishRecipe = (
+  recipeId: RecipeId,
+  { onSuccess }: { onSuccess?: () => void } = {}
+) => {
+  const queryClient = useQueryClient();
+
+  const { myRecipesApi } = useRecipesApi();
+
+  return useAdaptedMutation<
+    void,
+    PublishRecipeFormValues,
+    FormValidationOrApiError
+  >(
+    async (formValues) =>
+      DraftRecipeFormSchema.parseAsync(formValues)
+        .then((dto) => myRecipesApi.unpublishRecipe(recipeId, dto))
         .catch(catchFormValidationOrApiError),
     {
       onSuccess: () => {

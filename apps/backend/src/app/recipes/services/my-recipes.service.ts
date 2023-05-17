@@ -50,4 +50,18 @@ export class MyRecipesService {
 
     await this.recipesRepository.publishRecipe(recipeId, publishRecipeDto);
   }
+
+  async unpublishRecipe(
+    recipeId: RecipeId,
+    unpublishRecipeDto: IDraftRecipeDto,
+    userId: UserId,
+  ): Promise<void> {
+    const recipe = await this.recipesRepository.find(recipeId);
+
+    if (!recipe) throw new NotFoundException('Recipe not found!');
+    if (!recipe.isCreatedBy(userId))
+      throw new BadRequestException('No permissions to modify the recipe!');
+
+    await this.recipesRepository.unpublishRecipe(recipeId, unpublishRecipeDto);
+  }
 }

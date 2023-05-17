@@ -17,4 +17,8 @@ export class MyRecipesTestApi implements IMyRecipesApi {
   publishRecipe = apiMethodMock<IMyRecipesApi['publishRecipe']>(
     'IMyRecipesApi.publishRecipe'
   );
+
+  unpublishRecipe = apiMethodMock<IMyRecipesApi['unpublishRecipe']>(
+    'IMyRecipesApi.unpublishRecipe'
+  );
 }

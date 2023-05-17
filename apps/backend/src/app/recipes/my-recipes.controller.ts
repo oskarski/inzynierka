@@ -1,8 +1,16 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { IRecipeListItemDto, RecipeId } from '@lib/shared';
 import { CurrentUser, PrivateApiGuard } from '../auth';
 import { MyRecipesService } from './services';
-import { CreateRecipeDto, PublishRecipeDto } from './dtos';
+import { CreateRecipeDto, PublishRecipeDto, UnpublishRecipeDto } from './dtos';
 import { User } from '../iam/entities';
 
 @Controller('me/recipes')
@@ -45,6 +53,19 @@ export class MyRecipesController {
     await this.myRecipesService.publishRecipe(
       recipeId,
       publishRecipeDto,
+      currentUser.id,
+    );
+  }
+
+  @Delete('/:id/publish')
+  async unpublishRecipe(
+    @Param('id') recipeId: RecipeId,
+    @Body() unpublishRecipeDto: UnpublishRecipeDto,
+    @CurrentUser() currentUser: User,
+  ): Promise<void> {
+    await this.myRecipesService.unpublishRecipe(
+      recipeId,
+      unpublishRecipeDto,
       currentUser.id,
     );
   }

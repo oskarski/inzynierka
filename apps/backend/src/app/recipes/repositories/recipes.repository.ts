@@ -95,6 +95,21 @@ class SaveRecipeTransactionQuery {
     });
   }
 
+  async unpublishRecipe(
+    recipeId: RecipeId,
+    dto: IDraftRecipeDto,
+  ): Promise<void> {
+    await this.queryRunner.manager.save(Recipe, {
+      id: recipeId,
+      name: dto.name,
+      description: dto.description,
+      preparationTime: dto.preparationTime,
+      portions: dto.portions,
+      instructions: dto.instructions,
+      state: RecipeState.draft,
+    });
+  }
+
   async saveCategories(
     recipeId: RecipeId,
     categoryIds: RecipeCategoryId[] | undefined,
@@ -339,6 +354,34 @@ export class RecipesRepository {
 
     try {
       await query.publishRecipe(recipeId, dto);
+      await query.saveCategories(
+        recipeId,
+        uniq([
+          ...(dto.dietType || []),
+          ...(dto.dishType || []),
+          ...(dto.cuisineType || []),
+        ]),
+      );
+      await query.saveIngredients(recipeId, dto.ingredients);
+      await query.execute();
+    } catch (err) {
+      console.error(err);
+      await query.rollback();
+
+      throw new BadRequestException();
+    }
+  }
+
+  async unpublishRecipe(
+    recipeId: RecipeId,
+    dto: IDraftRecipeDto,
+  ): Promise<void> {
+    const query = await SaveRecipeTransactionQuery.fromQueryRunner(
+      this.dataSource.createQueryRunner(),
+    );
+
+    try {
+      await query.unpublishRecipe(recipeId, dto);
       await query.saveCategories(
         recipeId,
         uniq([

@@ -14,6 +14,8 @@ export interface IMyRecipesApi {
   listMyRecipes(): Promise<IRecipeListItemDto[]>;
 
   publishRecipe(recipeId: RecipeId, dto: IPublishRecipeDto): Promise<void>;
+
+  unpublishRecipe(recipeId: RecipeId, dto: IDraftRecipeDto): Promise<void>;
 }
 
 export class MyRecipesApi implements IMyRecipesApi {
@@ -38,6 +40,13 @@ export class MyRecipesApi implements IMyRecipesApi {
 
   publishRecipe(recipeId: RecipeId, dto: IPublishRecipeDto): Promise<void> {
     return this.httpClient.post<IPublishRecipeDto, void>(
+      `${this.baseUrl}/${recipeId}/publish`,
+      dto
+    );
+  }
+
+  unpublishRecipe(recipeId: RecipeId, dto: IDraftRecipeDto): Promise<void> {
+    return this.httpClient.delete<IDraftRecipeDto, void>(
       `${this.baseUrl}/${recipeId}/publish`,
       dto
     );

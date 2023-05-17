@@ -161,3 +161,5 @@ export class PublishRecipeDto implements IPublishRecipeDto {
   @Type(() => SaveRecipeIngredientDto)
   readonly ingredients: SaveRecipeIngredientDto[];
 }
+
+export class UnpublishRecipeDto extends DraftRecipeDto {}

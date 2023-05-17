@@ -11,6 +11,7 @@ import {
   RecipesApi,
   usePublishRecipe,
   useRecipeDetails,
+  useUnpublishRecipe,
 } from '@fe/recipes';
 import { RecipeId } from '@lib/shared';
 import { ApiErrorMessage } from '@fe/errors';
@@ -71,14 +72,12 @@ export default function EditYourRecipePage({
       onSuccess: () => redirectTo(routes.recipeDetails(recipeId)),
     });
 
-  const [unpublishRecipe, unpublishRecipeLoading] = [
-    (formValues: any) => {
-      console.log('UNPUBLISH WILL BE HERE', formValues);
-    },
-    false,
-  ];
+  const [unpublishRecipe, unpublishRecipeLoading, unpublishRecipeError] =
+    useUnpublishRecipe(recipeId, {
+      onSuccess: () => redirectTo(routes.recipeDetails(recipeId)),
+    });
 
-  const error = publishRecipeError;
+  const error = publishRecipeError || unpublishRecipeError;
 
   return (
     <>

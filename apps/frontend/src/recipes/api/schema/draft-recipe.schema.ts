@@ -7,7 +7,7 @@ import {
   RecipeDifficulty,
 } from '@lib/shared';
 
-export const CreateRecipeFormSchema = z.object({
+export const DraftRecipeFormSchema = z.object({
   name: z
     .string({ required_error: validationMessages.required })
     .nonempty(validationMessages.required),
@@ -79,4 +79,4 @@ export const CreateRecipeFormSchema = z.object({
     .optional(),
 });
 
-export type CreateRecipeFormValues = z.infer<typeof CreateRecipeFormSchema>;
+export type DraftRecipeFormValues = z.infer<typeof DraftRecipeFormSchema>;

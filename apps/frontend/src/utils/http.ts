@@ -58,7 +58,12 @@ export class HttpClient {
       .then((res) => res.data);
   }
 
-  delete<ReturnType = void>(url: string): Promise<ReturnType> {
-    return this.axiosInstance.delete<ReturnType>(url).then((res) => res.data);
+  delete<DataType = void, ReturnType = void>(
+    url: string,
+    data?: DataType
+  ): Promise<ReturnType> {
+    return this.axiosInstance
+      .delete<ReturnType>(url, { data })
+      .then((res) => res.data);
   }
 }
