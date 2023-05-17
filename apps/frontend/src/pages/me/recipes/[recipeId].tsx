@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { env, headTitle, HttpClient } from '@fe/utils';
+import { env, headTitle, HttpClient, routes, useRouting } from '@fe/utils';
 import { Loader, SectionTitle } from '@fe/components';
 import { HydrateReactQueryState } from '../../../server/server-react-query';
 import { SignedInGuard } from '../../../server/server-guards';
@@ -9,6 +9,7 @@ import {
   GetRecipeDetailsQueryKey,
   RecipeForm,
   RecipesApi,
+  usePublishRecipe,
   useRecipeDetails,
 } from '@fe/recipes';
 import { RecipeId } from '@lib/shared';
@@ -54,9 +55,9 @@ interface EditYourRecipePageProps {
 export default function EditYourRecipePage({
   recipeId,
 }: EditYourRecipePageProps) {
-  const [recipe, loading, getRecipeError] = useRecipeDetails(recipeId);
+  const { redirectTo } = useRouting();
 
-  const error = null;
+  const [recipe, loading, getRecipeError] = useRecipeDetails(recipeId);
 
   const [saveRecipe, saveRecipeLoading] = [
     (formValues: any) => {
@@ -65,12 +66,10 @@ export default function EditYourRecipePage({
     false,
   ];
 
-  const [publishRecipe, publishRecipeLoading] = [
-    (formValues: any) => {
-      console.log('PUBLISH WILL BE HERE', formValues);
-    },
-    false,
-  ];
+  const [publishRecipe, publishRecipeLoading, publishRecipeError] =
+    usePublishRecipe(recipeId, {
+      onSuccess: () => redirectTo(routes.recipeDetails(recipeId)),
+    });
 
   const [unpublishRecipe, unpublishRecipeLoading] = [
     (formValues: any) => {
@@ -78,6 +77,8 @@ export default function EditYourRecipePage({
     },
     false,
   ];
+
+  const error = publishRecipeError;
 
   return (
     <>
@@ -115,7 +116,9 @@ export default function EditYourRecipePage({
                     Object.values(formValues.ingredients),
                 }),
               loading: publishRecipeLoading || unpublishRecipeLoading,
-              cta: recipe.isPublished ? 'Wycofaj publikacje' : 'Opublikuj',
+              cta: recipe.isPublished
+                ? 'Zapisz i wycofaj publikacje'
+                : 'Zapisz i opublikuj',
             }}
           />
         )}

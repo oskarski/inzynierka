@@ -85,7 +85,7 @@ class SaveRecipeTransactionQuery {
     dto: IPublishRecipeDto,
   ): Promise<void> {
     await this.queryRunner.manager.save(Recipe, {
-      recipeId,
+      id: recipeId,
       name: dto.name,
       description: dto.description,
       preparationTime: dto.preparationTime,
@@ -339,7 +339,14 @@ export class RecipesRepository {
 
     try {
       await query.publishRecipe(recipeId, dto);
-      await query.saveCategories(recipeId, uniq([...(dto.dietType || [])]));
+      await query.saveCategories(
+        recipeId,
+        uniq([
+          ...(dto.dietType || []),
+          ...(dto.dishType || []),
+          ...(dto.cuisineType || []),
+        ]),
+      );
       await query.saveIngredients(recipeId, dto.ingredients);
       await query.execute();
     } catch (err) {

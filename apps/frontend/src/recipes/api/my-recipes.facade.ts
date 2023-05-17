@@ -84,3 +84,31 @@ export const useListMyRecipes = () => {
     { select: ListSelector(RecipeListItemSelector) }
   );
 };
+
+export const usePublishRecipe = (
+  recipeId: RecipeId,
+  { onSuccess }: { onSuccess?: () => void } = {}
+) => {
+  const queryClient = useQueryClient();
+
+  const { myRecipesApi } = useRecipesApi();
+
+  return useAdaptedMutation<
+    void,
+    PublishRecipeFormValues,
+    FormValidationOrApiError
+  >(
+    async (formValues) =>
+      PublishRecipeFormSchema.parseAsync(formValues)
+        .then((dto) => myRecipesApi.publishRecipe(recipeId, dto))
+        .catch(catchFormValidationOrApiError),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(ListMyRecipesQueryKey);
+        queryClient.invalidateQueries(GetRecipeDetailsQueryKey(recipeId));
+
+        if (onSuccess) onSuccess();
+      },
+    }
+  );
+};

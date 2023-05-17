@@ -175,7 +175,7 @@ function GeneralTab({ error, defaultValues }: GeneralTabProps) {
         name="difficulty"
         label="Trudność"
         error={error}
-        defaultValue={defaultValues?.difficulty || RecipeDifficulty.medium}
+        initialValue={defaultValues?.difficulty || RecipeDifficulty.medium}
         options={[
           {
             value: RecipeDifficulty.easy,

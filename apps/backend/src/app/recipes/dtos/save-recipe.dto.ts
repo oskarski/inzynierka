@@ -125,6 +125,16 @@ export class PublishRecipeDto implements IPublishRecipeDto {
   @IsOptional()
   readonly dietType?: RecipeCategoryId[];
 
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  @IsOptional()
+  readonly dishType?: RecipeCategoryId[];
+
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  @IsOptional()
+  readonly cuisineType?: RecipeCategoryId[];
+
   @IsNumber()
   @IsPositive()
   @IsInt()
