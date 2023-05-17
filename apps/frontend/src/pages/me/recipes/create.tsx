@@ -4,7 +4,6 @@ import { SectionTitle } from '@fe/components';
 import { HydrateReactQueryState } from '../../../server/server-react-query';
 import { SignedInGuard } from '../../../server/server-guards';
 import { GetServerSideProps } from 'next/types';
-import { Form } from 'antd-mobile';
 import React from 'react';
 import {
   useCreateAndPublishRecipe,
@@ -52,8 +51,6 @@ export default function CreateYourRecipePage() {
 
   const [createRecipe, createRecipeLoading, createRecipeError] =
     useCreateRecipe({ onSuccess: () => redirectTo(routes.yourRecipes()) });
-
-  const [form] = Form.useForm();
 
   const error = createRecipeError || createAndPublishRecipeError;
 
