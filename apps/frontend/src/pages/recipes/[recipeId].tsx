@@ -165,7 +165,7 @@ export default function RecipeDetailsPage({
               ))}
             </div>
 
-            <div className="fixed bottom-20 left-4 right-4 space-y-3">
+            <div className="fixed z-10 bottom-20 left-4 right-4 space-y-3">
               <RecipeCookingModeModalButton
                 recipe={recipe}
                 portionsProportion={portionsProportion}
