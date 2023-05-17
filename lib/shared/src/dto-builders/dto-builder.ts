@@ -20,7 +20,7 @@ export abstract class DtoBuilder<DtoType extends object> {
     for (const [dtoKey, isRequired] of Object.entries(
       this.getRequiredKeysMap()
     )) {
-      if (isRequired && !this.dto[dtoKey as keyof DtoType])
+      if (isRequired && this.dto[dtoKey as keyof DtoType] === undefined)
         throw new Error(`Missing "${dtoKey}" property and it is required!`);
     }
 
