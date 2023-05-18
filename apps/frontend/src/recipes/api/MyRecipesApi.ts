@@ -1,13 +1,13 @@
 import {
   RecipeId,
-  IDraftRecipeDto,
+  ISaveDraftRecipeDto,
   IPublishRecipeDto,
   IRecipeListItemDto,
 } from '@lib/shared';
 import { HttpClient } from '@fe/utils';
 
 export interface IMyRecipesApi {
-  createRecipe(dto: IDraftRecipeDto): Promise<RecipeId>;
+  createRecipe(dto: ISaveDraftRecipeDto): Promise<RecipeId>;
 
   createAndPublishRecipe(dto: IPublishRecipeDto): Promise<RecipeId>;
 
@@ -15,7 +15,7 @@ export interface IMyRecipesApi {
 
   publishRecipe(recipeId: RecipeId, dto: IPublishRecipeDto): Promise<void>;
 
-  unpublishRecipe(recipeId: RecipeId, dto: IDraftRecipeDto): Promise<void>;
+  unpublishRecipe(recipeId: RecipeId, dto: ISaveDraftRecipeDto): Promise<void>;
 }
 
 export class MyRecipesApi implements IMyRecipesApi {
@@ -23,8 +23,11 @@ export class MyRecipesApi implements IMyRecipesApi {
 
   constructor(private readonly httpClient: HttpClient) {}
 
-  createRecipe(dto: IDraftRecipeDto): Promise<RecipeId> {
-    return this.httpClient.post<IDraftRecipeDto, RecipeId>(this.baseUrl, dto);
+  createRecipe(dto: ISaveDraftRecipeDto): Promise<RecipeId> {
+    return this.httpClient.post<ISaveDraftRecipeDto, RecipeId>(
+      this.baseUrl,
+      dto
+    );
   }
 
   createAndPublishRecipe(dto: IPublishRecipeDto): Promise<RecipeId> {
@@ -45,8 +48,8 @@ export class MyRecipesApi implements IMyRecipesApi {
     );
   }
 
-  unpublishRecipe(recipeId: RecipeId, dto: IDraftRecipeDto): Promise<void> {
-    return this.httpClient.delete<IDraftRecipeDto, void>(
+  unpublishRecipe(recipeId: RecipeId, dto: ISaveDraftRecipeDto): Promise<void> {
+    return this.httpClient.delete<ISaveDraftRecipeDto, void>(
       `${this.baseUrl}/${recipeId}/publish`,
       dto
     );

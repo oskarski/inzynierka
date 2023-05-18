@@ -1,5 +1,5 @@
 import {
-  IDraftRecipeDto,
+  ISaveDraftRecipeDto,
   IDraftRecipeInstructionDto,
   IngredientId,
   IPublishRecipeDto,
@@ -43,7 +43,7 @@ class DraftRecipeInstructionDto implements IDraftRecipeInstructionDto {
   readonly step?: string;
 }
 
-abstract class DraftRecipeDto implements IDraftRecipeDto {
+export class SaveDraftRecipeDto implements ISaveDraftRecipeDto {
   @IsString()
   @IsNotEmpty()
   readonly name: string;
@@ -102,8 +102,6 @@ abstract class DraftRecipeDto implements IDraftRecipeDto {
   readonly ingredients?: SaveRecipeIngredientDto[];
 }
 
-export class CreateRecipeDto extends DraftRecipeDto {}
-
 class RecipeInstructionDto implements IRecipeInstructionDto {
   @IsString()
   @IsNotEmpty()
@@ -161,5 +159,3 @@ export class PublishRecipeDto implements IPublishRecipeDto {
   @Type(() => SaveRecipeIngredientDto)
   readonly ingredients: SaveRecipeIngredientDto[];
 }
-
-export class UnpublishRecipeDto extends DraftRecipeDto {}

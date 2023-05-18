@@ -35,7 +35,7 @@ interface ISaveRecipeDto {
 
 export type IDraftRecipeInstructionDto = Partial<IRecipeInstructionDto>;
 
-export interface IDraftRecipeDto extends Partial<ISaveRecipeDto> {
+export interface ISaveDraftRecipeDto extends Partial<ISaveRecipeDto> {
   readonly instructions?: IDraftRecipeInstructionDto[];
   readonly name: string;
 }

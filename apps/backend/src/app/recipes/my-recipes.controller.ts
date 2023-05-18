@@ -10,7 +10,7 @@ import {
 import { IRecipeListItemDto, RecipeId } from '@lib/shared';
 import { CurrentUser, PrivateApiGuard } from '../auth';
 import { MyRecipesService } from './services';
-import { CreateRecipeDto, PublishRecipeDto, UnpublishRecipeDto } from './dtos';
+import { SaveDraftRecipeDto, PublishRecipeDto } from './dtos';
 import { User } from '../iam/entities';
 
 @Controller('me/recipes')
@@ -20,7 +20,7 @@ export class MyRecipesController {
 
   @Post()
   async createRecipe(
-    @Body() createRecipeDto: CreateRecipeDto,
+    @Body() createRecipeDto: SaveDraftRecipeDto,
     @CurrentUser() currentUser: User,
   ): Promise<RecipeId> {
     return this.myRecipesService.createRecipe(createRecipeDto, currentUser.id);
@@ -60,7 +60,7 @@ export class MyRecipesController {
   @Delete('/:id/publish')
   async unpublishRecipe(
     @Param('id') recipeId: RecipeId,
-    @Body() unpublishRecipeDto: UnpublishRecipeDto,
+    @Body() unpublishRecipeDto: SaveDraftRecipeDto,
     @CurrentUser() currentUser: User,
   ): Promise<void> {
     await this.myRecipesService.unpublishRecipe(

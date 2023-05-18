@@ -9,7 +9,7 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Pagination } from '../../utils';
 import {
-  IDraftRecipeDto,
+  ISaveDraftRecipeDto,
   IListRecipesCategoryFiltersDto,
   IListRecipesDifficultyFiltersDto,
   IListRecipesFiltersDto,
@@ -37,7 +37,7 @@ class SaveRecipeTransactionQuery {
   }
 
   async createDraftRecipe(
-    dto: IDraftRecipeDto,
+    dto: ISaveDraftRecipeDto,
     authorId: UserId,
   ): Promise<RecipeId> {
     return this.createRecipe(
@@ -62,7 +62,7 @@ class SaveRecipeTransactionQuery {
   }
 
   private async createRecipe(
-    dto: IDraftRecipeDto,
+    dto: ISaveDraftRecipeDto,
     authorId: UserId,
     state: RecipeState,
   ): Promise<RecipeId> {
@@ -97,7 +97,7 @@ class SaveRecipeTransactionQuery {
 
   async unpublishRecipe(
     recipeId: RecipeId,
-    dto: IDraftRecipeDto,
+    dto: ISaveDraftRecipeDto,
   ): Promise<void> {
     await this.queryRunner.manager.save(Recipe, {
       id: recipeId,
@@ -288,7 +288,10 @@ export class RecipesRepository {
     private readonly dataSource: DataSource,
   ) {}
 
-  async createRecipe(dto: IDraftRecipeDto, userId: UserId): Promise<RecipeId> {
+  async createRecipe(
+    dto: ISaveDraftRecipeDto,
+    userId: UserId,
+  ): Promise<RecipeId> {
     const query = await SaveRecipeTransactionQuery.fromQueryRunner(
       this.dataSource.createQueryRunner(),
     );
@@ -374,7 +377,7 @@ export class RecipesRepository {
 
   async unpublishRecipe(
     recipeId: RecipeId,
-    dto: IDraftRecipeDto,
+    dto: ISaveDraftRecipeDto,
   ): Promise<void> {
     const query = await SaveRecipeTransactionQuery.fromQueryRunner(
       this.dataSource.createQueryRunner(),
