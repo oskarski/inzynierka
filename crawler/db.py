@@ -23,7 +23,7 @@ SELECT title, description,
         WHEN difficulty = 'łatwy' THEN '100'
         WHEN difficulty = 'średni' THEN '200'
         WHEN difficulty = 'trudny' THEN '300'
-        ELSE 'String 200'
+        ELSE '200'
     END
 FROM crawler_recipes
 INNER JOIN crawler_recipeinstruction ON crawler_recipes.link = crawler_recipeinstruction.link
