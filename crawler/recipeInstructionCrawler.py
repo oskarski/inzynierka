@@ -6,10 +6,10 @@ import json
 
 # Connect to the PostgreSQL database
 conn = psycopg2.connect(
-    host="localhost",
+    host="iacstack-inzynierkadbinstanced4782ce1-hedjbq3rrafm.criw09kq67ql.eu-north-1.rds.amazonaws.com",
     port=5432,
-    user="root",
-    password="root",
+    user="postgres",
+    password="xovjaHba1iNoG^C92mI5_7wV5-Hmjv",
     database="inzynierka"
 )
 
@@ -31,7 +31,7 @@ for link in links:
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    print(url)
+    print("Processing link:", url)
 
     # Find the recipe description and save it to the database
     description_div = soup.find('div', {'class': 'article', 'id': 'opis'})

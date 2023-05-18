@@ -4,14 +4,14 @@ import psycopg2
 
 # Define the base URL and type list
 base_url = "https://kuchnialidla.pl/przepisy/"
-type_list = ['kuchnia-amerykanska','kuchnia-azjatycka','kuchnia-czeska','kuchnia-francuska','kuchnia-grecka','kuchnia-hiszpanska-i-portugalska','kuchnia-polska','kuchnia-wloska','brytyjska','kuchnia-orientalna','kuchnia-alpejska','kuchnia-tajska','kuchnia-meksykanska', 'kuchnia-meksykanska']
+type_list = ['kuchnia-amerykanska','kuchnia-azjatycka','kuchnia-czeska','kuchnia-francuska','kuchnia-grecka','kuchnia-hiszpanska-i-portugalska','kuchnia-polska','kuchnia-wloska','brytyjska','kuchnia-orientalna','kuchnia-alpejska','kuchnia-tajska','kuchnia-meksykanska']
 
 # Connect to the PostgreSQL database
 db = psycopg2.connect(
-    host="localhost",
+    host="iacstack-inzynierkadbinstanced4782ce1-hedjbq3rrafm.criw09kq67ql.eu-north-1.rds.amazonaws.com",
     port=5432,
-    user="root",
-    password="root",
+    user="postgres",
+    password="xovjaHba1iNoG^C92mI5_7wV5-Hmjv",
     database="inzynierka"
 )
 cursor = db.cursor()
