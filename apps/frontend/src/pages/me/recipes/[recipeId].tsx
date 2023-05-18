@@ -60,13 +60,6 @@ export default function EditYourRecipePage({
 
   const [recipe, loading, getRecipeError] = useRecipeDetails(recipeId);
 
-  const [saveRecipe, saveRecipeLoading] = [
-    (formValues: any) => {
-      console.log('SAVE WILL BE HERE', formValues);
-    },
-    false,
-  ];
-
   const [publishRecipe, publishRecipeLoading, publishRecipeError] =
     usePublishRecipe(recipeId, {
       onSuccess: () => redirectTo(routes.recipeDetails(recipeId)),
@@ -98,13 +91,15 @@ export default function EditYourRecipePage({
             defaultValues={recipe}
             primaryAction={{
               onSubmit: (formValues) =>
-                saveRecipe({
+                (recipe.isPublished ? publishRecipe : unpublishRecipe)({
                   ...formValues,
                   ingredients:
                     formValues.ingredients &&
                     Object.values(formValues.ingredients),
                 }),
-              loading: saveRecipeLoading,
+              loading: recipe.isPublished
+                ? publishRecipeLoading
+                : unpublishRecipeLoading,
             }}
             secondaryAction={{
               onSubmit: (formValues) =>
