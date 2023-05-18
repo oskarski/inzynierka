@@ -61,7 +61,7 @@ END WHERE name IS NULL;
 cur.execute('''
 ALTER TABLE crawler_recipeCuisine ADD COLUMN IF NOT EXISTS name varchar(255);
 UPDATE crawler_recipeCuisine SET name = CASE
-WHEN cuisine = 'kuchnia-amerykanska' THEN 'dania amerykańska'
+WHEN cuisine = 'kuchnia-amerykanska' THEN 'amerykańska'
 WHEN cuisine = 'kuchnia-azjatycka' THEN 'azjatycka'
 WHEN cuisine = 'kuchnia-czeska' THEN 'czeska'
 WHEN cuisine = 'kuchnia-francuska' THEN 'francuska'
