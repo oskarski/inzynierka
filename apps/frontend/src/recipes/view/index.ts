@@ -12,3 +12,4 @@ export * from './EmptyFavouriteRecipesList';
 export * from './RecipeDifficultyText';
 export * from './RecipeForm';
 export * from './RecipeStateTag';
+export * from './RecipeDeleteButton';

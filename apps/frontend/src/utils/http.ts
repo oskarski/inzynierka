@@ -41,7 +41,7 @@ export class HttpClient {
           return Promise.reject('Unauthorized!');
         }
 
-        return error;
+        return Promise.reject(error);
       }
     );
 

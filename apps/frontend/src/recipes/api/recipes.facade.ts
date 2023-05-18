@@ -16,8 +16,14 @@ import { useListCategories } from '@fe/recipes-categories';
 import { useCallback } from 'react';
 
 export const ListPaginatedRecipesQueryKey = (
-  queryDto: IListRecipesQueryDto
-) => ['recipesApi', 'listRecipesPaginated', queryDto];
+  queryDto: IListRecipesQueryDto | undefined
+) => {
+  const queryKey: any[] = ['recipesApi', 'listRecipesPaginated'];
+
+  if (queryDto) queryKey.push(queryDto);
+
+  return queryKey;
+};
 
 export const GetRecipeDetailsQueryKey = (id: RecipeId) => [
   'recipesApi',

@@ -10,6 +10,7 @@ import {
   useInfiniteQuery,
   InfiniteData,
   UseInfiniteQueryResult,
+  UseMutationResult,
 } from 'react-query';
 import { IPaginated } from '@lib/shared';
 
@@ -167,13 +168,18 @@ export function useAdaptedMutation<
 ): [
   UseMutateFunction<PayloadType, ErrorType, ArgumentsType>,
   boolean,
-  ErrorType | null
+  ErrorType | null,
+  UseMutationResult<PayloadType, ErrorType, ArgumentsType>
 ] {
-  const { mutate, isLoading, error } = useMutation<
-    PayloadType,
-    ErrorType,
-    ArgumentsType
-  >(mutationFn, options);
+  const mutationResult = useMutation<PayloadType, ErrorType, ArgumentsType>(
+    mutationFn,
+    options
+  );
 
-  return [mutate, isLoading, error];
+  return [
+    mutationResult.mutate,
+    mutationResult.isLoading,
+    mutationResult.error,
+    mutationResult,
+  ];
 }

@@ -39,7 +39,9 @@ export class Recipe {
   @Column({ type: 'jsonb', default: '[]' })
   instructions: IRecipeInstructionDto[];
 
-  @OneToMany(() => RecipeCategory, (recipeCategory) => recipeCategory.recipe)
+  @OneToMany(() => RecipeCategory, (recipeCategory) => recipeCategory.recipe, {
+    cascade: true,
+  })
   categories: RecipeCategory[];
 
   @RelationId((recipe: Recipe) => recipe.categories)
@@ -48,6 +50,9 @@ export class Recipe {
   @OneToMany(
     () => RecipeIngredient,
     (recipeIngredient) => recipeIngredient.recipe,
+    {
+      cascade: true,
+    },
   )
   ingredients: RecipeIngredient[];
 

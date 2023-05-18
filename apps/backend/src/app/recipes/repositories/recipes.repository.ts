@@ -403,6 +403,10 @@ export class RecipesRepository {
     }
   }
 
+  async deleteRecipe(recipeId: RecipeId): Promise<void> {
+    await this.repository.delete({ id: recipeId });
+  }
+
   async findAll(
     pagination: Pagination,
     filters: IListRecipesFiltersDto,

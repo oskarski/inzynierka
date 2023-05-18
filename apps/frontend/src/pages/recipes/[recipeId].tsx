@@ -25,6 +25,7 @@ import {
   RecipeStateTag,
   FavouriteRecipesApi,
   ListFavouriteRecipesQueryKey,
+  RecipeDeleteButton,
 } from '@fe/recipes';
 import { RecipeId } from '@lib/shared';
 import { ApiErrorMessage } from '@fe/errors';
@@ -90,6 +91,18 @@ export default function RecipeDetailsPage({
 
         {recipe && (
           <>
+            {recipe.isAuthoredBy(currentUser?.id) && (
+              <div className="flex items-center justify-end space-x-3 mb-3">
+                <Link href={routes.editRecipe(recipeId)}>
+                  <Button fill="solid" color="default" size="small">
+                    Edytuj
+                  </Button>
+                </Link>
+
+                <RecipeDeleteButton recipeId={recipeId} />
+              </div>
+            )}
+
             {/* TODO Add image to recipe */}
             {/*{dummyRecipe.imageUrl && (*/}
             {/*  <RecipeImage*/}
@@ -179,22 +192,11 @@ export default function RecipeDetailsPage({
               ))}
             </div>
 
-            <div className="fixed z-10 bottom-20 left-4 right-4 space-y-3">
+            <div className="fixed z-10 bottom-20 left-4 right-4">
               <RecipeCookingModeModalButton
                 recipe={recipe}
                 portionsProportion={portionsProportion}
               />
-
-              {recipe.isAuthoredBy(currentUser?.id) && (
-                <Link
-                  href={routes.editRecipe(recipeId)}
-                  className="block bg-white"
-                >
-                  <Button block={true} color="primary" fill="outline">
-                    Edytuj
-                  </Button>
-                </Link>
-              )}
             </div>
           </>
         )}

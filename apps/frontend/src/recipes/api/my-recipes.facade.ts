@@ -2,6 +2,7 @@ import { useRecipesApi } from './RecipesApi.context';
 import { ListSelector, useAdaptedMutation, useAdaptedQuery } from '@fe/utils';
 import { RecipeId } from '@lib/shared';
 import {
+  ApiError,
   catchFormValidationOrApiError,
   FormValidationOrApiError,
 } from '@fe/errors';
@@ -15,7 +16,11 @@ import {
   PublishRecipeFormValues,
 } from './schema/publish-recipe.schema';
 import { RecipeListItemSelector } from './selectors';
-import { GetRecipeDetailsQueryKey } from './recipes.facade';
+import {
+  GetRecipeDetailsQueryKey,
+  ListPaginatedRecipesQueryKey,
+} from './recipes.facade';
+import { ListFavouriteRecipesQueryKey } from './favourite-recipes.facade';
 
 export const ListMyRecipesQueryKey = ['myRecipesApi.listMyRecipes'];
 
@@ -134,6 +139,29 @@ export const useUnpublishRecipe = (
       onSuccess: () => {
         queryClient.invalidateQueries(ListMyRecipesQueryKey);
         queryClient.invalidateQueries(GetRecipeDetailsQueryKey(recipeId));
+
+        if (onSuccess) onSuccess();
+      },
+    }
+  );
+};
+
+export const useDeleteRecipe = (
+  recipeId: RecipeId,
+  { onSuccess }: { onSuccess?: () => void } = {}
+) => {
+  const queryClient = useQueryClient();
+
+  const { myRecipesApi } = useRecipesApi();
+
+  return useAdaptedMutation<void, void, ApiError>(
+    () =>
+      myRecipesApi.deleteRecipe(recipeId).catch(catchFormValidationOrApiError),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(ListMyRecipesQueryKey);
+        queryClient.invalidateQueries(ListPaginatedRecipesQueryKey(undefined));
+        queryClient.invalidateQueries(ListFavouriteRecipesQueryKey);
 
         if (onSuccess) onSuccess();
       },

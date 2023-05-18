@@ -69,4 +69,12 @@ export class MyRecipesController {
       currentUser.id,
     );
   }
+
+  @Delete('/:id')
+  async deleteRecipe(
+    @Param('id') recipeId: RecipeId,
+    @CurrentUser() currentUser: User,
+  ): Promise<void> {
+    await this.myRecipesService.deleteRecipe(recipeId, currentUser.id);
+  }
 }
