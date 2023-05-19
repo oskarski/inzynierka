@@ -40,15 +40,15 @@ export const RecipeCard = ({
       <div className="p-4 flex flex-col justify-between h-full">
         <div className="flex justify-between">
           <div>
-            <div className="flex items-center -mx-1 mb-2">
+            <div className="flex items-center flex-wrap px-1 -mx-1 mb-2">
               {showStateBadge && (
-                <div className="px-1 mb-2">
+                <div className="px-1 mb-2 flex">
                   <RecipeStateTag recipeState={recipe.state} />
                 </div>
               )}
 
               {categories.map((category) => (
-                <div key={category.id} className="px-1 mb-2">
+                <div key={category.id} className="px-1 mb-2 flex">
                   <RecipeCategoryTag>{category.name}</RecipeCategoryTag>
                 </div>
               ))}
