@@ -55,6 +55,17 @@ type FiltersAction =
       type: 'clear-diet-type-filter';
     }
   | {
+      type: 'select-other-category-filter';
+      categoryId: RecipeCategoryId;
+    }
+  | {
+      type: 'unselect-other-category-filter';
+      categoryId: RecipeCategoryId;
+    }
+  | {
+      type: 'clear-other-category-filter';
+    }
+  | {
       type: 'select-difficulty-filter';
       difficulty: RecipeDifficulty;
     }
@@ -151,6 +162,30 @@ const filtersReducer = (
         ...state,
         dietTypeCategoryIds: undefined,
       };
+    case 'select-other-category-filter':
+      return {
+        ...state,
+        otherCategoryIds: [
+          ...(state.otherCategoryIds || []),
+          action.categoryId,
+        ],
+      };
+    case 'unselect-other-category-filter': {
+      const otherCategoryIds = state.otherCategoryIds?.filter(
+        (categoryId) => categoryId !== action.categoryId
+      );
+
+      return {
+        ...state,
+        otherCategoryIds:
+          otherCategoryIds?.length === 0 ? undefined : otherCategoryIds,
+      };
+    }
+    case 'clear-other-category-filter':
+      return {
+        ...state,
+        otherCategoryIds: undefined,
+      };
     case 'select-difficulty-filter':
       return {
         ...state,
@@ -195,6 +230,9 @@ interface IRecipesFiltersContext {
   clearDietTypeFilter: () => void;
   selectDietTypeFilter: (categoryId: RecipeCategoryId) => void;
   unselectDietTypeFilter: (categoryId: RecipeCategoryId) => void;
+  clearOtherCategoryFilter: () => void;
+  selectOtherCategoryFilter: (categoryId: RecipeCategoryId) => void;
+  unselectOtherCategoryFilter: (categoryId: RecipeCategoryId) => void;
   clearDifficultyFilter: () => void;
   selectDifficultyFilter: (difficulty: RecipeDifficulty) => void;
   unselectDifficultyFilter: (difficulty: RecipeDifficulty) => void;
@@ -272,6 +310,23 @@ export const RecipesFiltersProvider = ({ children }: PropsWithChildren<{}>) => {
     []
   );
 
+  const clearOtherCategoryFilter = useCallback(
+    () => dispatch({ type: 'clear-other-category-filter' }),
+    []
+  );
+
+  const selectOtherCategoryFilter = useCallback(
+    (categoryId: RecipeCategoryId) =>
+      dispatch({ type: 'select-other-category-filter', categoryId }),
+    []
+  );
+
+  const unselectOtherCategoryFilter = useCallback(
+    (categoryId: RecipeCategoryId) =>
+      dispatch({ type: 'unselect-other-category-filter', categoryId }),
+    []
+  );
+
   const clearDifficultyFilter = useCallback(
     () => dispatch({ type: 'clear-difficulty-filter' }),
     []
@@ -306,6 +361,9 @@ export const RecipesFiltersProvider = ({ children }: PropsWithChildren<{}>) => {
     clearDietTypeFilter,
     selectDietTypeFilter,
     unselectDietTypeFilter,
+    clearOtherCategoryFilter,
+    selectOtherCategoryFilter,
+    unselectOtherCategoryFilter,
     clearDifficultyFilter,
     selectDifficultyFilter,
     unselectDifficultyFilter,
@@ -336,6 +394,9 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     clearDietTypeFilter,
     selectDietTypeFilter,
     unselectDietTypeFilter,
+    clearOtherCategoryFilter,
+    selectOtherCategoryFilter,
+    unselectOtherCategoryFilter,
     clearDifficultyFilter,
     selectDifficultyFilter,
     unselectDifficultyFilter,
@@ -403,6 +464,18 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     'IRecipesFiltersContext.unselectDietTypeFilter must be defined!'
   );
   assertIsDefined(
+    clearOtherCategoryFilter,
+    'IRecipesFiltersContext.clearOtherCategoryFilter must be defined!'
+  );
+  assertIsDefined(
+    selectOtherCategoryFilter,
+    'IRecipesFiltersContext.selectOtherCategoryFilter must be defined!'
+  );
+  assertIsDefined(
+    unselectOtherCategoryFilter,
+    'IRecipesFiltersContext.unselectOtherCategoryFilter must be defined!'
+  );
+  assertIsDefined(
     clearDifficultyFilter,
     'IRecipesFiltersContext.clearDifficultyFilter must be defined!'
   );
@@ -432,6 +505,9 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     clearDietTypeFilter,
     selectDietTypeFilter,
     unselectDietTypeFilter,
+    clearOtherCategoryFilter,
+    selectOtherCategoryFilter,
+    unselectOtherCategoryFilter,
     clearDifficultyFilter,
     selectDifficultyFilter,
     unselectDifficultyFilter,

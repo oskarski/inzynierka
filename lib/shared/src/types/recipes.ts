@@ -57,6 +57,7 @@ export interface IListRecipesCategoryFiltersDto {
   readonly dishTypeCategoryIds?: RecipeCategoryId[];
   readonly cuisineTypeCategoryIds?: RecipeCategoryId[];
   readonly dietTypeCategoryIds?: RecipeCategoryId[];
+  readonly otherCategoryIds?: RecipeCategoryId[];
 }
 
 export interface IListRecipesDifficultyFiltersDto {

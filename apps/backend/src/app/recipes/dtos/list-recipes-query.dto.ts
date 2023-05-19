@@ -63,6 +63,11 @@ export class ListRecipesQueryDto
 
   @IsOptional()
   @IsArray()
+  @IsUUID(undefined, { each: true })
+  readonly otherCategoryIds?: RecipeCategoryId[];
+
+  @IsOptional()
+  @IsArray()
   @IsEnum(RecipeDifficulty, { each: true })
   readonly difficulty?: RecipeDifficulty[];
 }

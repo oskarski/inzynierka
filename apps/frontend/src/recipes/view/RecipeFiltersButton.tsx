@@ -18,6 +18,8 @@ export const RecipeFiltersButton = () => {
       selectedFiltersCount += filters.cuisineTypeCategoryIds.length;
     if (filters.dietTypeCategoryIds)
       selectedFiltersCount += filters.dietTypeCategoryIds.length;
+    if (filters.otherCategoryIds)
+      selectedFiltersCount += filters.otherCategoryIds.length;
     if (filters.minPreparationTime !== undefined) selectedFiltersCount += 1;
     if (filters.maxPreparationTime !== undefined) selectedFiltersCount += 1;
 
@@ -54,6 +56,8 @@ const RecipeFiltersPopupContent = AppPopup.withAppPopupContent(() => {
         <PreparationTimeFilters />
 
         <DietTypeFilters />
+
+        <OtherCategoryFilters />
       </div>
 
       <div className="pt-4">
@@ -272,6 +276,56 @@ function DietTypeFilters() {
                   checked
                     ? selectDietTypeFilter(category.id)
                     : unselectDietTypeFilter(category.id)
+                }
+              >
+                {category.name}
+              </Checkbox>
+            ))}
+        </Checkbox.Group>
+      </div>
+    </div>
+  );
+}
+
+function OtherCategoryFilters() {
+  const {
+    filters,
+    selectOtherCategoryFilter,
+    unselectOtherCategoryFilter,
+    clearOtherCategoryFilter,
+  } = useRecipesFilters();
+
+  const [otherCategories, , error] = useListCategories({
+    type: CategoryType.Other,
+  });
+
+  if (error) return null;
+
+  return (
+    <div className="space-y-3">
+      <h5 className="text-lg text-default font-medium">Kategorie</h5>
+
+      <div className="-mx-1">
+        <Checkbox.Group value={filters.otherCategoryIds || ['any']}>
+          <Checkbox
+            className="px-1 mb-3"
+            checked={!filters.otherCategoryIds}
+            value={'any'}
+            onChange={(checked) => checked && clearOtherCategoryFilter()}
+          >
+            Wszystkie
+          </Checkbox>
+
+          {otherCategories &&
+            otherCategories.map((category) => (
+              <Checkbox
+                key={category.id}
+                className="px-1 mb-3"
+                value={category.id}
+                onChange={(checked) =>
+                  checked
+                    ? selectOtherCategoryFilter(category.id)
+                    : unselectOtherCategoryFilter(category.id)
                 }
               >
                 {category.name}

@@ -252,6 +252,16 @@ class ListRecipesQuery {
     return this;
   }
 
+  filterByOtherCategories(filters: IListRecipesCategoryFiltersDto): this {
+    if (filters.otherCategoryIds)
+      this.queryBuilder.andWhere(
+        'category.category_id IN (:...otherCategoryIds)',
+        { otherCategoryIds: filters.otherCategoryIds },
+      );
+
+    return this;
+  }
+
   filterByDifficulty(filters: IListRecipesDifficultyFiltersDto): this {
     if (filters.difficulty)
       this.queryBuilder.andWhere('recipes.difficulty IN (:...difficulty)', {
@@ -418,6 +428,7 @@ export class RecipesRepository {
       .filterByDishType(filters)
       .filterByCuisineType(filters)
       .filterByDietType(filters)
+      .filterByOtherCategories(filters)
       .filterByDifficulty(filters)
       .getRawManyAndCount();
   }
@@ -498,6 +509,11 @@ export class RecipesRepository {
       query.andWhere(
         'matching_recipes.category_ids && ARRAY[:...dietTypeCategoryIds]::uuid[]',
         { dietTypeCategoryIds: queryDto.dietTypeCategoryIds },
+      );
+    if (queryDto.otherCategoryIds)
+      query.andWhere(
+        'matching_recipes.category_ids && ARRAY[:...otherCategoryIds]::uuid[]',
+        { otherCategoryIds: queryDto.otherCategoryIds },
       );
     if (queryDto.difficulty)
       query.andWhere('recipes.difficulty && ARRAY[:...difficulty]::uuid[]', {
