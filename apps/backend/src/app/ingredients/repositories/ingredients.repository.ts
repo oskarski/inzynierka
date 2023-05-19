@@ -43,8 +43,8 @@ export class IngredientsRepository {
       .createQueryBuilder()
       .skip(pagination.skip)
       .take(pagination.take)
-      .where('name LIKE :name', { name: `${name}%` })
-      .orderBy('name')
+      .orderBy('similarity(name, :name)', 'DESC')
+      .setParameter('name', name)
       .getMany();
   }
 }
