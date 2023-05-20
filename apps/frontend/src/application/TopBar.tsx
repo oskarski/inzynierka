@@ -23,7 +23,7 @@ const TopBar = ({ className }: TopBarProps) => {
         back={null}
         left={
           <Link href={routes.home()} className="md:hidden">
-            AppName
+            Cook Mate
           </Link>
         }
         right={<ProfileAvatar />}

@@ -37,3 +37,7 @@ next-env.d.ts
 
 .env*
 !.env.sample
+
+public/fallback-development.js
+public/sw.js*
+public/workbox-*.js*

@@ -79,3 +79,7 @@ div.adm-capsule-tabs-content {
 div.adm-popup-body {
   @apply sm:max-w-xl sm:mx-auto sm:right-0 sm:top-16 sm:bottom-auto sm:rounded-2xl;
 }
+
+.adm-error-block-image {
+  @apply flex justify-center;
+}

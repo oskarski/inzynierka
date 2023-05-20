@@ -37,7 +37,7 @@ const NavigationBar = AppPopup.withAppPopup(
       <>
         <div className="hidden md:block fixed left-0 top-0 bottom-0 w-44 bg-neutral-100">
           <Link href={routes.home()} className="hidden md:block pt-6 pb-5 px-3">
-            AppName
+            Cook Mate
           </Link>
 
           <SideBar
