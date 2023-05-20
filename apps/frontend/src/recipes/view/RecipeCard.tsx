@@ -30,7 +30,7 @@ export const RecipeCard = ({
     <Link
       href={routes.recipeDetails(recipe.id)}
       className={classNames(
-        'block rounded-3xl overflow-hidden shadow-md min-w-70',
+        'block rounded-3xl overflow-hidden shadow-md min-w-70 sm:min-w-0',
         className
       )}
     >

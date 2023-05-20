@@ -57,11 +57,11 @@ export const RecipeForm = ({
 
   return (
     <AppForm
-      className="pb-24"
+      className="pb-24 sm:pb-10"
       form={form}
       onSubmit={primaryAction.onSubmit}
       error={error}
-      footerClassName="fixed bottom-20 left-4 right-4"
+      footerClassName="fixed bottom-20 left-4 right-4 sm:bottom-6"
       submitBtn={
         <div className="space-y-3">
           {secondaryAction && (

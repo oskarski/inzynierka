@@ -56,15 +56,21 @@ export default function YourRecipesPage() {
         {loading && <Loader />}
         {error && <ApiErrorMessage size="base" error={error} />}
 
-        {myRecipes?.map((recipe) => (
-          <RecipeCard
-            key={recipe.id}
-            recipe={recipe}
-            categories={connectedCategories(recipe)}
-            showStateBadge={true}
-            className="mb-4"
-          />
-        ))}
+        {myRecipes && (
+          <div className="sm:flex sm:flex-wrap sm:-mx-2 sm:px-2 lg:-mx-3 lg:px-3">
+            {myRecipes.map((recipe) => (
+              <div className="mb-4 sm:w-1/2 lg:w-1/3 sm:px-2 lg:px-3">
+                <RecipeCard
+                  key={recipe.id}
+                  recipe={recipe}
+                  categories={connectedCategories(recipe)}
+                  showStateBadge={true}
+                  className="h-full"
+                />
+              </div>
+            ))}
+          </div>
+        )}
 
         {myRecipes && myRecipes.length === 0 && (
           <EmptyMyRecipesList className="mt-16" />

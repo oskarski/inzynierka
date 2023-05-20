@@ -112,7 +112,7 @@ export default function RecipeDetailsPage({
             {/*  />*/}
             {/*)}*/}
 
-            <div className="pb-12">
+            <div className="pb-12 sm:pb-4">
               {((categories && categories.length > 0) ||
                 recipe.isAuthoredBy(currentUser?.id)) && (
                 <div className="flex items-center space-x-2 mb-3">
@@ -161,38 +161,44 @@ export default function RecipeDetailsPage({
                 <FavouriteRecipeButton recipeId={recipe.id} />
               </div>
 
-              <div className="flex justify-between items-center mb-2">
-                <SectionSubTitle>Składniki:</SectionSubTitle>
+              <div className="md:flex md:justify-center md:mt-16">
+                <div className="md:min-w-64 md:w-64 md:mx-8">
+                  <div className="flex justify-between items-center mb-2">
+                    <SectionSubTitle>Składniki:</SectionSubTitle>
 
-                {/*  /!* TODO Implement adding to shopping list *!/*/}
-                {/*  /!*<button className="text-secondary text-xs font-normal inline-flex items-center">*!/*/}
-                {/*  /!*  <ShoppingOutlined className="text-base leading-none mr-1.5" />*!/*/}
-                {/*  /!*  Dodaj do zakupów*!/*/}
-                {/*  /!*</button>*!/*/}
+                    {/*  /!* TODO Implement adding to shopping list *!/*/}
+                    {/*  /!*<button className="text-secondary text-xs font-normal inline-flex items-center">*!/*/}
+                    {/*  /!*  <ShoppingOutlined className="text-base leading-none mr-1.5" />*!/*/}
+                    {/*  /!*  Dodaj do zakupów*!/*/}
+                    {/*  /!*</button>*!/*/}
+                  </div>
+
+                  <ul className="list-disc list-inside text-base text-secondary pb-3 mb-4">
+                    {recipe.ingredients.map((ingredient) => (
+                      <li key={ingredient.id}>
+                        {ingredient.name} -{' '}
+                        {+(ingredient.quantity * portionsProportion).toFixed(2)}{' '}
+                        {ingredient.unit}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="md:px-8 md:w-full">
+                  {recipe.instructions.map(({ step }, i) => (
+                    <React.Fragment key={i}>
+                      <SectionSubTitle className="mb-2">
+                        Krok {i + 1}:
+                      </SectionSubTitle>
+
+                      <p className="text-base text-secondary mb-4">{step}</p>
+                    </React.Fragment>
+                  ))}
+                </div>
               </div>
-
-              <ul className="list-disc list-inside text-base text-secondary pb-3 mb-4">
-                {recipe.ingredients.map((ingredient) => (
-                  <li key={ingredient.id}>
-                    {ingredient.name} -{' '}
-                    {+(ingredient.quantity * portionsProportion).toFixed(2)}{' '}
-                    {ingredient.unit}
-                  </li>
-                ))}
-              </ul>
-
-              {recipe.instructions.map(({ step }, i) => (
-                <React.Fragment key={i}>
-                  <SectionSubTitle className="mb-2">
-                    Krok {i + 1}:
-                  </SectionSubTitle>
-
-                  <p className="text-base text-secondary mb-4">{step}</p>
-                </React.Fragment>
-              ))}
             </div>
 
-            <div className="fixed z-10 bottom-20 left-4 right-4">
+            <div className="fixed z-10 bottom-20 left-4 right-4 sm:bottom-6">
               <RecipeCookingModeModalButton
                 recipe={recipe}
                 portionsProportion={portionsProportion}

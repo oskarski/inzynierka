@@ -63,7 +63,7 @@ export default function CreateYourRecipePage() {
       </Head>
 
       <main>
-        <SectionTitle className="mb-6">Dodaj przepis</SectionTitle>
+        <SectionTitle className="mb-6 sm:mb-10">Dodaj przepis</SectionTitle>
 
         <RecipeForm
           error={error}

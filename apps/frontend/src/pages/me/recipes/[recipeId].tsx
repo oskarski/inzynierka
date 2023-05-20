@@ -79,7 +79,7 @@ export default function EditYourRecipePage({
       </Head>
 
       <main>
-        <SectionTitle className="mb-6">Edytuj przepis</SectionTitle>
+        <SectionTitle className="mb-6 sm:mb-10">Edytuj przepis</SectionTitle>
 
         {loading && <Loader />}
 

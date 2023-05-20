@@ -1,4 +1,4 @@
-import { TabBar } from 'antd-mobile';
+import { SideBar, TabBar } from 'antd-mobile';
 import {
   HomeOutlined,
   ReadOutlined,
@@ -14,6 +14,8 @@ import {
   SearchRecipesByIngredientsPopupContent,
   useRecipesFilters,
 } from '@fe/recipes';
+import Link from 'next/link';
+import React from 'react';
 
 interface NavigationBarProps {
   className?: string;
@@ -33,9 +35,43 @@ const NavigationBar = AppPopup.withAppPopup(
 
     return (
       <>
+        <div className="hidden md:block fixed left-0 top-0 bottom-0 w-44 bg-neutral-100">
+          <Link href={routes.home()} className="hidden md:block pt-6 pb-5 px-3">
+            AppName
+          </Link>
+
+          <SideBar
+            activeKey={currentRoute}
+            onChange={(key) => {
+              if (key === searchKey) return openSearchPopup();
+
+              redirectTo(key);
+            }}
+            style={{ '--width': '100%' }}
+          >
+            <SideBar.Item key={routes.home()} title="Start" />
+
+            <SideBar.Item key={routes.recipes()} title="Przepisy" />
+
+            <SideBar.Item
+              key={searchKey}
+              title="Szukaj"
+              badge={
+                selectedIngredients.length === 0
+                  ? null
+                  : selectedIngredients.length
+              }
+            />
+
+            <SideBar.Item key={routes.shoppingList()} title="Zakupy" />
+
+            <SideBar.Item key={routes.favourite()} title="Ulubione" />
+          </SideBar>
+        </div>
+
         <TabBar
           activeKey={currentRoute}
-          className={classNames('border-t sm:hidden py-2', className)}
+          className={classNames('border-t md:hidden py-2', className)}
           onChange={(key) => {
             if (key === searchKey) return openSearchPopup();
 
@@ -58,7 +94,11 @@ const NavigationBar = AppPopup.withAppPopup(
             key={searchKey}
             title="Szukaj"
             icon={<SearchOutlined />}
-            badge={selectedIngredients.length === 0 ? null : selectedIngredients.length}
+            badge={
+              selectedIngredients.length === 0
+                ? null
+                : selectedIngredients.length
+            }
           />
 
           <TabBar.Item

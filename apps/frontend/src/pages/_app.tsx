@@ -49,7 +49,9 @@ export default function App({ Component, pageProps }: AppProps) {
         dehydratedReactQueryState={pageProps.dehydratedReactQueryState}
         isPublicPage={!!pageProps.isPublicPage}
       >
-        <div className={classNames('pb-16 flex flex-col justify-between')}>
+        <div
+          className={classNames('pb-16 flex flex-col justify-between md:pl-44')}
+        >
           <TopBar className="grow-0 pt-4" />
 
           <div className="grow overflow-auto p-4">

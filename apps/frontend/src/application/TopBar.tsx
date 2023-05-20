@@ -21,7 +21,11 @@ const TopBar = ({ className }: TopBarProps) => {
       <NavBar
         backArrow={false}
         back={null}
-        left={<Link href={routes.home()}>AppName</Link>}
+        left={
+          <Link href={routes.home()} className="md:hidden">
+            AppName
+          </Link>
+        }
         right={<ProfileAvatar />}
       />
     </div>
