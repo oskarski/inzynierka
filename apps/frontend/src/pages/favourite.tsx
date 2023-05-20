@@ -64,9 +64,8 @@ export default function FavouriteRecipesPage() {
         {favouriteRecipes && (
           <div className="sm:flex sm:flex-wrap sm:-mx-2 sm:px-2">
             {favouriteRecipes.map((recipe) => (
-              <div className="mb-4 sm:w-1/2 lg:w-1/3 sm:px-2">
+              <div key={recipe.id} className="mb-4 sm:w-1/2 lg:w-1/3 sm:px-2">
                 <RecipeCard
-                  key={recipe.id}
                   recipe={recipe}
                   categories={connectedCategories(recipe)}
                   className="h-full"

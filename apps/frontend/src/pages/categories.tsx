@@ -47,9 +47,11 @@ export default function CategoriesPage() {
         {recipesCategories && (
           <div className="sm:flex sm:flex-wrap sm:-mx-2 sm:px-2">
             {recipesCategories.map((recipeCategory) => (
-              <div className="sm:w-1/3 md:w-1/4 lg:w-1/5 sm:px-2">
+              <div
+                key={recipeCategory.id}
+                className="sm:w-1/3 md:w-1/4 lg:w-1/5 sm:px-2"
+              >
                 <RecipeCategoryCard
-                  key={recipeCategory.id}
                   recipeCategory={recipeCategory}
                   className="mb-4"
                 />
