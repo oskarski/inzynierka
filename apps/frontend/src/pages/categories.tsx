@@ -2,13 +2,16 @@ import Head from 'next/head';
 import { env, headTitle, HttpClient } from '@fe/utils';
 import {
   ListAllRecipesCategoriesQueryKey,
+  RecipeCategoryCard,
   RecipesCategoriesApi,
-  RecipesCategoriesListing,
+  useListCategories,
 } from '@fe/recipes-categories';
-import { SectionTitle } from '@fe/components';
+import { Loader, SectionTitle } from '@fe/components';
 import { HydrateReactQueryState } from '../server/server-react-query';
 import { SignedInGuard } from '../server/server-guards';
 import { GetServerSideProps } from 'next/types';
+import { ApiErrorMessage } from '@fe/errors';
+import React from 'react';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard(async (ctx, queryClient, user) => {
@@ -27,6 +30,8 @@ export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
 );
 
 export default function CategoriesPage() {
+  const [recipesCategories, loading, error] = useListCategories();
+
   return (
     <>
       <Head>
@@ -36,9 +41,17 @@ export default function CategoriesPage() {
       <main>
         <SectionTitle className="mb-6">Kategorie</SectionTitle>
 
-        <RecipesCategoriesListing>
-          <RecipesCategoriesListing.CardList />
-        </RecipesCategoriesListing>
+        {loading && <Loader />}
+        {error && <ApiErrorMessage size="base" error={error} />}
+
+        {recipesCategories &&
+          recipesCategories.map((recipeCategory) => (
+            <RecipeCategoryCard
+              key={recipeCategory.id}
+              recipeCategory={recipeCategory}
+              className="mb-4"
+            />
+          ))}
       </main>
     </>
   );
