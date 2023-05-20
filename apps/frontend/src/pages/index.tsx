@@ -56,11 +56,14 @@ function MyRecipesSection() {
       {myRecipes && myRecipes.length > 0 && (
         <ScrollableRow className="space-x-3 -mr-4 pr-4 pb-2 pl-1">
           {myRecipes.map((recipe) => (
-            <RecipeCard
-              key={recipe.id}
-              recipe={recipe}
-              categories={connectedCategories(recipe)}
-            />
+            <div className="min-w-70">
+              <RecipeCard
+                key={recipe.id}
+                recipe={recipe}
+                categories={connectedCategories(recipe)}
+                className="h-full"
+              />
+            </div>
           ))}
         </ScrollableRow>
       )}
