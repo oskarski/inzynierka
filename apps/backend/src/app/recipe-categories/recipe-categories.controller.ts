@@ -14,4 +14,9 @@ export class RecipeCategoriesController {
   async listCategories(): Promise<IRecipeCategoryListItemDto[]> {
     return this.recipeCategoriesService.listCategories();
   }
+
+  @Get('/popular')
+  async listPopularCategories(): Promise<IRecipeCategoryListItemDto[]> {
+    return this.recipeCategoriesService.listPopularCategories();
+  }
 }

@@ -11,4 +11,8 @@ export class RecipeCategoriesService {
   listCategories(): Promise<IRecipeCategoryListItemDto[]> {
     return this.recipeCategoryRepository.findAll();
   }
+
+  listPopularCategories(): Promise<IRecipeCategoryListItemDto[]> {
+    return this.recipeCategoryRepository.findPopularCategories();
+  }
 }

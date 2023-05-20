@@ -18,4 +18,15 @@ export class RecipeCategoryRepository {
   findAll(): Promise<Category[]> {
     return this.repository.find();
   }
+
+  findPopularCategories(): Promise<Category[]> {
+    return this.repository
+      .createQueryBuilder('category')
+      .select('category')
+      .addSelect('COUNT(*)', 'count')
+      .groupBy('category.id')
+      .orderBy('count', 'DESC')
+      .getRawMany()
+      .then((results) => results.map((result) => result.category));
+  }
 }
