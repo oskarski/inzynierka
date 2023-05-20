@@ -10,9 +10,9 @@
     }
   ],
   "theme_color": "#ef4444",
-  "background_color": "#ef4444",
+  "background_color": "#ffffff",
   "start_url": "/",
-  "display": "minimal-ui",
+  "display": "standalone",
   "orientation": "portrait",
   "shortcuts": []
 }
