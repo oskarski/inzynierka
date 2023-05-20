@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import { AppProvider } from '@fe/AppProvider';
 import { Amplify } from '@aws-amplify/core';
 import dynamic from 'next/dynamic';
+import { SafeArea } from 'antd-mobile';
 
 const roboto = Roboto({
   weight: ['400', '500', '700'],
@@ -234,6 +235,8 @@ export default function App({ Component, pageProps }: AppProps) {
         dehydratedReactQueryState={pageProps.dehydratedReactQueryState}
         isPublicPage={!!pageProps.isPublicPage}
       >
+        <SafeArea position="top" />
+
         <div
           className={classNames('pb-16 flex flex-col justify-between md:pl-44')}
         >
@@ -245,6 +248,8 @@ export default function App({ Component, pageProps }: AppProps) {
 
           <NavigationBar className="fixed left-0 right-0 bottom-0 bg-white" />
         </div>
+
+        <SafeArea position="bottom" />
       </AppProvider>
     </>
   );
