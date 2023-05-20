@@ -19,14 +19,20 @@ export class RecipeCategoryRepository {
     return this.repository.find();
   }
 
-  findPopularCategories(): Promise<Category[]> {
-    return this.repository
-      .createQueryBuilder('category')
-      .select('category')
-      .addSelect('COUNT(*)', 'count')
-      .groupBy('category.id')
-      .orderBy('count', 'DESC')
-      .getRawMany()
-      .then((results) => results.map((result) => result.category));
+  async findPopularCategories(): Promise<Category[]> {
+    const query = `
+      SELECT *
+      FROM categories
+      INNER JOIN (
+        SELECT category_id, COUNT(recipe_id) AS count
+        FROM recipe_categories
+        GROUP BY category_id
+        ORDER BY COUNT(recipe_id) DESC
+        LIMIT 5
+      ) AS popular_categories ON category_id = categories.id
+      ORDER BY count DESC
+    `;
+
+    return this.repository.query(query);
   }
 }
