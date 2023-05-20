@@ -248,8 +248,6 @@ export default function App({ Component, pageProps }: AppProps) {
 
           <NavigationBar className="fixed left-0 right-0 bottom-0 bg-white" />
         </div>
-
-        <SafeArea position="bottom" />
       </AppProvider>
     </>
   );

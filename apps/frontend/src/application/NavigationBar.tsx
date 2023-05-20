@@ -1,4 +1,4 @@
-import { SideBar, TabBar } from 'antd-mobile';
+import { SafeArea, SideBar, TabBar } from 'antd-mobile';
 import {
   HomeOutlined,
   ReadOutlined,
@@ -69,50 +69,54 @@ const NavigationBar = AppPopup.withAppPopup(
           </SideBar>
         </div>
 
-        <TabBar
-          activeKey={currentRoute}
-          className={classNames('border-t md:hidden py-2', className)}
-          onChange={(key) => {
-            if (key === searchKey) return openSearchPopup();
+        <div className={className}>
+          <TabBar
+            activeKey={currentRoute}
+            className="border-t md:hidden py-2"
+            onChange={(key) => {
+              if (key === searchKey) return openSearchPopup();
 
-            redirectTo(key);
-          }}
-        >
-          <TabBar.Item
-            key={routes.home()}
-            title="Start"
-            icon={<HomeOutlined />}
-          />
+              redirectTo(key);
+            }}
+          >
+            <TabBar.Item
+              key={routes.home()}
+              title="Start"
+              icon={<HomeOutlined />}
+            />
 
-          <TabBar.Item
-            key={routes.recipes()}
-            title="Przepisy"
-            icon={<ReadOutlined />}
-          />
+            <TabBar.Item
+              key={routes.recipes()}
+              title="Przepisy"
+              icon={<ReadOutlined />}
+            />
 
-          <TabBar.Item
-            key={searchKey}
-            title="Szukaj"
-            icon={<SearchOutlined />}
-            badge={
-              selectedIngredients.length === 0
-                ? null
-                : selectedIngredients.length
-            }
-          />
+            <TabBar.Item
+              key={searchKey}
+              title="Szukaj"
+              icon={<SearchOutlined />}
+              badge={
+                selectedIngredients.length === 0
+                  ? null
+                  : selectedIngredients.length
+              }
+            />
 
-          <TabBar.Item
-            key={routes.shoppingList()}
-            title="Zakupy"
-            icon={<ShoppingOutlined />}
-          />
+            <TabBar.Item
+              key={routes.shoppingList()}
+              title="Zakupy"
+              icon={<ShoppingOutlined />}
+            />
 
-          <TabBar.Item
-            key={routes.favourite()}
-            title="Ulubione"
-            icon={<HeartOutlined />}
-          />
-        </TabBar>
+            <TabBar.Item
+              key={routes.favourite()}
+              title="Ulubione"
+              icon={<HeartOutlined />}
+            />
+          </TabBar>
+
+          <SafeArea position="bottom" />
+        </div>
 
         <SearchRecipesByIngredientsPopupContent />
       </>
