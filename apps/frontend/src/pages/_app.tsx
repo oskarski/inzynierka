@@ -47,9 +47,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="apple-mobile-web-app-title" content="Cook Mate" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="msapplication-TileColor" content="#ef4444" />
+        <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="msapplication-tap-highlight" content="no" />
-        <meta name="theme-color" content="#ef4444" />
+        <meta name="theme-color" content="#ffffff" />
 
         <link
           rel="apple-touch-startup-image"
