@@ -74,7 +74,10 @@ AppPopup.Title = function Title({ children }: PropsWithChildren<{}>) {
   );
 };
 
-AppPopup.Content = function Content({ children }: PropsWithChildren<{}>) {
+AppPopup.Content = function Content({
+  destroyOnClose,
+  children,
+}: PropsWithChildren<{ destroyOnClose?: boolean }>) {
   const { opened, close } = useAppPopupContext();
 
   return (
@@ -82,6 +85,7 @@ AppPopup.Content = function Content({ children }: PropsWithChildren<{}>) {
       visible={opened}
       onMaskClick={close}
       bodyClassName="rounded-t-2xl overflow-y-auto"
+      destroyOnClose={destroyOnClose}
     >
       <div className="p-4 flex flex-col max-h-80-screen">{children}</div>
 
@@ -91,10 +95,11 @@ AppPopup.Content = function Content({ children }: PropsWithChildren<{}>) {
 };
 
 AppPopup.withAppPopupContent = function withAppPopupContent<PropsType>(
-  Component: FunctionComponent<PropsType>
+  Component: FunctionComponent<PropsType>,
+  { destroyOnClose }: { destroyOnClose?: boolean } = {}
 ) {
   return (props: PropsType) => (
-    <AppPopup.Content>
+    <AppPopup.Content destroyOnClose={destroyOnClose}>
       {/* @ts-ignore*/}
       <Component {...props} />
     </AppPopup.Content>

@@ -14,10 +14,15 @@ export const useGetShoppingList = () => {
   );
 };
 
-export const useBulkAddToShoppingList = () => {
+export const useBulkAddToShoppingList = ({
+  onSuccess,
+}: {
+  onSuccess?: () => void;
+}) => {
   const { shoppingListApi } = useShoppingListApi();
 
   return useAdaptedMutation<IShoppingListItemDto[], IBulkAddToShoppingListDto>(
-    (dto) => shoppingListApi.bulkAddToShoppingList(dto)
+    (dto) => shoppingListApi.bulkAddToShoppingList(dto),
+    { onSuccess }
   );
 };

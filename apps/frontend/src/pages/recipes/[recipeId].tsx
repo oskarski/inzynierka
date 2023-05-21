@@ -10,7 +10,7 @@ import {
   RecipesCategoriesApi,
 } from '@fe/recipes-categories';
 import { Loader, SectionSubTitle, SectionTitle } from '@fe/components';
-import { ShoppingOutlined, TeamOutlined } from '@ant-design/icons';
+import { TeamOutlined } from '@ant-design/icons';
 import { Button, SafeArea, Stepper } from 'antd-mobile';
 import {
   FavouriteRecipeButton,
@@ -31,6 +31,7 @@ import { RecipeId } from '@lib/shared';
 import { ApiErrorMessage } from '@fe/errors';
 import { useSignedInUser } from '@fe/iam';
 import Link from 'next/link';
+import { AddRecipeIngredientsToShoppingListButton } from '@fe/shopping-list';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard(async ({ params }, queryClient, user) => {
@@ -65,6 +66,13 @@ export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
 interface RecipeDetailsPageProps {
   recipeId: RecipeId;
 }
+
+const calculatePortions = (
+  quantity: number,
+  portionsProportion: number
+): number => {
+  return +(quantity * portionsProportion).toFixed(2);
+};
 
 export default function RecipeDetailsPage({
   recipeId,
@@ -166,18 +174,25 @@ export default function RecipeDetailsPage({
                   <div className="flex justify-between items-center mb-2">
                     <SectionSubTitle>Składniki:</SectionSubTitle>
 
-                    {/*  /!* TODO Implement adding to shopping list *!/*/}
-                    {/*  /!*<button className="text-secondary text-xs font-normal inline-flex items-center">*!/*/}
-                    {/*  /!*  <ShoppingOutlined className="text-base leading-none mr-1.5" />*!/*/}
-                    {/*  /!*  Dodaj do zakupów*!/*/}
-                    {/*  /!*</button>*!/*/}
+                    <AddRecipeIngredientsToShoppingListButton
+                      ingredients={recipe.ingredients.map((ingredient) => ({
+                        ...ingredient,
+                        quantity: calculatePortions(
+                          ingredient.quantity,
+                          portionsProportion
+                        ),
+                      }))}
+                    />
                   </div>
 
                   <ul className="list-disc list-inside text-base text-secondary pb-3 mb-4">
                     {recipe.ingredients.map((ingredient) => (
                       <li key={ingredient.id}>
                         {ingredient.name} -{' '}
-                        {+(ingredient.quantity * portionsProportion).toFixed(2)}{' '}
+                        {calculatePortions(
+                          ingredient.quantity,
+                          portionsProportion
+                        )}{' '}
                         {ingredient.unit}
                       </li>
                     ))}
