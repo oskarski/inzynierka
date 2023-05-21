@@ -58,6 +58,12 @@ export class HttpClient {
       .then((res) => res.data);
   }
 
+  put<DataType, ReturnType>(url: string, data: DataType): Promise<ReturnType> {
+    return this.axiosInstance
+      .put<ReturnType>(url, data)
+      .then((res) => res.data);
+  }
+
   delete<DataType = void, ReturnType = void>(
     url: string,
     data?: DataType
