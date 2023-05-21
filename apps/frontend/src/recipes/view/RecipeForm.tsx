@@ -13,7 +13,7 @@ import {
 } from '@fe/form';
 import { RecipeDifficultyText } from './RecipeDifficultyText';
 import React from 'react';
-import { Button, CapsuleTabs, Form, List } from 'antd-mobile';
+import { Button, CapsuleTabs, Form, List, SafeArea } from 'antd-mobile';
 import {
   FormValidationErrorMessage,
   FormValidationOrApiError,
@@ -92,6 +92,8 @@ export const RecipeForm = ({
               Zapisz
             </SubmitButton>
           </div>
+
+          <SafeArea position="bottom" />
         </div>
       }
     >

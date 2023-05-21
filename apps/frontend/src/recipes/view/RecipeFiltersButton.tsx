@@ -1,6 +1,6 @@
 import { AppPopup } from '@fe/components';
 import { ControlOutlined } from '@ant-design/icons';
-import { Badge, Button, Checkbox, Radio } from 'antd-mobile';
+import { Badge, Button, Checkbox, Radio, SafeArea } from 'antd-mobile';
 import React, { useMemo } from 'react';
 import { useRecipesFilters } from '@fe/recipes';
 import { useListCategories } from '@fe/recipes-categories';
@@ -65,6 +65,8 @@ const RecipeFiltersPopupContent = AppPopup.withAppPopupContent(() => {
           Filtruj
         </Button>
       </div>
+
+      <SafeArea position="bottom" />
     </>
   );
 });

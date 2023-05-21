@@ -6,7 +6,6 @@ import {
   ShoppingOutlined,
   HeartOutlined,
 } from '@ant-design/icons';
-import classNames from 'classnames';
 import { routes, useRouting } from '@fe/utils';
 import { useSignedInUser } from '@fe/iam';
 import { AppPopup } from '@fe/components';

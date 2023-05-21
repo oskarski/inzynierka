@@ -11,7 +11,7 @@ import {
 } from '@fe/recipes-categories';
 import { Loader, SectionSubTitle, SectionTitle } from '@fe/components';
 import { ShoppingOutlined, TeamOutlined } from '@ant-design/icons';
-import { Button, Stepper } from 'antd-mobile';
+import { Button, SafeArea, Stepper } from 'antd-mobile';
 import {
   FavouriteRecipeButton,
   GetRecipeDetailsQueryKey,
@@ -203,6 +203,8 @@ export default function RecipeDetailsPage({
                 recipe={recipe}
                 portionsProportion={portionsProportion}
               />
+
+              <SafeArea position="bottom" />
             </div>
           </>
         )}

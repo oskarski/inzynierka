@@ -1,4 +1,4 @@
-import { Popup } from 'antd-mobile';
+import { Popup, SafeArea } from 'antd-mobile';
 import React, {
   createContext,
   FunctionComponent,
@@ -83,7 +83,9 @@ AppPopup.Content = function Content({ children }: PropsWithChildren<{}>) {
       onMaskClick={close}
       bodyClassName="rounded-t-2xl overflow-y-auto"
     >
-      <div className="p-4 flex flex-col max-h-90-screen">{children}</div>
+      <div className="p-4 flex flex-col max-h-80-screen">{children}</div>
+
+      <SafeArea position="bottom" />
     </Popup>
   );
 };

@@ -22,7 +22,7 @@ module.exports = {
         55: '.55',
       },
       maxHeight: {
-        '90-screen': '90vh',
+        '80-screen': '80vh',
       },
       minWidth: {
         70: '17.5rem',

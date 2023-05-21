@@ -1,5 +1,5 @@
 import { AppPopup, LinkButton } from '@fe/components';
-import { Button, List } from 'antd-mobile';
+import { Button, List, SafeArea } from 'antd-mobile';
 import React from 'react';
 import { useRecipesFilters } from '../RecipesFilters.context';
 import { routes, useRouting } from '@fe/utils';
@@ -88,6 +88,8 @@ export const SearchRecipesByIngredientsPopupContent =
             Szukamy!
           </Button>
         </div>
+
+        <SafeArea position="bottom" />
       </>
     );
   });
