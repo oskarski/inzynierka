@@ -73,3 +73,15 @@ export const useIngredientsSelection = (
     clearSelection,
   };
 };
+
+export const useUnitOptions = () => {
+  return [
+    { value: 'szt.', label: 'szt.' },
+    { value: 'l', label: 'l' },
+    { value: 'ml', label: 'ml' },
+    { value: 'g', label: 'g' },
+    { value: 'łyżki', label: 'łyżki' },
+    { value: 'łyżeczki', label: 'łyżeczki' },
+    { value: 'szklanki', label: 'szklanki' },
+  ];
+};

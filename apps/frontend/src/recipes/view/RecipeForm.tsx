@@ -23,6 +23,7 @@ import {
   IngredientsSearchBar,
   IngredientsSearchResultList,
   useIngredientsSelection,
+  useUnitOptions,
 } from '@fe/ingredients';
 import {
   ClockCircleOutlined,
@@ -259,6 +260,8 @@ function IngredientsTab({ error, defaultValues }: IngredientsTabProps) {
     isIngredientSelected,
   } = useIngredientsSelection(defaultValues?.ingredients);
 
+  const unitOptions = useUnitOptions();
+
   return (
     <>
       <div className="border-b mb-3">
@@ -324,16 +327,7 @@ function IngredientsTab({ error, defaultValues }: IngredientsTabProps) {
                                 (i) => i.id === ingredient.id
                               )?.unit || 'szt.'
                             }
-                            // TODO Extract to enum? Or <UnitSelect />
-                            options={[
-                              { value: 'szt.', label: 'szt.' },
-                              { value: 'l', label: 'l' },
-                              { value: 'ml', label: 'ml' },
-                              { value: 'g', label: 'g' },
-                              { value: 'łyżki', label: 'łyżki' },
-                              { value: 'łyżeczki', label: 'łyżeczki' },
-                              { value: 'szklanki', label: 'szklanki' },
-                            ]}
+                            options={unitOptions}
                           />
 
                           <button
