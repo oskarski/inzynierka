@@ -9,6 +9,8 @@ import { AppProvider } from '@fe/AppProvider';
 import { Amplify } from '@aws-amplify/core';
 import dynamic from 'next/dynamic';
 import { SafeArea } from 'antd-mobile';
+import { PropsWithChildren } from 'react';
+import { useSignedInUser } from '@fe/iam';
 
 const roboto = Roboto({
   weight: ['400', '500', '700'],
@@ -235,22 +237,36 @@ export default function App({ Component, pageProps }: AppProps) {
         dehydratedReactQueryState={pageProps.dehydratedReactQueryState}
         isPublicPage={!!pageProps.isPublicPage}
       >
-        <SafeArea position="top" />
-
-        <div
-          className={classNames('pb-16 flex flex-col justify-between', {
-            'pt-16 md:pl-44': !pageProps.isPublicPage,
-          })}
-        >
-          <TopBar className="grow-0 pt-4 fixed left-0 right-0 top-0 z-10 bg-white" />
-
-          <div className="grow overflow-auto p-4">
-            <Component {...pageProps} />
-          </div>
-
-          <NavigationBar className="fixed left-0 right-0 bottom-0 bg-white" />
-        </div>
+        <AppContent>
+          <Component {...pageProps} />
+        </AppContent>
       </AppProvider>
+    </>
+  );
+}
+
+function AppContent({ children }: PropsWithChildren<{}>) {
+  const [signedInUser] = useSignedInUser();
+
+  return (
+    <>
+      <SafeArea position="top" />
+
+      <div
+        className={classNames('pb-16 flex flex-col justify-between', {
+          'pt-16 md:pl-44': !!signedInUser,
+        })}
+      >
+        {!!signedInUser && (
+          <TopBar className="grow-0 pt-4 fixed left-0 right-0 top-0 z-10 bg-white" />
+        )}
+
+        <div className="grow overflow-auto p-4">{children}</div>
+
+        {!!signedInUser && (
+          <NavigationBar className="fixed left-0 right-0 bottom-0 bg-white" />
+        )}
+      </div>
     </>
   );
 }
