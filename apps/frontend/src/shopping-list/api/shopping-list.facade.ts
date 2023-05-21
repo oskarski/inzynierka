@@ -1,5 +1,6 @@
 import { useShoppingListApi } from './ShoppingListApi.context';
-import { useAdaptedQuery } from '@fe/utils';
+import { useAdaptedMutation, useAdaptedQuery } from '@fe/utils';
+import { IBulkAddToShoppingListDto, IShoppingListItemDto } from '@lib/shared';
 
 export const GetShoppingListQueryKey = [
   'shoppingListApi.listShoppingListItems',
@@ -10,5 +11,13 @@ export const useGetShoppingList = () => {
 
   return useAdaptedQuery(GetShoppingListQueryKey, () =>
     shoppingListApi.listShoppingListItems()
+  );
+};
+
+export const useBulkAddToShoppingList = () => {
+  const { shoppingListApi } = useShoppingListApi();
+
+  return useAdaptedMutation<IShoppingListItemDto[], IBulkAddToShoppingListDto>(
+    (dto) => shoppingListApi.bulkAddToShoppingList(dto)
   );
 };
