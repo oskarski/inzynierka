@@ -8,38 +8,15 @@ import { ApiErrorMessage } from '@fe/errors';
 import React from 'react';
 import { Button, Checkbox, List } from 'antd-mobile';
 import { FrownOutlined } from '@ant-design/icons';
+import { useGetShoppingList } from '@fe/shopping-list';
+import { IShoppingListItemDto } from '@lib/shared';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard()
 );
 
 export default function ShoppingListPage() {
-  const loading = false;
-  const error = null;
-
-  const shoppingList = [
-    {
-      id: '1',
-      name: 'Pomidorki koktajlowe',
-      quantity: 0.5,
-      unit: 'kg',
-      completed: false,
-    },
-    {
-      id: '2',
-      name: 'Pomidory w puszce',
-      quantity: 400,
-      unit: 'ml',
-      completed: true,
-    },
-    {
-      id: '3',
-      name: 'Ząbek czosnku',
-      quantity: 1,
-      unit: 'szt.',
-      completed: false,
-    },
-  ];
+  const [shoppingList, loading, error] = useGetShoppingList();
 
   return (
     <>
@@ -87,8 +64,7 @@ export default function ShoppingListPage() {
   );
 }
 
-// TODO Drop any
-function ShoppingListItem({ item }: { item: any }) {
+function ShoppingListItem({ item }: { item: IShoppingListItemDto }) {
   return (
     <List.Item
       prefix={
