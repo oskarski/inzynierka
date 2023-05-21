@@ -18,6 +18,7 @@ import {
 import { RecipeIngredient } from './recipe-ingredient.entity';
 import { RecipeCategory } from './recipe-category.entity';
 import { User } from '../../iam/entities';
+import { Review } from '../../reviews/entities';
 
 @Entity('recipes')
 export class Recipe {
@@ -77,4 +78,12 @@ export class Recipe {
   isCreatedBy(authorId: UserId): boolean {
     return this.authorId === authorId;
   }
+
+  @OneToMany(() => Review, (review) => review.recipe, {
+    cascade: true,
+  })
+  reviews: Review[];
+
+  @Column({ nullable: true })
+  review: number | null;
 }
