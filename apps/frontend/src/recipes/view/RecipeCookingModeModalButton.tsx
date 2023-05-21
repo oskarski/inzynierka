@@ -57,6 +57,8 @@ const useStepper = (stepsTotal: number) => {
   const goToNextStep = () =>
     setStep((prev) => (canGoForward(prev) ? prev + 1 : prev));
 
+  const resetStepper = () => setStep(0);
+
   return {
     stepIndex,
     stepsTotal,
@@ -64,6 +66,7 @@ const useStepper = (stepsTotal: number) => {
     canGoBack: canGoBack(stepIndex),
     goToPrevStep,
     goToNextStep,
+    resetStepper,
   };
 };
 
@@ -79,6 +82,7 @@ function RecipeCookingModeModalContent({
     canGoBack,
     goToPrevStep,
     goToNextStep,
+    resetStepper,
   } = useStepper(recipe.instructions.length);
 
   const [view, setView] = useState<
@@ -89,7 +93,13 @@ function RecipeCookingModeModalContent({
 
   return (
     <div className="flex flex-col justify-between h-screen px-4 py-6">
-      <button onClick={onClose} className="absolute right-4 top-6 text-2xl">
+      <button
+        onClick={() => {
+          resetStepper();
+          onClose();
+        }}
+        className="absolute right-4 top-6 text-2xl"
+      >
         <CloseOutlined />
       </button>
 
