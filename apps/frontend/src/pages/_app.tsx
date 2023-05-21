@@ -238,7 +238,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <SafeArea position="top" />
 
         <div
-          className={classNames('pb-16 flex flex-col justify-between md:pl-44')}
+          className={classNames('pb-16 flex flex-col justify-between', {
+            'md:pl-44': !pageProps.isPublicPage,
+          })}
         >
           <TopBar className="grow-0 pt-4" />
 
