@@ -11,6 +11,7 @@ import { IngredientsModule } from './ingredients';
 import { AuthModule } from './auth';
 import { RecipesModule } from './recipes';
 import { IamModule } from './iam';
+import { ShoppingListModule } from './shopping-list';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { IamModule } from './iam';
     RecipeCategoriesModule,
     IngredientsModule,
     RecipesModule,
+    ShoppingListModule,
     IamModule,
   ],
   controllers: [AppController],
