@@ -19,3 +19,9 @@ export interface IAddToShoppingListItemDto {
 export interface IBulkAddToShoppingListDto {
   readonly items: IAddToShoppingListItemDto[];
 }
+
+export interface IUpdateShoppingListItemDto {
+  readonly quantity: number;
+  readonly unit: string;
+  readonly completed: boolean;
+}

@@ -1,7 +1,8 @@
-import { Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { PrivateApiGuard } from '../auth';
+import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
+import { CurrentUser, PrivateApiGuard } from '../auth';
 import { IShoppingListItemDto } from '@lib/shared';
-import { BulkAddToShoppingListDto } from './dtos';
+import { BulkAddToShoppingListDto, UpdateShoppingListItemDto } from './dtos';
+import { User } from '../iam/entities';
 
 @Controller('shopping-list')
 @UseGuards(PrivateApiGuard)
@@ -38,9 +39,20 @@ export class ShoppingListController {
 
   @Post('/bulk')
   bulkAddToShoppingList(
-    dto: BulkAddToShoppingListDto,
+    @Body() dto: BulkAddToShoppingListDto,
+    @CurrentUser() currentUser: User,
   ): Promise<IShoppingListItemDto[]> {
     // TODO Add to shopping list logic
+
+    return this.listShoppingListItems();
+  }
+
+  @Put(':id')
+  updateShoppingListItem(
+    @Body() dto: UpdateShoppingListItemDto,
+    @CurrentUser() currentUser: User,
+  ): Promise<IShoppingListItemDto[]> {
+    // TODO Update shopping list item logic
 
     return this.listShoppingListItems();
   }
