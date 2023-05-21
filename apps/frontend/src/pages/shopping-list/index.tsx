@@ -3,10 +3,16 @@ import { env, headTitle, HttpClient } from '@fe/utils';
 import { GetServerSideProps } from 'next';
 import { SignedInGuard } from '../../server/server-guards';
 import { HydrateReactQueryState } from '../../server/server-react-query';
-import { Empty, Loader, SectionTitle } from '@fe/components';
+import {
+  Empty,
+  LinkButton,
+  Loader,
+  PickerBasedSelect,
+  SectionTitle,
+} from '@fe/components';
 import { ApiErrorMessage } from '@fe/errors';
-import React from 'react';
-import { Button, Checkbox, List } from 'antd-mobile';
+import React, { useState } from 'react';
+import { Button, Checkbox, List, SafeArea, Stepper } from 'antd-mobile';
 import { FrownOutlined } from '@ant-design/icons';
 import {
   GetShoppingListQueryKey,
@@ -14,6 +20,7 @@ import {
   useGetShoppingList,
 } from '@fe/shopping-list';
 import { IShoppingListItemDto } from '@lib/shared';
+import { useUnitOptions } from '@fe/ingredients';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard(async ({}, queryClient, user) => {
@@ -43,7 +50,18 @@ export default function ShoppingListPage() {
       </Head>
 
       <main>
-        <SectionTitle className="mb-6">Lista zakupów</SectionTitle>
+        <div className="flex justify-between items-center mb-6">
+          <SectionTitle>Lista zakupów</SectionTitle>
+
+          <LinkButton
+            onClick={() => {
+              // TODO Clear
+              console.log('CLEAR');
+            }}
+          >
+            Wyczyść listę
+          </LinkButton>
+        </div>
 
         {loading && <Loader />}
         {error && <ApiErrorMessage size="base" error={error} />}
@@ -77,28 +95,116 @@ export default function ShoppingListPage() {
             ))}
           </List>
         )}
+
+        <div className="fixed z-10 bottom-20 left-4 right-4 sm:bottom-6">
+          <Button
+            block={true}
+            color="primary"
+            onClick={() => {
+              // TODO Add
+              console.log('ADD');
+            }}
+          >
+            Dodaj
+          </Button>
+
+          <SafeArea position="bottom" />
+        </div>
       </main>
     </>
   );
 }
 
-function ShoppingListItem({ item }: { item: IShoppingListItemDto }) {
+interface ShoppingListItemProps {
+  item: IShoppingListItemDto;
+}
+
+function ShoppingListItem({ item }: ShoppingListItemProps) {
+  const unitOptions = useUnitOptions();
+
+  const [editMode, toggleEditMode] = useState(false);
+
   return (
     <List.Item
       prefix={
-        <Checkbox
-          checked={item.completed}
-          id={`checkbox-${item.id}`}
-          value={item.id}
-          onChange={() => {
-            console.log('TOGGLE');
-          }}
-        />
+        !editMode && (
+          <Checkbox
+            checked={item.completed}
+            id={`checkbox-${item.id}`}
+            value={item.id}
+            onChange={() => {
+              console.log('TOGGLE');
+            }}
+          />
+        )
+      }
+      arrow={
+        editMode ? (
+          <>
+            <LinkButton
+              variant="primary"
+              className="mr-2"
+              onClick={() => {
+                // TODO Edit
+                console.log('Edit');
+              }}
+            >
+              Zapisz
+            </LinkButton>
+
+            <LinkButton onClick={() => toggleEditMode(false)}>
+              Anuluj
+            </LinkButton>
+          </>
+        ) : (
+          <>
+            <LinkButton onClick={() => toggleEditMode(true)}>Edytuj</LinkButton>
+
+            <LinkButton
+              variant="primary"
+              className="ml-2"
+              onClick={() => {
+                // TODO Delete
+                console.log('DELETE');
+              }}
+            >
+              Usuń
+            </LinkButton>
+          </>
+        )
       }
     >
-      <label htmlFor={`checkbox-${item.id}`}>
-        {item.name} - {item.quantity} {item.unit}
-      </label>
+      {!editMode && (
+        <label htmlFor={`checkbox-${item.id}`}>
+          {item.name} - {item.quantity} {item.unit}
+        </label>
+      )}
+
+      {editMode && (
+        <>
+          {item.name}
+          <div className="flex items-center text-sm mt-2 mr-3">
+            <Stepper
+              min={1}
+              value={item.quantity}
+              className="mr-2"
+              onChange={(value) => {
+                // TODO change quantity
+                console.log(value);
+              }}
+            />
+
+            <PickerBasedSelect
+              value={item.unit}
+              options={unitOptions}
+              onChange={(value) => {
+                // TODO change unit
+                console.log(value);
+              }}
+            />
+          </div>
+        </>
+      )}
     </List.Item>
   );
 }
