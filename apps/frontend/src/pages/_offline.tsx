@@ -1,16 +1,13 @@
 import Head from 'next/head';
 import { headTitle } from '@fe/utils';
-import { GetServerSideProps } from 'next';
-import { SignedInGuard } from '../server/server-guards';
-import { HydrateReactQueryState } from '../server/server-react-query';
 import React from 'react';
 import { ErrorBlock } from 'antd-mobile';
+import { PublicPage } from '../server/server-public-page';
+import { GetStaticProps } from 'next/types';
 
-export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
-  SignedInGuard()
-);
+export const getStaticProps: GetStaticProps = PublicPage();
 
-export default function HomePage() {
+export default function OfflinePage() {
   return (
     <>
       <Head>
