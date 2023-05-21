@@ -1,4 +1,9 @@
-import { IBulkAddToShoppingListDto, IShoppingListItemDto } from '@lib/shared';
+import {
+  IBulkAddToShoppingListDto,
+  IShoppingListItemDto,
+  IUpdateShoppingListItemDto,
+  ShoppingListItemId,
+} from '@lib/shared';
 import { HttpClient } from '@fe/utils';
 
 export interface IShoppingListApi {
@@ -6,6 +11,11 @@ export interface IShoppingListApi {
 
   bulkAddToShoppingList(
     dto: IBulkAddToShoppingListDto
+  ): Promise<IShoppingListItemDto[]>;
+
+  updateShoppingListItem(
+    shoppingListItem: ShoppingListItemId,
+    dto: IUpdateShoppingListItemDto
   ): Promise<IShoppingListItemDto[]>;
 }
 
@@ -25,5 +35,15 @@ export class ShoppingListApi implements IShoppingListApi {
       IBulkAddToShoppingListDto,
       IShoppingListItemDto[]
     >(`${this.baseUrl}/bulk`, dto);
+  }
+
+  updateShoppingListItem(
+    shoppingListItem: ShoppingListItemId,
+    dto: IUpdateShoppingListItemDto
+  ): Promise<IShoppingListItemDto[]> {
+    return this.httpClient.put<
+      IUpdateShoppingListItemDto,
+      IShoppingListItemDto[]
+    >(`${this.baseUrl}/${shoppingListItem}`, dto);
   }
 }
