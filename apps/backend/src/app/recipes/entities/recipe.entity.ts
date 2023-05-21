@@ -20,6 +20,9 @@ import { RecipeCategory } from './recipe-category.entity';
 import { User } from '../../iam/entities';
 import { Review } from '../../reviews/entities';
 
+import { AfterInsert, AfterUpdate, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+
 @Entity('recipes')
 export class Recipe {
   @PrimaryGeneratedColumn('uuid')
@@ -86,4 +89,35 @@ export class Recipe {
 
   @Column({ nullable: true })
   review: number | null;
+
+  constructor(
+    @InjectRepository(Review)
+    private readonly reviewRepository: Repository<Review>,
+    @InjectRepository(Recipe)
+    private readonly recipeRepository: Repository<Recipe>,
+  ) {}
+
+  @AfterInsert()
+  @AfterUpdate()
+  async updateAverageRating(): Promise<void> {
+    const reviewQuery = this.reviewRepository
+      .createQueryBuilder('review')
+      .where('review.recipe = :recipe', { recipe: this });
+
+    const reviews = await reviewQuery.getMany();
+    const totalReviews = reviews.length;
+
+    if (totalReviews === 0) {
+      this.review = null;
+    } else {
+      const totalRating = reviews.reduce(
+        (sum, review) => sum + review.value,
+        0,
+      );
+      const averageRating = totalRating / totalReviews;
+      this.review = averageRating;
+    }
+
+    await this.recipeRepository.save(this);
+  }
 }
