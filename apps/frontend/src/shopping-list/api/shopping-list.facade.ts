@@ -1,14 +1,14 @@
 import { useShoppingListApi } from './ShoppingListApi.context';
 import { useAdaptedQuery } from '@fe/utils';
 
-export const ListAllRecipesCategoriesQueryKey = [
-  'recipesCategoriesApi.listCategories',
+export const GetShoppingListQueryKey = [
+  'shoppingListApi.listShoppingListItems',
 ];
 
 export const useGetShoppingList = () => {
   const { shoppingListApi } = useShoppingListApi();
 
-  return useAdaptedQuery(ListAllRecipesCategoriesQueryKey, () =>
+  return useAdaptedQuery(GetShoppingListQueryKey, () =>
     shoppingListApi.listShoppingListItems()
   );
 };

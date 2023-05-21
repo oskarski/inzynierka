@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { headTitle } from '@fe/utils';
+import { env, headTitle, HttpClient } from '@fe/utils';
 import { GetServerSideProps } from 'next';
 import { SignedInGuard } from '../../server/server-guards';
 import { HydrateReactQueryState } from '../../server/server-react-query';
@@ -8,11 +8,29 @@ import { ApiErrorMessage } from '@fe/errors';
 import React from 'react';
 import { Button, Checkbox, List } from 'antd-mobile';
 import { FrownOutlined } from '@ant-design/icons';
-import { useGetShoppingList } from '@fe/shopping-list';
+import {
+  GetShoppingListQueryKey,
+  ShoppingListApi,
+  useGetShoppingList,
+} from '@fe/shopping-list';
 import { IShoppingListItemDto } from '@lib/shared';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
-  SignedInGuard()
+  SignedInGuard(async ({}, queryClient, user) => {
+    const httpClient = HttpClient.privateHttpClient(env().apiUrl, {
+      accessToken: user.accessToken,
+    });
+
+    const shoppingListApi = new ShoppingListApi(httpClient);
+
+    await queryClient.prefetchQuery(GetShoppingListQueryKey, () =>
+      shoppingListApi.listShoppingListItems()
+    );
+
+    return {
+      props: {},
+    };
+  })
 );
 
 export default function ShoppingListPage() {
