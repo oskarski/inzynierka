@@ -25,3 +25,7 @@ export interface IUpdateShoppingListItemDto {
   readonly unit: string;
   readonly completed: boolean;
 }
+
+export interface IBulkDeleteShoppingListItemsDto {
+  readonly itemIds: ShoppingListItemId[];
+}

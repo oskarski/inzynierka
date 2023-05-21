@@ -1,7 +1,19 @@
-import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { CurrentUser, PrivateApiGuard } from '../auth';
 import { IShoppingListItemDto } from '@lib/shared';
-import { BulkAddToShoppingListDto, UpdateShoppingListItemDto } from './dtos';
+import {
+  BulkAddToShoppingListDto,
+  BulkDeleteShoppingListItemsDto,
+  UpdateShoppingListItemDto,
+} from './dtos';
 import { User } from '../iam/entities';
 
 @Controller('shopping-list')
@@ -53,6 +65,16 @@ export class ShoppingListController {
     @CurrentUser() currentUser: User,
   ): Promise<IShoppingListItemDto[]> {
     // TODO Update shopping list item logic
+
+    return this.listShoppingListItems();
+  }
+
+  @Delete('/bulk')
+  deleteShoppingListItems(
+    @Body() dto: BulkDeleteShoppingListItemsDto,
+    @CurrentUser() currentUser: User,
+  ): Promise<IShoppingListItemDto[]> {
+    // TODO Delete shopping list items logic
 
     return this.listShoppingListItems();
   }
