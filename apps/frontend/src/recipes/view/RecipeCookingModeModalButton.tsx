@@ -89,8 +89,6 @@ function RecipeCookingModeModalContent({
 
   return (
     <div className="flex flex-col justify-between h-screen px-4 py-6">
-      <SafeArea position="top" />
-
       <button onClick={onClose} className="absolute right-4 top-6 text-2xl">
         <CloseOutlined />
       </button>
