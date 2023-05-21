@@ -2,6 +2,7 @@ import { useShoppingListApi } from './ShoppingListApi.context';
 import { useAdaptedMutation, useAdaptedQuery } from '@fe/utils';
 import {
   IBulkAddToShoppingListDto,
+  IBulkDeleteShoppingListItemsDto,
   IShoppingListItemDto,
   IUpdateShoppingListItemDto,
   ShoppingListItemId,
@@ -46,4 +47,17 @@ export const useUpdateShoppingListItem = (
     (dto) => shoppingListApi.updateShoppingListItem(id, dto),
     { onSuccess }
   );
+};
+
+export const useBulkDeleteShoppingListItems = ({
+  onSuccess,
+}: {
+  onSuccess?: () => void;
+}) => {
+  const { shoppingListApi } = useShoppingListApi();
+
+  return useAdaptedMutation<
+    IShoppingListItemDto[],
+    IBulkDeleteShoppingListItemsDto
+  >((dto) => shoppingListApi.bulkDeleteShoppingListItems(dto), { onSuccess });
 };

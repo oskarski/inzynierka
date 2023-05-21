@@ -1,5 +1,6 @@
 import {
   IBulkAddToShoppingListDto,
+  IBulkDeleteShoppingListItemsDto,
   IShoppingListItemDto,
   IUpdateShoppingListItemDto,
   ShoppingListItemId,
@@ -16,6 +17,10 @@ export interface IShoppingListApi {
   updateShoppingListItem(
     shoppingListItem: ShoppingListItemId,
     dto: IUpdateShoppingListItemDto
+  ): Promise<IShoppingListItemDto[]>;
+
+  bulkDeleteShoppingListItems(
+    dto: IBulkDeleteShoppingListItemsDto
   ): Promise<IShoppingListItemDto[]>;
 }
 
@@ -45,5 +50,14 @@ export class ShoppingListApi implements IShoppingListApi {
       IUpdateShoppingListItemDto,
       IShoppingListItemDto[]
     >(`${this.baseUrl}/${shoppingListItem}`, dto);
+  }
+
+  bulkDeleteShoppingListItems(
+    dto: IBulkDeleteShoppingListItemsDto
+  ): Promise<IShoppingListItemDto[]> {
+    return this.httpClient.delete<
+      IBulkDeleteShoppingListItemsDto,
+      IShoppingListItemDto[]
+    >(`${this.baseUrl}/bulk`, dto);
   }
 }

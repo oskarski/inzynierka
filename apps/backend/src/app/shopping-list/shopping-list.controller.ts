@@ -70,7 +70,7 @@ export class ShoppingListController {
   }
 
   @Delete('/bulk')
-  deleteShoppingListItems(
+  bulkDeleteShoppingListItems(
     @Body() dto: BulkDeleteShoppingListItemsDto,
     @CurrentUser() currentUser: User,
   ): Promise<IShoppingListItemDto[]> {

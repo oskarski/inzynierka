@@ -13,4 +13,8 @@ export class ShoppingListTestApi implements IShoppingListApi {
   updateShoppingListItem = apiMethodMock<
     IShoppingListApi['updateShoppingListItem']
   >('IShoppingListApi.updateShoppingListItem');
+
+  bulkDeleteShoppingListItems = apiMethodMock<
+    IShoppingListApi['bulkDeleteShoppingListItems']
+  >('IShoppingListApi.bulkDeleteShoppingListItems');
 }
