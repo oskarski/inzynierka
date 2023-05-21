@@ -17,7 +17,7 @@ interface TopBarProps {
 
 const TopBar = ({ className }: TopBarProps) => {
   return (
-    <div className={classNames('py-2', className)}>
+    <div className={classNames('py-2 ', className)}>
       <NavBar
         backArrow={false}
         back={null}

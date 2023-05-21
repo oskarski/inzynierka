@@ -239,10 +239,10 @@ export default function App({ Component, pageProps }: AppProps) {
 
         <div
           className={classNames('pb-16 flex flex-col justify-between', {
-            'md:pl-44': !pageProps.isPublicPage,
+            'pt-16 md:pl-44': !pageProps.isPublicPage,
           })}
         >
-          <TopBar className="grow-0 pt-4" />
+          <TopBar className="grow-0 pt-4 fixed left-0 right-0 top-0 z-10 bg-white" />
 
           <div className="grow overflow-auto p-4">
             <Component {...pageProps} />
