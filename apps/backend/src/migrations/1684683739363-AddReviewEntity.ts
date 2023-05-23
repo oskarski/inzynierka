@@ -10,7 +10,7 @@ export class AddReviewEntity1684683739363 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "recipes" ADD "review" integer`);
         await queryRunner.query(`ALTER TABLE "reviews" ADD CONSTRAINT "FK_c7700bc1937b08b564d84e2abea" FOREIGN KEY ("recipe_id") REFERENCES "recipes"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "reviews" ADD CONSTRAINT "FK_92e950a2513a79bb3fab273c92e" FOREIGN KEY ("reviewer_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE NO ACTION`);
-        await queryRunner.query(`CREATE VIEW "recipe_details_view_entity" AS SELECT "recipe"."id" id, "recipe"."name" name, "recipe"."description" description, "recipe"."portions" portions, "recipe"."instructions" instructions, "recipe"."state" state, "recipe"."difficulty" difficulty, "recipe"."preparation_time" AS "preparationTime", "recipe"."author_id" AS "authorId", array_remove(array_agg(DISTINCT "recipeCategories"."category_id"), NULL) AS "categoryIds", array_remove(
+        await queryRunner.query(`CREATE VIEW "recipe_details_view_entity" AS SELECT "recipe"."id" id, "recipe"."name" AS name, "recipe"."description" description, "recipe"."portions" portions, "recipe"."instructions" instructions, "recipe"."state" state, "recipe"."difficulty" difficulty, "recipe"."preparation_time" AS "preparationTime", "recipe"."author_id" AS "authorId", array_remove(array_agg(DISTINCT "recipeCategories"."category_id"), NULL) AS "categoryIds", array_remove(
                   array_agg(
                     DISTINCT
                     CASE
