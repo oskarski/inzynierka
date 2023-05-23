@@ -16,3 +16,19 @@ export const useListCategories = (queryDto: IListCategoriesQueryDto = {}) => {
     { select: FilterCategoriesSelector(queryDto) }
   );
 };
+
+export const ListPopularCategoriesQueryKey = [
+  'recipesCategoriesApi.listPopularCategories',
+];
+
+export const useListPopularCategories = (
+  queryDto: IListCategoriesQueryDto = {}
+) => {
+  const { recipesCategoriesApi } = useRecipesCategoriesApi();
+
+  return useAdaptedQuery(
+    ListPopularCategoriesQueryKey,
+    () => recipesCategoriesApi.listPopularCategories(),
+    { select: FilterCategoriesSelector(queryDto) }
+  );
+};

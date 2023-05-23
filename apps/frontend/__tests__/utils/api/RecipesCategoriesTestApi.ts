@@ -5,4 +5,8 @@ export class RecipesCategoriesTestApi implements IRecipesCategoriesApi {
   listCategories = apiMethodMock<IRecipesCategoriesApi['listCategories']>(
     'IRecipesCategoriesApi.listCategories'
   );
+
+  listPopularCategories = apiMethodMock<
+    IRecipesCategoriesApi['listPopularCategories']
+  >('IRecipesCategoriesApi.listPopularCategories');
 }

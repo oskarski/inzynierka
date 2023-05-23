@@ -8,6 +8,8 @@ export interface IRecipesCategoriesApi {
   listCategories(
     queryDto: IListCategoriesQueryDto
   ): Promise<IRecipeCategoryListItemDto[]>;
+
+  listPopularCategories(): Promise<IRecipeCategoryListItemDto[]>;
 }
 
 export class RecipesCategoriesApi implements IRecipesCategoriesApi {
@@ -21,6 +23,12 @@ export class RecipesCategoriesApi implements IRecipesCategoriesApi {
     return this.httpClient.get<IRecipeCategoryListItemDto[]>(
       this.baseUrl,
       queryDto
+    );
+  }
+
+  listPopularCategories(): Promise<IRecipeCategoryListItemDto[]> {
+    return this.httpClient.get<IRecipeCategoryListItemDto[]>(
+      `${this.baseUrl}/popular`
     );
   }
 }
