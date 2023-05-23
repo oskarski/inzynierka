@@ -19,6 +19,7 @@ import {
   ShoppingListApi,
   useBulkDeleteShoppingListItems,
   useGetShoppingList,
+  useUpdateShoppingListItem,
 } from '@fe/shopping-list';
 import { IShoppingListItemDto } from '@lib/shared';
 import { useUnitOptions } from '@fe/ingredients';
@@ -135,9 +136,12 @@ function ShoppingListItem({ item }: ShoppingListItemProps) {
   const [deleteShoppingListItems, deleteLoading, deleteError] =
     useBulkDeleteShoppingListItems();
 
+  const [updateShoppingListItem, updateLoading, updateError] =
+    useUpdateShoppingListItem(item.id, { onSuccess: () => {} });
+
   const [editMode, toggleEditMode] = useState(false);
 
-  const error = deleteError;
+  const error = deleteError || updateError;
 
   return (
     <List.Item
@@ -147,9 +151,10 @@ function ShoppingListItem({ item }: ShoppingListItemProps) {
             checked={item.completed}
             id={`checkbox-${item.id}`}
             value={item.id}
-            onChange={() => {
-              console.log('TOGGLE');
-            }}
+            disabled={updateLoading}
+            onChange={(value) =>
+              updateShoppingListItem({ ...item, completed: value })
+            }
           />
         )
       }
