@@ -16,6 +16,9 @@ import { RecipesRepository } from './repositories';
 import { IamModule } from '../iam';
 import { FavouriteRecipesController } from './favourite-recipes.controller';
 import { MyRecipesController } from './my-recipes.controller';
+import { Review } from '../reviews/entities';
+import { ReviewsService } from '../reviews/services';
+import { ReviewRepository } from '../reviews/repositories';
 
 @Module({
   imports: [
@@ -24,6 +27,7 @@ import { MyRecipesController } from './my-recipes.controller';
       RecipeIngredient,
       RecipeCategory,
       RecipeDetailsViewEntity,
+      Review,
     ]),
     IamModule,
   ],
@@ -37,6 +41,8 @@ import { MyRecipesController } from './my-recipes.controller';
     FavouriteRecipesService,
     MyRecipesService,
     RecipesRepository,
+    ReviewsService,
+    ReviewRepository,
   ],
 })
 export class RecipesModule {}

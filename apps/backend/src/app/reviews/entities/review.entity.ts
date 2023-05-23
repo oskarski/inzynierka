@@ -14,10 +14,9 @@ import { User } from '../../iam/entities';
 @Entity({ name: 'reviews' })
 export class Review {
   @PrimaryGeneratedColumn('uuid')
-  @RelationId((review: Review) => review.recipe)
   recipe_id: RecipeId;
 
-  @ManyToOne(() => Recipe, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Recipe, (recipe) => recipe.reviews, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'recipe_id' })
   recipe: Recipe;
 

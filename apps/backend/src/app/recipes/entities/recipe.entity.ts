@@ -19,7 +19,6 @@ import { RecipeIngredient } from './recipe-ingredient.entity';
 import { RecipeCategory } from './recipe-category.entity';
 import { User } from '../../iam/entities';
 import { Review } from '../../reviews/entities';
-
 import { AfterInsert, AfterUpdate, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -86,6 +85,14 @@ export class Recipe {
     cascade: true,
   })
   reviews: Review[];
+
+  // @OneToMany(() => RecipeCategory, (recipeCategory) => recipeCategory.recipe, {
+  //   cascade: true,
+  // })
+  // categories: RecipeCategory[];
+  //
+  // @RelationId((recipe: Recipe) => recipe.categories)
+  // categoryIds: RecipeCategoryId[];
 
   @Column({ nullable: true })
   review: number | null;
