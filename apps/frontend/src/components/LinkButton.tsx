@@ -1,13 +1,17 @@
 import { HTMLAttributes } from 'react';
 import classNames from 'classnames';
+import { Loader } from '@fe/components/Loader';
 
 interface LinkButtonProps extends HTMLAttributes<HTMLButtonElement> {
   variant?: 'default' | 'primary';
+  loading?: boolean;
 }
 
 export const LinkButton = ({
   className,
   variant = 'default',
+  loading,
+  children,
   ...props
 }: LinkButtonProps) => {
   return (
@@ -22,6 +26,10 @@ export const LinkButton = ({
         className
       )}
       {...props}
-    />
+      disabled={loading}
+    >
+      {loading && <Loader size="sm" className="mr-1" />}
+      {children}
+    </button>
   );
 };

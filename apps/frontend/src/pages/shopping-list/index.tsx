@@ -17,6 +17,7 @@ import { FrownOutlined } from '@ant-design/icons';
 import {
   GetShoppingListQueryKey,
   ShoppingListApi,
+  useBulkDeleteShoppingListItems,
   useGetShoppingList,
 } from '@fe/shopping-list';
 import { IShoppingListItemDto } from '@lib/shared';
@@ -41,7 +42,12 @@ export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
 );
 
 export default function ShoppingListPage() {
-  const [shoppingList, loading, error] = useGetShoppingList();
+  const [shoppingList, loading, listingError] = useGetShoppingList();
+
+  const [deleteShoppingListItems, deleteLoading, deleteError] =
+    useBulkDeleteShoppingListItems();
+
+  const error = listingError || deleteError;
 
   return (
     <>
@@ -53,14 +59,18 @@ export default function ShoppingListPage() {
         <div className="flex justify-between items-center mb-6">
           <SectionTitle>Lista zakupów</SectionTitle>
 
-          <LinkButton
-            onClick={() => {
-              // TODO Clear
-              console.log('CLEAR');
-            }}
-          >
-            Wyczyść listę
-          </LinkButton>
+          {shoppingList && shoppingList.length > 0 && (
+            <LinkButton
+              loading={deleteLoading}
+              onClick={() =>
+                deleteShoppingListItems({
+                  itemIds: shoppingList.map((item) => item.id),
+                })
+              }
+            >
+              Wyczyść listę
+            </LinkButton>
+          )}
         </div>
 
         {loading && <Loader />}
@@ -122,7 +132,12 @@ interface ShoppingListItemProps {
 function ShoppingListItem({ item }: ShoppingListItemProps) {
   const unitOptions = useUnitOptions();
 
+  const [deleteShoppingListItems, deleteLoading, deleteError] =
+    useBulkDeleteShoppingListItems();
+
   const [editMode, toggleEditMode] = useState(false);
+
+  const error = deleteError;
 
   return (
     <List.Item
@@ -161,12 +176,10 @@ function ShoppingListItem({ item }: ShoppingListItemProps) {
             <LinkButton onClick={() => toggleEditMode(true)}>Edytuj</LinkButton>
 
             <LinkButton
+              loading={deleteLoading}
               variant="primary"
               className="ml-2"
-              onClick={() => {
-                // TODO Delete
-                console.log('DELETE');
-              }}
+              onClick={() => deleteShoppingListItems({ itemIds: [item.id] })}
             >
               Usuń
             </LinkButton>
@@ -205,6 +218,8 @@ function ShoppingListItem({ item }: ShoppingListItemProps) {
           </div>
         </>
       )}
+
+      {error && <ApiErrorMessage error={error} />}
     </List.Item>
   );
 }

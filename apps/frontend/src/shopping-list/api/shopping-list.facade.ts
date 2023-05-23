@@ -53,7 +53,7 @@ export const useBulkDeleteShoppingListItems = ({
   onSuccess,
 }: {
   onSuccess?: () => void;
-}) => {
+} = {}) => {
   const { shoppingListApi } = useShoppingListApi();
 
   return useAdaptedMutation<
