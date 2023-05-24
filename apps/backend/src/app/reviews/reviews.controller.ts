@@ -9,7 +9,7 @@ import {
 import { ReviewsService } from './services';
 import { CurrentUser, PrivateApiGuard } from '../auth';
 import { User } from '../iam/entities';
-import { IReviewListItemDto } from '@lib/shared';
+import { IAddReviewDto } from '@lib/shared';
 import { Review } from './entities';
 
 @Controller('reviews')
@@ -24,7 +24,7 @@ export class ReviewsController {
 
   @Post()
   async addOrUpdateReview(
-    @Body() reviewDto: IReviewListItemDto,
+    @Body() reviewDto: IAddReviewDto,
     @CurrentUser() currentUser: User,
   ): Promise<void> {
     if (currentUser) {

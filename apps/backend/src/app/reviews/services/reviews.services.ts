@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ReviewRepository } from '../repositories';
 import { Review } from '../entities';
-import { IReviewListItemDto } from '@lib/shared';
+import { IAddReviewDto } from '@lib/shared';
 
 @Injectable()
 export class ReviewsService {
@@ -22,7 +22,7 @@ export class ReviewsService {
   async modifyReview(
     userId: string,
     recipeId: string,
-    reviewDto: IReviewListItemDto,
+    reviewDto: IAddReviewDto,
   ): Promise<void> {
     const existingReview = await this.reviewRepository.findByUserAndRecipe(
       userId,
@@ -41,7 +41,7 @@ export class ReviewsService {
   async addReview(
     userId: string,
     recipeId: string,
-    reviewDto: IReviewListItemDto,
+    reviewDto: IAddReviewDto,
   ): Promise<void> {
     const newReview = this.reviewRepository.create({
       recipe_id: recipeId,

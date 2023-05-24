@@ -1,6 +1,7 @@
-export type ReviewId = string & { readonly __type: unique symbol };
 import { RecipeId } from './recipes';
 import { UserId } from './iam';
+
+export type ReviewId = string & { readonly __type: unique symbol };
 
 export interface IReviewDto {
   readonly user_id: UserId;
@@ -9,8 +10,7 @@ export interface IReviewDto {
   readonly review_value: number;
 }
 
-export interface IReviewListItemDto {
-  readonly id: ReviewId;
+export interface IAddReviewDto {
   readonly recipe_id: RecipeId;
   readonly review_value: number;
 }
