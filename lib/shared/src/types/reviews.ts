@@ -14,3 +14,7 @@ export interface IAddReviewDto {
   readonly recipe_id: RecipeId;
   readonly review_value: number;
 }
+
+export interface IUserRecipeReviewDto {
+  readonly value?: number;
+}

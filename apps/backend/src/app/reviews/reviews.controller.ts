@@ -3,13 +3,14 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   UseGuards,
 } from '@nestjs/common';
 import { ReviewsService } from './services';
 import { CurrentUser, PrivateApiGuard } from '../auth';
 import { User } from '../iam/entities';
-import { IAddReviewDto } from '@lib/shared';
+import { IAddReviewDto, IUserRecipeReviewDto, RecipeId } from '@lib/shared';
 import { Review } from './entities';
 
 @Controller('reviews')
@@ -50,5 +51,15 @@ export class ReviewsController {
     } else {
       throw new BadRequestException('User not found');
     }
+  }
+
+  @Get('/:recipeId')
+  async getUserReviewForRecipe(
+    @Param('recipeId') recipeId: RecipeId,
+    @CurrentUser() currentUser: User,
+  ): Promise<IUserRecipeReviewDto> {
+    // TODO Add implementation
+
+    return {};
   }
 }
