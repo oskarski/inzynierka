@@ -60,6 +60,7 @@ export class ReviewsController {
   ): Promise<IUserRecipeReviewDto> {
     // TODO Add implementation
 
-    return {};
+    // value: undefined <- when user hasn't added the review
+    return { value: 4 };
   }
 }
