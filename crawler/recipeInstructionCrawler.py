@@ -3,6 +3,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import psycopg2
 import json
+import re
 
 # Connect to the PostgreSQL database
 conn = psycopg2.connect(
@@ -18,11 +19,11 @@ cursor = conn.cursor()
 
 # Create the recipedescription table if it does not exist
 
-cursor.execute("DROP TABLE IF EXISTS crawler_recipeInstruction")
+# cursor.execute("DROP TABLE IF EXISTS crawler_recipeInstruction")
 cursor.execute("CREATE TABLE IF NOT EXISTS crawler_recipeInstruction (id SERIAL PRIMARY KEY, link VARCHAR(255), jsonDescription jsonb)")
 
 # Select all recipe links from the recipes table
-cursor.execute("SELECT link FROM crawler_recipes")
+cursor.execute("SELECT link FROM crawler_recipeinstruction where link = '/biala-kielbasa-z-suszonymi-pomidorami'")
 links = cursor.fetchall()
 
 # Loop over each recipe link and scrape data
@@ -44,12 +45,15 @@ for link in links:
         for tag in description_div.children:
             if tag.name == 'h2' and tag.text == 'Sposób przygotowania:':
                 result['Sposób przygotowania'] = tag.text
-            elif tag.name == 'h2' and 'KROK' in tag.text:
-
-                step_desc = tag.find_next_sibling('p').text
-                steps.append({'step': step_desc})
-
-                step_num+=1
+            elif tag.name == 'h2' and ('KROK' in tag.text or 'Krok' in tag.text):
+                try:
+                    step_desc = tag.find_next_sibling('p').text
+                    # Remove any <a> tags within the <p> tag
+                    step_desc = re.sub(r'<a[^>]*>(.*?)</a>', r'\1', step_desc)
+                    steps.append({'step': step_desc})
+                    step_num += 1
+                except AttributeError:
+                    continue
 
         result.update({'Kroki': steps})
 
@@ -60,6 +64,8 @@ for link in links:
 
         # Commit the changes to the database
         conn.commit()
+
+
 
 # Close the cursor and database connection
 cursor.close()
