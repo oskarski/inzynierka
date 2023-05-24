@@ -1,8 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-
 import { ReviewRepository } from '../repositories';
 import { Review } from '../entities';
-import { IReviewListItemDto } from '@lib/shared/dist/types/reviews';
+import { IReviewListItemDto } from '@lib/shared';
 
 @Injectable()
 export class ReviewsService {
@@ -48,7 +47,7 @@ export class ReviewsService {
       recipe_id: recipeId,
       reviewerId: userId,
       value: reviewDto.review_value,
-      created_at: reviewDto.created_at,
+      created_at: new Date(),
     });
 
     await this.reviewRepository.save(newReview);

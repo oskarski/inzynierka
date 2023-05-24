@@ -11,8 +11,6 @@ export interface IReviewDto {
 
 export interface IReviewListItemDto {
   readonly id: ReviewId;
-  readonly user_id: UserId;
   readonly recipe_id: RecipeId;
-  readonly created_at: Date;
   readonly review_value: number;
 }
