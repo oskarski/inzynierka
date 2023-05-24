@@ -23,29 +23,28 @@ export class ReviewsController {
     return this.reviewsService.listReviews();
   }
 
-  @Post(':recipeId')
+  @Post()
   async addOrUpdateReview(
-    @Param('recipeId') recipeId: string,
     @Body() reviewDto: IReviewListItemDto,
     @CurrentUser() currentUser: User,
   ): Promise<void> {
     if (currentUser) {
       const hasReviewed = await this.reviewsService.hasReviewedRecipe(
         currentUser.id,
-        recipeId,
+        reviewDto.recipe_id,
       );
 
       if (hasReviewed) {
         await this.reviewsService.modifyReview(
           currentUser.id,
-          recipeId,
+          reviewDto.recipe_id,
           reviewDto,
         );
       } else {
         // Add a new review
         await this.reviewsService.addReview(
           currentUser.id,
-          recipeId,
+          reviewDto.recipe_id,
           reviewDto,
         );
       }
