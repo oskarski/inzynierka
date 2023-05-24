@@ -13,7 +13,9 @@ recipes_url = f"{base_url}/przepisy/"
 recipes = []
 
 n = 1
-while n<=10:  # for first 10 pages -
+
+
+while n<=284:  # for first 10 pages -
     try:
         response = requests.get(f"{recipes_url}{n}#lista", headers=headers)
         soup = BeautifulSoup(response.content, "html.parser")
@@ -99,6 +101,7 @@ if recipes:
             query = "INSERT INTO crawler_recipes (title, description, link, image, difficulty, time, size, wege) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
             values = (recipe['title'], recipe['description'], recipe['link'], recipe['image'], recipe['difficulty'], recipe['time'], recipe['size'], recipe['wege'])
             cursor.execute(query, values)
+
 
 # Commit the changes to the database
 db.commit()
