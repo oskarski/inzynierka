@@ -6,6 +6,7 @@ import { Button, List, SafeArea, Stepper } from 'antd-mobile';
 import { useUnitOptions } from '@fe/ingredients';
 import { useBulkAddToShoppingList } from '@fe/shopping-list';
 import { ApiErrorMessage } from '@fe/errors';
+import { routes, useRouting } from '@fe/utils';
 
 interface AddRecipeIngredientsToShoppingListButtonProps {
   ingredients: IRecipeIngredientDto[];
@@ -87,6 +88,8 @@ const AddRecipeIngredientsToShoppingListPopupContent =
     ({ ingredients }: AddRecipeIngredientsToShoppingListPopupContentProps) => {
       const closePopup = AppPopup.useClosePopup();
 
+      const { redirectTo } = useRouting();
+
       const {
         selectedIngredients,
         resetSelection,
@@ -101,6 +104,7 @@ const AddRecipeIngredientsToShoppingListPopupContent =
         onSuccess: () => {
           resetSelection();
           closePopup();
+          redirectTo(routes.shoppingList());
         },
       });
 
