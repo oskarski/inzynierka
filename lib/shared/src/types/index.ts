@@ -4,3 +4,4 @@ export * from './ingredients';
 export * from './recipes';
 export * from './shopping-list';
 export * from './pagination';
+export * from './reviews';

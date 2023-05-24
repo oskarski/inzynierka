@@ -10,7 +10,7 @@ import {
 import { ReviewsService } from './services';
 import { CurrentUser, PrivateApiGuard } from '../auth';
 import { User } from '../iam/entities';
-import { IReviewListItemDto } from '@lib/shared/dist/types/reviews';
+import { IReviewListItemDto } from '@lib/shared';
 import { Review } from './entities';
 
 @Controller('reviews')
