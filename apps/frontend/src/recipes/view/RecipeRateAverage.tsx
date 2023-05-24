@@ -1,11 +1,11 @@
 import { StarFilled } from '@ant-design/icons';
 import React from 'react';
 
-interface RecipeRateProps {
+interface RecipeRateAverageProps {
   rate?: number;
 }
 
-export const RecipeRate = ({ rate }: RecipeRateProps) => {
+export const RecipeRateAverage = ({ rate }: RecipeRateAverageProps) => {
   if (rate === undefined) return null;
 
   return (
