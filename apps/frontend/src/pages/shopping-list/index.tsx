@@ -131,8 +131,6 @@ interface ShoppingListItemProps {
 }
 
 function ShoppingListItem({ item }: ShoppingListItemProps) {
-  const unitOptions = useUnitOptions();
-
   const [deleteShoppingListItems, deleteLoading, deleteError] =
     useBulkDeleteShoppingListItems();
 
@@ -143,86 +141,110 @@ function ShoppingListItem({ item }: ShoppingListItemProps) {
 
   const error = deleteError || updateError;
 
+  if (editMode)
+    return (
+      <EditShoppingListItem
+        item={item}
+        leaveEditMode={() => toggleEditMode(false)}
+      />
+    );
+
   return (
     <List.Item
       prefix={
-        !editMode && (
-          <Checkbox
-            checked={item.completed}
-            id={`checkbox-${item.id}`}
-            value={item.id}
-            disabled={updateLoading}
-            onChange={(value) =>
-              updateShoppingListItem({ ...item, completed: value })
-            }
-          />
-        )
+        <Checkbox
+          checked={item.completed}
+          id={`checkbox-${item.id}`}
+          value={item.id}
+          disabled={updateLoading}
+          onChange={(value) =>
+            updateShoppingListItem({ ...item, completed: value })
+          }
+        />
       }
       arrow={
-        editMode ? (
-          <>
-            <LinkButton
-              variant="primary"
-              className="mr-2"
-              onClick={() => {
-                // TODO Edit
-                console.log('Edit');
-              }}
-            >
-              Zapisz
-            </LinkButton>
+        <>
+          <LinkButton onClick={() => toggleEditMode(true)}>Edytuj</LinkButton>
 
-            <LinkButton onClick={() => toggleEditMode(false)}>
-              Anuluj
-            </LinkButton>
-          </>
-        ) : (
-          <>
-            <LinkButton onClick={() => toggleEditMode(true)}>Edytuj</LinkButton>
-
-            <LinkButton
-              loading={deleteLoading}
-              variant="primary"
-              className="ml-2"
-              onClick={() => deleteShoppingListItems({ itemIds: [item.id] })}
-            >
-              Usuń
-            </LinkButton>
-          </>
-        )
+          <LinkButton
+            loading={deleteLoading}
+            variant="primary"
+            className="ml-2"
+            onClick={() => deleteShoppingListItems({ itemIds: [item.id] })}
+          >
+            Usuń
+          </LinkButton>
+        </>
       }
     >
-      {!editMode && (
-        <label htmlFor={`checkbox-${item.id}`}>
-          {item.name} - {item.quantity} {item.unit}
-        </label>
-      )}
+      <label htmlFor={`checkbox-${item.id}`}>
+        {item.name} - {item.quantity} {item.unit}
+      </label>
 
-      {editMode && (
+      {error && <ApiErrorMessage error={error} />}
+    </List.Item>
+  );
+}
+
+interface EditShoppingListItemProps {
+  item: IShoppingListItemDto;
+  leaveEditMode: () => void;
+}
+
+function EditShoppingListItem({
+  item,
+  leaveEditMode,
+}: EditShoppingListItemProps) {
+  const unitOptions = useUnitOptions();
+
+  const [values, setValues] = useState(item);
+
+  const [updateShoppingListItem, updateLoading, error] =
+    useUpdateShoppingListItem(item.id, { onSuccess: leaveEditMode });
+
+  return (
+    <List.Item
+      arrow={
         <>
-          {item.name}
-          <div className="flex items-center text-sm mt-2 mr-3">
-            <Stepper
-              min={1}
-              value={item.quantity}
-              className="mr-2"
-              onChange={(value) => {
-                // TODO change quantity
-                console.log(value);
-              }}
-            />
+          <LinkButton
+            variant="primary"
+            className="mr-2"
+            onClick={() =>
+              updateShoppingListItem({
+                quantity: values.quantity,
+                unit: values.unit,
+                completed: item.completed,
+              })
+            }
+          >
+            Zapisz
+          </LinkButton>
 
-            <PickerBasedSelect
-              value={item.unit}
-              options={unitOptions}
-              onChange={(value) => {
-                // TODO change unit
-                console.log(value);
-              }}
-            />
-          </div>
+          <LinkButton onClick={leaveEditMode}>Anuluj</LinkButton>
         </>
-      )}
+      }
+    >
+      <>
+        {item.name}
+        <div className="flex items-center text-sm mt-2 mr-3">
+          <Stepper
+            min={1}
+            value={values.quantity}
+            className="mr-2"
+            onChange={(value) =>
+              setValues((prev) => ({ ...prev, quantity: value }))
+            }
+          />
+
+          <PickerBasedSelect
+            value={values.unit}
+            options={unitOptions}
+            onChange={(value) =>
+              setValues((prev) => ({ ...prev, unit: value }))
+            }
+          />
+        </div>
+      </>
 
       {error && <ApiErrorMessage error={error} />}
     </List.Item>
