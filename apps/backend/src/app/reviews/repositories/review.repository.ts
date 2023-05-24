@@ -25,8 +25,8 @@ export class ReviewRepository {
   ): Promise<Review | undefined> {
     const review = await this.repository
       .createQueryBuilder('review')
-      .where('review.userId = :userId', { userId })
-      .andWhere('review.recipeId = :recipeId', { recipeId })
+      .where('review.reviewer_id = :userId', { userId })
+      .andWhere('review.recipe_id = :recipeId', { recipeId })
       .getOne();
 
     return review;
