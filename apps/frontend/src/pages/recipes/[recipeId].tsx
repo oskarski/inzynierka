@@ -147,8 +147,8 @@ export default function RecipeDetailsPage({
 
               <div className="flex items-center justify-between mb-7">
                 <div className="flex items-center text-sm text-secondary space-x-6">
-                  {/* TODO Add recipe rate */}
-                  {/*<RecipeRate rate={dummyRecipe.rate} />*/}
+                  {/* TODO Add recipe rate average */}
+                  <RecipeRate rate={undefined} />
 
                   <RecipePreparationTime
                     preparationTimeLabel={recipe.formattedPreparationTime}
