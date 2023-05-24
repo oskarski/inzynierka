@@ -218,7 +218,7 @@ export default function RecipeDetailsPage({
                   Jak oceniasz ten przepis?
                 </SectionSubTitle>
 
-                <RecipeRate />
+                <RecipeRate recipeId={recipeId} />
               </div>
             </div>
 
