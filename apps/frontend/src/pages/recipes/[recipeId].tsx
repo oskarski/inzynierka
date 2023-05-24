@@ -26,6 +26,7 @@ import {
   FavouriteRecipesApi,
   ListFavouriteRecipesQueryKey,
   RecipeDeleteButton,
+  RecipeRate,
 } from '@fe/recipes';
 import { RecipeId } from '@lib/shared';
 import { ApiErrorMessage } from '@fe/errors';
@@ -210,6 +211,14 @@ export default function RecipeDetailsPage({
                     </React.Fragment>
                   ))}
                 </div>
+              </div>
+
+              <div className="mb-6">
+                <SectionSubTitle className="mb-2">
+                  Jak oceniasz ten przepis?
+                </SectionSubTitle>
+
+                <RecipeRate />
               </div>
             </div>
 
