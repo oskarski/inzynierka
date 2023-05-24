@@ -33,6 +33,7 @@ import { ApiErrorMessage } from '@fe/errors';
 import { useSignedInUser } from '@fe/iam';
 import Link from 'next/link';
 import { AddRecipeIngredientsToShoppingListButton } from '@fe/shopping-list';
+import { GetUserReviewForRecipeQueryKey, ReviewsApi } from '@fe/reviews';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard(async ({ params }, queryClient, user) => {
@@ -45,6 +46,7 @@ export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
     const recipesApi = new RecipesApi(httpClient);
     const recipesCategoriesApi = new RecipesCategoriesApi(httpClient);
     const favouriteRecipesApi = new FavouriteRecipesApi(httpClient);
+    const reviewsApi = new ReviewsApi(httpClient);
 
     await queryClient.prefetchQuery(GetRecipeDetailsQueryKey(recipeId), () =>
       recipesApi.getRecipeDetails(recipeId)
@@ -54,6 +56,10 @@ export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
     );
     await queryClient.prefetchQuery(ListFavouriteRecipesQueryKey, () =>
       favouriteRecipesApi.listFavouriteRecipes()
+    );
+    await queryClient.prefetchQuery(
+      GetUserReviewForRecipeQueryKey(recipeId),
+      () => reviewsApi.getUserReviewForRecipe(recipeId)
     );
 
     return {

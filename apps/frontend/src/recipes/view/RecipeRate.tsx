@@ -1,21 +1,24 @@
 import { Rate } from 'antd-mobile';
 import React from 'react';
-import { useAddReview } from '@fe/reviews';
+import { useAddReview, useGetUserReviewForRecipe } from '@fe/reviews';
 import { RecipeId } from '@lib/shared';
 import { ApiErrorMessage } from '@fe/errors';
+import { Loader } from '@fe/components';
 
 interface RecipeRateProps {
   recipeId: RecipeId;
-  rate?: number;
 }
 
-export const RecipeRate = ({ recipeId, rate }: RecipeRateProps) => {
+export const RecipeRate = ({ recipeId }: RecipeRateProps) => {
+  const [userReview, loadingUserReview] = useGetUserReviewForRecipe(recipeId);
   const [addReview, loading, error] = useAddReview(recipeId);
+
+  if (loadingUserReview) return <Loader />;
 
   return (
     <>
       <Rate
-        defaultValue={rate}
+        defaultValue={userReview?.value}
         onChange={(value) =>
           addReview({
             review_value: value,
