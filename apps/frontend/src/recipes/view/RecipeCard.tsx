@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { IRecipeListItem } from '../api';
 import { IRecipeCategoryListItemDto } from '@lib/shared';
 import { FavouriteRecipeButton } from './FavouriteRecipeButton';
-import { RecipeRateAverage } from './RecipeRateAverage';
+import { RecipeRateAverage } from '@fe/reviews';
 import { RecipePreparationTime } from './RecipePreparationTime';
 import { RecipeImage } from '@fe/recipes';
 import { routes } from '@fe/utils';

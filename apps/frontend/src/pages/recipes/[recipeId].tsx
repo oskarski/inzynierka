@@ -18,7 +18,6 @@ import {
   RecipeCookingModeModalButton,
   RecipeImage,
   RecipePreparationTime,
-  RecipeRateAverage,
   RecipesApi,
   useConnectedCategories,
   useRecipeDetails,
@@ -26,14 +25,18 @@ import {
   FavouriteRecipesApi,
   ListFavouriteRecipesQueryKey,
   RecipeDeleteButton,
-  RecipeRate,
 } from '@fe/recipes';
 import { RecipeId } from '@lib/shared';
 import { ApiErrorMessage } from '@fe/errors';
 import { useSignedInUser } from '@fe/iam';
 import Link from 'next/link';
 import { AddRecipeIngredientsToShoppingListButton } from '@fe/shopping-list';
-import { GetUserReviewForRecipeQueryKey, ReviewsApi } from '@fe/reviews';
+import {
+  GetUserReviewForRecipeQueryKey,
+  ReviewsApi,
+  RecipeRateAverage,
+  RecipeRate,
+} from '@fe/reviews';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard(async ({ params }, queryClient, user) => {
