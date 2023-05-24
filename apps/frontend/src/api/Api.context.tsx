@@ -20,6 +20,7 @@ import {
   RecipesApiProvider,
 } from '@fe/recipes';
 import { ShoppingListApi, ShoppingListApiProvider } from '@fe/shopping-list';
+import { ReviewsApi, ReviewsApiProvider } from '@fe/reviews';
 
 const publicHttpClient = HttpClient.publicHttpClient(env().apiUrl);
 
@@ -76,6 +77,7 @@ function PrivateApiProvider({
         api?.favouriteRecipesApi || new FavouriteRecipesApi(httpClient),
       myRecipesApi: api?.myRecipesApi || new MyRecipesApi(httpClient),
       shoppingListApi: api?.shoppingListApi || new ShoppingListApi(httpClient),
+      reviewsApi: api?.reviewsApi || new ReviewsApi(httpClient),
     };
   }, [api, signedInUser]);
 
@@ -94,7 +96,9 @@ function PrivateApiProvider({
           <ShoppingListApiProvider
             shoppingListApi={httpBasedApi.shoppingListApi}
           >
-            {children}
+            <ReviewsApiProvider reviewsApi={httpBasedApi.reviewsApi}>
+              {children}
+            </ReviewsApiProvider>
           </ShoppingListApiProvider>
         </RecipesApiProvider>
       </IngredientsApiProvider>
