@@ -26,6 +26,7 @@ import {
   RecipeId,
   RecipeState,
   UserId,
+  RecipeDifficulty,
 } from '@lib/shared';
 import { uniq } from 'lodash';
 
@@ -166,6 +167,8 @@ interface ListRecipesQueryResult {
   portions: number;
   categoryIds: RecipeCategoryId[];
   state: RecipeState;
+  authorId: UserId;
+  difficulty: RecipeDifficulty;
 }
 
 class ListRecipesQuery {
@@ -179,6 +182,7 @@ class ListRecipesQuery {
         'recipe.description AS description',
         'recipe.portions AS portions',
         'recipe.state AS state',
+        'recipe.difficulty AS difficulty',
       ])
       .addSelect('recipe.preparationTime', 'preparationTime')
       .addSelect('recipe.authorId', 'authorId')
@@ -464,6 +468,8 @@ export class RecipesRepository {
       .addSelect('recipes.portions', 'portions')
       .addSelect('recipes.preparation_time', 'preparationTime')
       .addSelect('recipes.state', 'state')
+      .addSelect('recipes.difficulty', 'difficulty')
+      .addSelect('recipes.author_id', 'authorId')
       .innerJoin(
         (subQuery) =>
           subQuery
