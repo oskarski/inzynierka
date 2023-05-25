@@ -175,17 +175,21 @@ AND COALESCE(cr.dish_type, cr.cuisine_type) IS NOT NULL;
 
 cur.execute('''
 INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity, unit)
-    SELECT DISTINCT r.id AS recipe_id, i.id AS ingredient_id,
-        CASE WHEN ci.amount ~ '^-?[0-9]+([,.][0-9]+)?$'
-            THEN REPLACE(ci.amount, ',', '.')::numeric
-            ELSE REPLACE(ci.amount, '-', '0')::numeric END AS quantity,
-       ci.unit AS unit
-    FROM crawler_ingredients ci
-    JOIN crawler_recipes cr ON ci.recipe_id = cr.id
-    JOIN recipes r ON cr.title = r.name
-    JOIN ingredients i ON ci.name = i.name
-    WHERE ci.amount <> ''
-    ON CONFLICT (recipe_id, ingredient_id) DO NOTHING;
+SELECT sub.recipe_id, sub.ingredient_id,
+       CASE
+           WHEN sub.quantity = '-' OR sub.quantity = '' THEN NULL
+           ELSE CAST(REPLACE(sub.quantity, ',', '.') AS numeric)
+       END,
+       sub.unit
+FROM (
+    SELECT recipes.id AS recipe_id, ingredients.id AS ingredient_id, crawler_ingredients.amount AS quantity, crawler_ingredients.unit AS unit
+    FROM crawler_recipes
+    JOIN crawler_ingredients ON crawler_recipes.link = crawler_ingredients.link
+    JOIN recipes ON crawler_recipes.title = recipes.name
+    JOIN ingredients ON crawler_ingredients.name = ingredients.name
+    WHERE crawler_ingredients.amount <> '' AND crawler_ingredients.amount <> '-' -- Exclude hyphens and empty strings
+) AS sub
+ON CONFLICT (recipe_id, ingredient_id) DO NOTHING;
 ''')
 
 # commit the changes to the database and close the cursor and connection
