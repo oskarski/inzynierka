@@ -16,11 +16,13 @@ interface TopBarProps {
 }
 
 const TopBar = ({ className }: TopBarProps) => {
+  const { back, currentRoute } = useRouting();
+
   return (
     <div className={classNames('py-2 ', className)}>
       <NavBar
-        backArrow={false}
-        back={null}
+        backArrow={currentRoute !== '/'}
+        onBack={back}
         left={
           <Link href={routes.home()} className="md:hidden">
             Cook Mate

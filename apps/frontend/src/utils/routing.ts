@@ -28,6 +28,7 @@ export const useRouting = () => {
     redirectTo,
     getQueryParam,
     currentRoute: router.route,
+    back: router.back,
   };
 };
 
