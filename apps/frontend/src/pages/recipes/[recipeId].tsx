@@ -133,16 +133,20 @@ export default function RecipeDetailsPage({
             <div className="pb-12 sm:pb-4">
               {((categories && categories.length > 0) ||
                 recipe.isAuthoredBy(currentUser?.id)) && (
-                <div className="flex items-center space-x-2 mb-3">
+                <div className="flex items-center flex-wrap -mx-1 px-1 mb-3">
                   {recipe.isAuthoredBy(currentUser?.id) && (
-                    <RecipeStateTag recipeState={recipe.state} />
+                    <div className="px-1">
+                      <RecipeStateTag recipeState={recipe.state} />
+                    </div>
                   )}
 
                   {categories &&
                     categories.map((category) => (
-                      <RecipeCategoryTag key={category.id}>
-                        {category.name}
-                      </RecipeCategoryTag>
+                      <div className="px-1">
+                        <RecipeCategoryTag key={category.id}>
+                          {category.name}
+                        </RecipeCategoryTag>
+                      </div>
                     ))}
                 </div>
               )}
@@ -157,8 +161,7 @@ export default function RecipeDetailsPage({
 
               <div className="flex items-center justify-between mb-7">
                 <div className="flex items-center text-sm text-secondary space-x-6">
-                  {/* TODO Add recipe rate average */}
-                  <RecipeRateAverage rate={undefined} />
+                  <RecipeRateAverage rate={recipe.review} />
 
                   <RecipePreparationTime
                     preparationTimeLabel={recipe.formattedPreparationTime}

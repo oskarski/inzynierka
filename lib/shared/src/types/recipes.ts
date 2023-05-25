@@ -108,6 +108,7 @@ export interface IRecipeDto {
   readonly state: RecipeState;
   readonly difficulty: RecipeDifficulty;
   readonly authorId: UserId | null;
+  readonly review: number | null;
 }
 
 export interface IAddRecipeToFavouritesDto {

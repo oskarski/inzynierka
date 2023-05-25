@@ -33,13 +33,14 @@ import { RecipeCategory } from './recipe-category.entity';
         'recipeCategories.recipe_id = recipe.id',
       )
       .select([
-        'recipe.id id',
-        'recipe.name name',
-        'recipe.description description',
-        'recipe.portions portions',
-        'recipe.instructions instructions',
-        'recipe.state state',
-        'recipe.difficulty difficulty',
+        'recipe.id AS id',
+        'recipe.name AS name',
+        'recipe.description AS description',
+        'recipe.portions AS portions',
+        'recipe.instructions AS instructions',
+        'recipe.state AS state',
+        'recipe.difficulty AS difficulty',
+        'recipe.review AS review',
       ])
       .addSelect('recipe.preparation_time', 'preparationTime')
       .addSelect('recipe.author_id', 'authorId')
@@ -100,7 +101,10 @@ export class RecipeDetailsViewEntity {
   difficulty: RecipeDifficulty;
 
   @ViewColumn()
-  authorId: UserId;
+  authorId: UserId | null;
+
+  @ViewColumn()
+  review: number | null;
 
   @ViewColumn()
   ingredients: Array<{
