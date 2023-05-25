@@ -6,6 +6,7 @@ import {
   RecipeIngredient,
   RecipeCategory,
   RecipeDetailsViewEntity,
+  RecipeListItemViewEntity,
 } from './entities';
 import {
   FavouriteRecipesService,
@@ -28,6 +29,7 @@ import { ReviewRepository } from '../reviews/repositories';
       RecipeCategory,
       RecipeDetailsViewEntity,
       Review,
+      RecipeListItemViewEntity,
     ]),
     IamModule,
   ],

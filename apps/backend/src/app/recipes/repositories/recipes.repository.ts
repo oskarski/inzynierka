@@ -4,7 +4,12 @@ import {
   Repository,
   SelectQueryBuilder,
 } from 'typeorm';
-import { Recipe, RecipeCategory, RecipeIngredient } from '../entities';
+import {
+  Recipe,
+  RecipeCategory,
+  RecipeIngredient,
+  RecipeListItemViewEntity,
+} from '../entities';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Pagination } from '../../utils';
@@ -164,27 +169,27 @@ interface ListRecipesQueryResult {
 }
 
 class ListRecipesQuery {
-  constructor(private readonly queryBuilder: SelectQueryBuilder<Recipe>) {
+  constructor(
+    private readonly queryBuilder: SelectQueryBuilder<RecipeListItemViewEntity>,
+  ) {
     this.queryBuilder
       .select([
-        'recipes.id AS id',
-        'recipes.name AS name',
-        'recipes.description AS description',
-        'recipes.portions AS portions',
-        'recipes.state AS state',
+        'recipe.id AS id',
+        'recipe.name AS name',
+        'recipe.description AS description',
+        'recipe.portions AS portions',
+        'recipe.state AS state',
       ])
-      .addSelect('recipes.preparation_time', 'preparationTime')
-      .addSelect('array_agg(category.category_id)', 'categoryIds')
-      .leftJoin('recipes.categories', 'category')
-      .groupBy('recipes.id')
-      .orderBy('recipes.id');
+      .addSelect('recipe.preparationTime', 'preparationTime')
+      .addSelect('recipe.authorId', 'authorId')
+      .addSelect('recipe.categoryIds', 'categoryIds');
   }
 
   favourite(userId: UserId): this {
     this.queryBuilder
-      .innerJoin('users_favourite_recipes', 'ufr', 'ufr.recipe_id = recipes.id')
+      .innerJoin('users_favourite_recipes', 'ufr', 'ufr.recipe_id = recipe.id')
       .where('ufr.user_id = :userId', { userId })
-      .andWhere('recipes.author_id IS NULL OR recipes.author_id = :userId', {
+      .andWhere('recipe.authorId IS NULL OR recipe.authorId = :userId', {
         userId,
       });
 
@@ -192,13 +197,13 @@ class ListRecipesQuery {
   }
 
   createdBy(userId: UserId): this {
-    this.queryBuilder.where('recipes.author_id = :userId', { userId });
+    this.queryBuilder.where('recipe.authorId = :userId', { userId });
 
     return this;
   }
 
   published(): this {
-    this.queryBuilder.where('recipes.state = :state', {
+    this.queryBuilder.where('state = :state', {
       state: RecipeState.published,
     });
 
@@ -210,13 +215,17 @@ class ListRecipesQuery {
   ): this {
     if (filters.maxPreparationTime)
       this.queryBuilder.andWhere(
-        'recipes.preparation_time <= :maxPreparationTime',
-        { maxPreparationTime: filters.maxPreparationTime },
+        'recipe.preparationTime <= :maxPreparationTime',
+        {
+          maxPreparationTime: filters.maxPreparationTime,
+        },
       );
     if (filters.minPreparationTime)
       this.queryBuilder.andWhere(
-        'recipes.preparation_time >= :minPreparationTime',
-        { minPreparationTime: filters.minPreparationTime },
+        'recipe.preparationTime >= :minPreparationTime',
+        {
+          minPreparationTime: filters.minPreparationTime,
+        },
       );
 
     return this;
@@ -225,7 +234,7 @@ class ListRecipesQuery {
   filterByDishType(filters: IListRecipesCategoryFiltersDto): this {
     if (filters.dishTypeCategoryIds)
       this.queryBuilder.andWhere(
-        'category.category_id IN (:...dishTypeCategoryIds)',
+        'recipe.categoryIds && ARRAY[:...dishTypeCategoryIds]::uuid[]',
         { dishTypeCategoryIds: filters.dishTypeCategoryIds },
       );
 
@@ -235,7 +244,7 @@ class ListRecipesQuery {
   filterByCuisineType(filters: IListRecipesCategoryFiltersDto): this {
     if (filters.cuisineTypeCategoryIds)
       this.queryBuilder.andWhere(
-        'category.category_id IN (:...cuisineTypeCategoryIds)',
+        'recipe.categoryIds && ARRAY[:...cuisineTypeCategoryIds]::uuid[]',
         { cuisineTypeCategoryIds: filters.cuisineTypeCategoryIds },
       );
 
@@ -245,7 +254,7 @@ class ListRecipesQuery {
   filterByDietType(filters: IListRecipesCategoryFiltersDto): this {
     if (filters.dietTypeCategoryIds)
       this.queryBuilder.andWhere(
-        'category.category_id IN (:...dietTypeCategoryIds)',
+        'recipe.categoryIds && ARRAY[:...dietTypeCategoryIds]::uuid[]',
         { dietTypeCategoryIds: filters.dietTypeCategoryIds },
       );
 
@@ -255,7 +264,7 @@ class ListRecipesQuery {
   filterByOtherCategories(filters: IListRecipesCategoryFiltersDto): this {
     if (filters.otherCategoryIds)
       this.queryBuilder.andWhere(
-        'category.category_id IN (:...otherCategoryIds)',
+        'recipe.categoryIds && ARRAY[:...otherCategoryIds]::uuid[]',
         { otherCategoryIds: filters.otherCategoryIds },
       );
 
@@ -264,7 +273,7 @@ class ListRecipesQuery {
 
   filterByDifficulty(filters: IListRecipesDifficultyFiltersDto): this {
     if (filters.difficulty)
-      this.queryBuilder.andWhere('recipes.difficulty IN (:...difficulty)', {
+      this.queryBuilder.andWhere('difficulty IN (:...difficulty)', {
         difficulty: filters.difficulty,
       });
 
@@ -294,6 +303,8 @@ export class RecipesRepository {
   constructor(
     @InjectRepository(Recipe)
     private readonly repository: Repository<Recipe>,
+    @InjectRepository(RecipeListItemViewEntity)
+    private readonly recipeListItemRepository: Repository<RecipeListItemViewEntity>,
     @InjectDataSource()
     private readonly dataSource: DataSource,
   ) {}
@@ -421,7 +432,9 @@ export class RecipesRepository {
     pagination: Pagination,
     filters: IListRecipesFiltersDto,
   ): Promise<[ListRecipesQueryResult[], number]> {
-    return new ListRecipesQuery(this.repository.createQueryBuilder('recipes'))
+    return new ListRecipesQuery(
+      this.recipeListItemRepository.createQueryBuilder('recipe'),
+    )
       .paginate(pagination)
       .published()
       .filterByPreparationTime(filters)
@@ -534,13 +547,17 @@ export class RecipesRepository {
   }
 
   findAllFavourite(userId: UserId): Promise<ListRecipesQueryResult[]> {
-    return new ListRecipesQuery(this.repository.createQueryBuilder('recipes'))
+    return new ListRecipesQuery(
+      this.recipeListItemRepository.createQueryBuilder('recipe'),
+    )
       .favourite(userId)
       .getRawMany();
   }
 
   findUserRecipes(userId: UserId): Promise<ListRecipesQueryResult[]> {
-    return new ListRecipesQuery(this.repository.createQueryBuilder('recipes'))
+    return new ListRecipesQuery(
+      this.recipeListItemRepository.createQueryBuilder('recipe'),
+    )
       .createdBy(userId)
       .getRawMany();
   }
