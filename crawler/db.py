@@ -35,7 +35,8 @@ INSERT INTO recipes (name, description, preparation_time, portions, instructions
             WHEN difficulty = 'średni' THEN '200'::recipes_difficulty_enum
             WHEN difficulty = 'trudny' THEN '300'::recipes_difficulty_enum
             ELSE '200'::recipes_difficulty_enum
-        END AS difficulty
+        END AS difficulty,
+        NULL as review
     FROM
         crawler_recipes
     INNER JOIN
