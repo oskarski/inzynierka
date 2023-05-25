@@ -89,6 +89,9 @@ export class Recipe {
   @Column({ nullable: true })
   review: number | null;
 
+  @Column({ nullable: true })
+  coverImage: number | null;
+
   constructor(
     @InjectRepository(Review)
     private readonly reviewRepository: Repository<Review>,
