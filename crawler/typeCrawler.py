@@ -16,7 +16,7 @@ conn = psycopg2.connect(
 )
 cur = conn.cursor()
 
-
+cur.execute("DROP TABLE IF EXISTS crawler_recipeType")
 cur.execute("CREATE TABLE IF NOT EXISTS crawler_recipeType (id SERIAL PRIMARY KEY, link VARCHAR(255), type VARCHAR(255))")
 
 # Loop through each type in the type list
