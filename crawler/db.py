@@ -14,20 +14,34 @@ cur = conn.cursor()
 
 # insert new data into the recipes table
 cur.execute("""
-INSERT INTO recipes (name, description, preparation_time, portions, instructions, difficulty)
-    SELECT title, description,
-        CASE WHEN trim(time) = '' THEN 3600 ELSE (substring(time from 1 for 1)::INTEGER * 3600) + (substring(time from 3)::INTEGER * 60) END,
-        CASE WHEN trim(size) = '' THEN 4 ELSE CAST(size AS INTEGER) END,
-        to_json(jsondescription),
+INSERT INTO recipes (name, description, preparation_time, portions, instructions, author_id, state, difficulty, review)
+    SELECT
+        title,
+        description,
+        CASE
+            WHEN TRIM(time) = '' THEN 3600
+            WHEN POSITION(':' IN time) > 0 THEN (CAST(SUBSTRING(time FROM 1 FOR POSITION(':' IN time) - 1) AS INTEGER) * 3600) + (CAST(SUBSTRING(time FROM POSITION(':' IN time) + 1) AS INTEGER) * 60)
+            ELSE CAST(time AS INTEGER) * 3600
+        END AS preparation_time,
+        CASE
+            WHEN TRIM(size) = '' THEN 4
+            ELSE CAST(size AS INTEGER)
+        END AS portions,
+        TO_JSON(jsondescription),
+        NULL AS author_id,
+        'published' AS state,
         CASE
             WHEN difficulty = 'łatwy' THEN '100'::recipes_difficulty_enum
             WHEN difficulty = 'średni' THEN '200'::recipes_difficulty_enum
             WHEN difficulty = 'trudny' THEN '300'::recipes_difficulty_enum
             ELSE '200'::recipes_difficulty_enum
-        END
-    FROM crawler_recipes
-    INNER JOIN crawler_recipeinstruction ON crawler_recipes.link = crawler_recipeinstruction.link
-    WHERE NOT EXISTS (SELECT 1 FROM recipes WHERE name = title);
+        END AS difficulty
+    FROM
+        crawler_recipes
+    INNER JOIN
+        crawler_recipeinstruction ON crawler_recipes.link = crawler_recipeinstruction.link
+    WHERE
+        NOT EXISTS (SELECT 1 FROM recipes WHERE name = title);
 """)
 
 # insert new data into the ingredients table
