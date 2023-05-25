@@ -169,6 +169,7 @@ interface ListRecipesQueryResult {
   state: RecipeState;
   authorId: UserId;
   difficulty: RecipeDifficulty;
+  review: number | null;
 }
 
 class ListRecipesQuery {
@@ -183,6 +184,7 @@ class ListRecipesQuery {
         'recipe.portions AS portions',
         'recipe.state AS state',
         'recipe.difficulty AS difficulty',
+        'recipe.review AS review',
       ])
       .addSelect('recipe.preparationTime', 'preparationTime')
       .addSelect('recipe.authorId', 'authorId')
@@ -469,6 +471,7 @@ export class RecipesRepository {
       .addSelect('recipes.preparation_time', 'preparationTime')
       .addSelect('recipes.state', 'state')
       .addSelect('recipes.difficulty', 'difficulty')
+      .addSelect('recipes.review', 'review')
       .addSelect('recipes.author_id', 'authorId')
       .innerJoin(
         (subQuery) =>

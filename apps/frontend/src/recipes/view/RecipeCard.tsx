@@ -70,8 +70,7 @@ export const RecipeCard = ({
 
         <div className="flex items-center justify-between">
           <div className="flex items-center text-sm text-secondary space-x-6">
-            {/* TODO Add recipe reviews */}
-            {/*<RecipeRate rate={recipe.rate} />*/}
+            <RecipeRateAverage rate={recipe.review} />
 
             <RecipePreparationTime
               preparationTimeLabel={recipe.formattedPreparationTime}

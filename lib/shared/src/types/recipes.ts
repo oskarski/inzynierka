@@ -82,6 +82,7 @@ export interface IRecipeListItemDto {
   readonly categoryIds: RecipeCategoryId[];
   readonly state: RecipeState;
   readonly ingredientsCoverage?: number;
+  readonly review: number | null;
 }
 
 export interface IRecipeInstructionDto {

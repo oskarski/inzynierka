@@ -2,11 +2,11 @@ import { StarFilled } from '@ant-design/icons';
 import React from 'react';
 
 interface RecipeRateAverageProps {
-  rate?: number;
+  rate?: number | null;
 }
 
 export const RecipeRateAverage = ({ rate }: RecipeRateAverageProps) => {
-  if (rate === undefined) return null;
+  if (rate === undefined || rate === null) return null;
 
   return (
     <div className="inline-flex items-center">

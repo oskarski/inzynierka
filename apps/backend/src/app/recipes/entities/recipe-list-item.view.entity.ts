@@ -25,6 +25,7 @@ import { Recipe } from './recipe.entity';
         'recipes.portions AS portions',
         'recipes.state AS state',
         'recipes.difficulty AS difficulty',
+        'recipes.review AS review',
       ])
       .addSelect('recipes.preparation_time', 'preparationTime')
       .addSelect('recipes.author_id', 'authorId')
@@ -62,4 +63,7 @@ export class RecipeListItemViewEntity {
 
   @ViewColumn()
   difficulty: RecipeDifficulty;
+
+  @ViewColumn()
+  review: number | null;
 }
