@@ -29,6 +29,7 @@ import { Recipe } from './recipe.entity';
       ])
       .addSelect('recipes.preparation_time', 'preparationTime')
       .addSelect('recipes.author_id', 'authorId')
+      .addSelect('recipes.cover_image', 'coverImage')
       .addSelect(
         'array_remove(array_agg(category.category_id), NULL)',
         'categoryIds',
@@ -66,4 +67,7 @@ export class RecipeListItemViewEntity {
 
   @ViewColumn()
   review: number | null;
+
+  @ViewColumn()
+  coverImage: string | null;
 }

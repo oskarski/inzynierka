@@ -121,14 +121,13 @@ export default function RecipeDetailsPage({
               </div>
             )}
 
-            {/* TODO Add image to recipe */}
-            {/*{dummyRecipe.imageUrl && (*/}
-            {/*  <RecipeImage*/}
-            {/*    imageUrl={dummyRecipe.imageUrl}*/}
-            {/*    recipeName={dummyRecipe.name}*/}
-            {/*    className="mb-6 -mx-4"*/}
-            {/*  />*/}
-            {/*)}*/}
+            {recipe.coverImage && (
+              <RecipeImage
+                imageUrl={recipe.coverImage}
+                recipeName={recipe.name}
+                className="mb-6 -mx-4"
+              />
+            )}
 
             <div className="pb-12 sm:pb-4">
               {((categories && categories.length > 0) ||
@@ -142,10 +141,8 @@ export default function RecipeDetailsPage({
 
                   {categories &&
                     categories.map((category) => (
-                      <div className="px-1">
-                        <RecipeCategoryTag key={category.id}>
-                          {category.name}
-                        </RecipeCategoryTag>
+                      <div key={category.id} className="px-1">
+                        <RecipeCategoryTag>{category.name}</RecipeCategoryTag>
                       </div>
                     ))}
                 </div>

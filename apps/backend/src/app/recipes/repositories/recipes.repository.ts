@@ -170,6 +170,7 @@ interface ListRecipesQueryResult {
   authorId: UserId;
   difficulty: RecipeDifficulty;
   review: number | null;
+  coverImage: string | null;
 }
 
 class ListRecipesQuery {
@@ -188,7 +189,8 @@ class ListRecipesQuery {
       ])
       .addSelect('recipe.preparationTime', 'preparationTime')
       .addSelect('recipe.authorId', 'authorId')
-      .addSelect('recipe.categoryIds', 'categoryIds');
+      .addSelect('recipe.categoryIds', 'categoryIds')
+      .addSelect('recipe.coverImage', 'coverImage');
   }
 
   favourite(userId: UserId): this {
@@ -473,6 +475,7 @@ export class RecipesRepository {
       .addSelect('recipes.difficulty', 'difficulty')
       .addSelect('recipes.review', 'review')
       .addSelect('recipes.author_id', 'authorId')
+      .addSelect('recipes.cover_image', 'coverImage')
       .innerJoin(
         (subQuery) =>
           subQuery

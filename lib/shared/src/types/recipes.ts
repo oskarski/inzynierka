@@ -83,6 +83,7 @@ export interface IRecipeListItemDto {
   readonly state: RecipeState;
   readonly ingredientsCoverage?: number;
   readonly review: number | null;
+  readonly coverImage: string | null;
 }
 
 export interface IRecipeInstructionDto {
@@ -109,6 +110,7 @@ export interface IRecipeDto {
   readonly difficulty: RecipeDifficulty;
   readonly authorId: UserId | null;
   readonly review: number | null;
+  readonly coverImage: string | null;
 }
 
 export interface IAddRecipeToFavouritesDto {
