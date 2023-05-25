@@ -86,14 +86,6 @@ export class Recipe {
   })
   reviews: Review[];
 
-  // @OneToMany(() => RecipeCategory, (recipeCategory) => recipeCategory.recipe, {
-  //   cascade: true,
-  // })
-  // categories: RecipeCategory[];
-  //
-  // @RelationId((recipe: Recipe) => recipe.categories)
-  // categoryIds: RecipeCategoryId[];
-
   @Column({ nullable: true })
   review: number | null;
 
