@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import { IngredientId } from '@lib/shared';
+import {ShoppingList} from "../../shopping-list/entities";
 
 @Entity('ingredients')
 export class Ingredient {
@@ -8,4 +9,7 @@ export class Ingredient {
 
   @Column()
   name: string;
+
+  @OneToMany(() => ShoppingList, (shoppingList) => shoppingList.foodItem)
+  shoppingLists: ShoppingList[];
 }
