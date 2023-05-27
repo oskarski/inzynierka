@@ -2,13 +2,14 @@ import {
   Column,
   Entity,
   JoinTable,
-  ManyToMany, OneToMany,
+  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
 import { RecipeId, UserId } from '@lib/shared';
 import { Recipe } from '../../recipes/entities';
-import {ShoppingList} from "../../shopping-list/entities";
+import { ShoppingList } from '../../shopping-list/entities';
 
 export enum UserStatus {
   notConfirmed = 'not_confirmed',
