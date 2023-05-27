@@ -10,7 +10,12 @@ import {
 import { ReviewsService } from './services';
 import { CurrentUser, PrivateApiGuard } from '../auth';
 import { User } from '../iam/entities';
-import { IAddReviewDto, IUserRecipeReviewDto, RecipeId } from '@lib/shared';
+import {
+  IAddReviewDto,
+  IUserRecipeReviewDto,
+  RecipeId,
+  UserId,
+} from '@lib/shared';
 import { Review } from './entities';
 
 @Controller('reviews')
@@ -58,9 +63,21 @@ export class ReviewsController {
     @Param('recipeId') recipeId: RecipeId,
     @CurrentUser() currentUser: User,
   ): Promise<IUserRecipeReviewDto> {
-    // TODO Add implementation
+    if (currentUser) {
+      const userId: UserId = currentUser.id;
 
-    // value: undefined <- when user hasn't added the review
-    return { value: 4 };
+      const existingReview = await this.reviewsService.findByUserAndRecipe(
+        userId,
+        recipeId,
+      );
+
+      if (existingReview) {
+        return { value: existingReview.value };
+      } else {
+        return { value: undefined };
+      }
+    } else {
+      throw new BadRequestException('User not found');
+    }
   }
 }

@@ -52,4 +52,15 @@ export class ReviewsService {
 
     await this.reviewRepository.save(newReview);
   }
+
+  async findByUserAndRecipe(
+    userId: string,
+    recipeId: string,
+  ): Promise<Review | undefined> {
+    const review = await this.reviewRepository.findByUserAndRecipe(
+      userId,
+      recipeId,
+    );
+    return review;
+  }
 }
