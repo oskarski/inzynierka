@@ -2,12 +2,13 @@ import {
   Column,
   Entity,
   JoinTable,
-  ManyToMany,
+  ManyToMany, OneToMany,
   PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
 import { RecipeId, UserId } from '@lib/shared';
 import { Recipe } from '../../recipes/entities';
+import {ShoppingList} from "../../shopping-list/entities";
 
 export enum UserStatus {
   notConfirmed = 'not_confirmed',
@@ -38,6 +39,9 @@ export class User {
 
   @RelationId((user: User) => user.favouriteRecipes)
   favouriteRecipesIds: RecipeId[];
+
+  @OneToMany(() => ShoppingList, (shoppingList) => shoppingList.user)
+  shoppingLists: ShoppingList[];
 
   static notConfirmed(id: UserId): User {
     const user = new User();
