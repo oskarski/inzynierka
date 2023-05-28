@@ -1,12 +1,18 @@
 import Head from 'next/head';
-import { headTitle, routes } from '@fe/utils';
+import { env, headTitle, HttpClient, routes } from '@fe/utils';
 import { Loader, ScrollableRow, SectionTitle } from '@fe/components';
 import { GetServerSideProps } from 'next';
 import { SignedInGuard } from '../server/server-guards';
 import { HydrateReactQueryState } from '../server/server-react-query';
 import {
   EmptyMyRecipesList,
+  FavouriteRecipesApi,
+  ListFavouriteRecipesQueryKey,
+  ListMyRecipesQueryKey,
+  ListPopularRecipesQueryKey,
+  MyRecipesApi,
   RecipeCard,
+  RecipesApi,
   useConnectedCategories,
   useListMyRecipes,
   useListPopularRecipes,
@@ -14,12 +20,42 @@ import {
 import { ApiErrorMessage } from '@fe/errors';
 import React from 'react';
 import {
+  ListAllRecipesCategoriesQueryKey,
+  ListPopularCategoriesQueryKey,
   RecipeCategoryCard,
+  RecipesCategoriesApi,
   useListPopularCategories,
 } from '@fe/recipes-categories';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
-  SignedInGuard()
+  SignedInGuard(async (ctx, queryClient, user) => {
+    const httpClient = HttpClient.privateHttpClient(env().apiUrl, {
+      accessToken: user.accessToken,
+    });
+
+    const recipesApi = new RecipesApi(httpClient);
+    const myRecipesApi = new MyRecipesApi(httpClient);
+    const favouriteRecipesApi = new FavouriteRecipesApi(httpClient);
+    const recipesCategoriesApi = new RecipesCategoriesApi(httpClient);
+
+    await queryClient.prefetchQuery(ListPopularRecipesQueryKey, () =>
+      recipesApi.listPopularRecipes()
+    );
+    await queryClient.prefetchQuery(ListFavouriteRecipesQueryKey, () =>
+      favouriteRecipesApi.listFavouriteRecipes()
+    );
+    await queryClient.prefetchQuery(ListMyRecipesQueryKey, () =>
+      myRecipesApi.listMyRecipes()
+    );
+    await queryClient.prefetchQuery(ListAllRecipesCategoriesQueryKey, () =>
+      recipesCategoriesApi.listCategories({})
+    );
+    await queryClient.prefetchQuery(ListPopularCategoriesQueryKey, () =>
+      recipesCategoriesApi.listPopularCategories()
+    );
+
+    return { props: {} };
+  })
 );
 
 export default function HomePage() {
