@@ -21,7 +21,14 @@ const TopBar = ({ className }: TopBarProps) => {
   return (
     <div className={classNames('py-2 ', className)}>
       <NavBar
-        backArrow={currentRoute !== '/'}
+        backArrow={
+          ![
+            routes.home(),
+            routes.signUp(),
+            routes.signIn(),
+            routes.forgotPassword(),
+          ].includes(currentRoute)
+        }
         onBack={back}
         left={
           <Link href={routes.home()} className="md:hidden">
