@@ -125,58 +125,73 @@ export default function RecipeDetailsPage({
               <RecipeImage
                 imageUrl={recipe.coverImage}
                 recipeName={recipe.name}
-                className="mb-6 -mx-4"
+                className="mb-6 -mx-4 sm:hidden"
               />
             )}
 
             <div className="pb-12 sm:pb-4">
-              {((categories && categories.length > 0) ||
-                recipe.isAuthoredBy(currentUser?.id)) && (
-                <div className="flex items-center flex-wrap -mx-1 px-1 mb-3">
-                  {recipe.isAuthoredBy(currentUser?.id) && (
-                    <div className="px-1">
-                      <RecipeStateTag recipeState={recipe.state} />
+              <div className="sm:flex">
+                <div className="sm:w-1/3 sm:pl-8">
+                  {((categories && categories.length > 0) ||
+                    recipe.isAuthoredBy(currentUser?.id)) && (
+                    <div className="flex items-center flex-wrap -mx-1 px-1 mb-3 sm:mb-6">
+                      {recipe.isAuthoredBy(currentUser?.id) && (
+                        <div className="px-1">
+                          <RecipeStateTag recipeState={recipe.state} />
+                        </div>
+                      )}
+
+                      {categories &&
+                        categories.map((category) => (
+                          <div key={category.id} className="px-1">
+                            <RecipeCategoryTag>
+                              {category.name}
+                            </RecipeCategoryTag>
+                          </div>
+                        ))}
                     </div>
                   )}
 
-                  {categories &&
-                    categories.map((category) => (
-                      <div key={category.id} className="px-1">
-                        <RecipeCategoryTag>{category.name}</RecipeCategoryTag>
+                  <SectionTitle className="mb-2 sm:mb-6" truncate={false}>
+                    {recipe.name}
+                  </SectionTitle>
+
+                  <p className="text-sm font-normal text-secondary mb-4 sm:mb-4">
+                    {recipe.description}
+                  </p>
+
+                  <div className="flex items-center justify-between mb-7">
+                    <div className="flex items-center text-sm text-secondary space-x-6">
+                      <RecipeRateAverage rate={recipe.review} />
+
+                      <RecipePreparationTime
+                        preparationTimeLabel={recipe.formattedPreparationTime}
+                      />
+
+                      <div className="flex items-center">
+                        <TeamOutlined className="text-base leading-none mr-2" />
+                        <Stepper
+                          defaultValue={recipe.portions}
+                          min={1}
+                          onChange={(portions) =>
+                            setPortionsProportion(portions / recipe.portions)
+                          }
+                        />
                       </div>
-                    ))}
-                </div>
-              )}
+                    </div>
 
-              <SectionTitle className="mb-2" truncate={false}>
-                {recipe.name}
-              </SectionTitle>
-
-              <p className="text-sm font-normal text-secondary mb-4">
-                {recipe.description}
-              </p>
-
-              <div className="flex items-center justify-between mb-7">
-                <div className="flex items-center text-sm text-secondary space-x-6">
-                  <RecipeRateAverage rate={recipe.review} />
-
-                  <RecipePreparationTime
-                    preparationTimeLabel={recipe.formattedPreparationTime}
-                  />
-
-                  <div className="flex items-center">
-                    <TeamOutlined className="text-base leading-none mr-2" />
-                    <Stepper
-                      defaultValue={recipe.portions}
-                      min={1}
-                      onChange={(portions) =>
-                        setPortionsProportion(portions / recipe.portions)
-                      }
-                    />
+                    <FavouriteRecipeButton recipeId={recipe.id} />
                   </div>
                 </div>
 
-                <FavouriteRecipeButton recipeId={recipe.id} />
+                <div className="hidden sm:block w-2/3 px-20">
+                  {recipe.coverImage && (
+                    <RecipeImage
+                      imageUrl={recipe.coverImage}
+                      recipeName={recipe.name}
+                    />
+                  )}
+                </div>
               </div>
 
               <div className="md:flex md:justify-center md:mt-16">
