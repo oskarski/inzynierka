@@ -13,6 +13,8 @@ export interface IRecipesApi {
     dto: IListRecipesQueryDto & IPaginationQueryDto
   ): Promise<IPaginated<IRecipeListItemDto>>;
 
+  listPopularRecipes(): Promise<IRecipeListItemDto[]>;
+
   getRecipeDetails(id: RecipeId): Promise<IRecipeDto>;
 }
 
@@ -28,6 +30,10 @@ export class RecipesApi implements IRecipesApi {
       this.baseUrl,
       dto
     );
+  }
+
+  listPopularRecipes(): Promise<IRecipeListItemDto[]> {
+    return this.httpClient.get<IRecipeListItemDto[]>(`${this.baseUrl}/popular`);
   }
 
   getRecipeDetails(id: RecipeId): Promise<IRecipeDto> {

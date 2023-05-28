@@ -22,6 +22,11 @@ export class RecipesController {
     return this.recipesService.listRecipesPaginated(queryDto);
   }
 
+  @Get('/popular')
+  async listPopularRecipes(): Promise<IRecipeListItemDto[]> {
+    return this.recipesService.listPopularRecipes();
+  }
+
   @Get('/:id')
   async getRecipeDetails(
     @Param('id') id: RecipeId,

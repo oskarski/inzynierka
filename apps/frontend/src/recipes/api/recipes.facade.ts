@@ -1,5 +1,6 @@
 import { useRecipesApi } from './RecipesApi.context';
 import {
+  ListSelector,
   PaginationSelector,
   useAdaptedQuery,
   usePaginatedQuery,
@@ -25,6 +26,8 @@ export const ListPaginatedRecipesQueryKey = (
   return queryKey;
 };
 
+export const ListPopularRecipesQueryKey = ['recipesApi', 'listPopularRecipes'];
+
 export const GetRecipeDetailsQueryKey = (id: RecipeId) => [
   'recipesApi',
   'getRecipeDetails',
@@ -45,6 +48,18 @@ export const useListPaginatedRecipes = (queryDto: IListRecipesQueryDto) => {
     20,
     {
       select: PaginationSelector(RecipeListItemSelector),
+    }
+  );
+};
+
+export const useListPopularRecipes = () => {
+  const { recipesApi } = useRecipesApi();
+
+  return useAdaptedQuery<IRecipeListItemDto[], IRecipeListItem[]>(
+    ListPopularRecipesQueryKey,
+    () => recipesApi.listPopularRecipes(),
+    {
+      select: ListSelector(RecipeListItemSelector),
     }
   );
 };

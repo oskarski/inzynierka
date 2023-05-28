@@ -9,6 +9,7 @@ import {
   RecipeCard,
   useConnectedCategories,
   useListMyRecipes,
+  useListPopularRecipes,
 } from '@fe/recipes';
 import { ApiErrorMessage } from '@fe/errors';
 import React from 'react';
@@ -29,13 +30,46 @@ export default function HomePage() {
       </Head>
 
       <main>
-        <SectionTitle href={routes.recipes()}>Popularne przepisy</SectionTitle>
-        <div className="mb-6">POPULAR RECIPES WILL BE HERE</div>
+        <PopularRecipesSection />
 
         <PopularCategoriesSection />
 
         <MyRecipesSection />
       </main>
+    </>
+  );
+}
+
+function PopularRecipesSection() {
+  const [popularRecipes, loading, error] = useListPopularRecipes();
+
+  const connectedCategories = useConnectedCategories();
+
+  if (popularRecipes && popularRecipes.length === 0) return null;
+
+  return (
+    <>
+      <SectionTitle href={routes.recipes()} className="mb-4">
+        Popularne przepisy
+      </SectionTitle>
+
+      {loading && <Loader />}
+      {error && <ApiErrorMessage size="base" error={error} />}
+
+      {popularRecipes && (
+        <ScrollableRow className="space-x-3 -mr-4 pr-4 pb-2 pl-1 mb-6">
+          {popularRecipes.map((recipe) => (
+            <div key={recipe.id} className="min-w-70">
+              <RecipeCard
+                recipe={recipe}
+                categories={connectedCategories(recipe)}
+                className="h-full"
+                showDescription={false}
+              />
+            </div>
+          ))}
+        </ScrollableRow>
+      )}
     </>
   );
 }
@@ -53,7 +87,7 @@ function PopularCategoriesSection() {
       {error && <ApiErrorMessage size="base" error={error} />}
 
       {popularCategories && popularCategories.length > 0 && (
-        <ScrollableRow className="space-x-3 -mr-4 pr-4 pb-2 pl-1">
+        <ScrollableRow className="space-x-3 -mr-4 pr-4 pb-2 pl-1 mb-6">
           {popularCategories.map((category) => (
             <div key={category.id} className="min-w-70">
               <RecipeCategoryCard recipeCategory={category} className="mb-4" />

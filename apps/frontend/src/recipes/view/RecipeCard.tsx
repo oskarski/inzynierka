@@ -17,6 +17,7 @@ interface RecipeCardProps {
   recipe: IRecipeListItem;
   categories: IRecipeCategoryListItemDto[];
   showStateBadge?: boolean;
+  showDescription?: boolean;
   className?: string;
 }
 
@@ -24,6 +25,7 @@ export const RecipeCard = ({
   recipe,
   categories,
   showStateBadge,
+  showDescription = true,
   className,
 }: RecipeCardProps) => {
   return (
@@ -69,7 +71,11 @@ export const RecipeCard = ({
               )}
             </div>
 
-            <p className="text-sm text-secondary mb-2">{recipe.description}</p>
+            {showDescription && (
+              <p className="text-sm text-secondary mb-2">
+                {recipe.description}
+              </p>
+            )}
           </div>
 
           <div className="flex items-center justify-between">

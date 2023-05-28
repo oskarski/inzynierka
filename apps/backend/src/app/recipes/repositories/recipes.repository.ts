@@ -304,6 +304,25 @@ class ListRecipesQuery {
   getRawMany(): Promise<ListRecipesQueryResult[]> {
     return this.queryBuilder.getRawMany();
   }
+
+  orderByPopularityAndGetRawMany(): Promise<ListRecipesQueryResult[]> {
+    return this.queryBuilder
+      .addSelect('count * COALESCE(recipe.review, 1)', 'popularity')
+      .leftJoin(
+        (subQuery) =>
+          subQuery
+            .select('ufr.recipe_id', 'recipe_id')
+            .addSelect('Count(1)', 'count')
+            .from('users_favourite_recipes', 'ufr')
+            .groupBy('ufr.recipe_id'),
+        'fr',
+        'fr.recipe_id = recipe.id',
+      )
+      .where('recipe.review >= 3.5')
+      .orWhere('recipe.review IS NULL')
+      .orderBy('popularity', 'DESC', 'NULLS LAST')
+      .getRawMany();
+  }
 }
 
 @Injectable()
@@ -572,5 +591,16 @@ export class RecipesRepository {
     )
       .createdBy(userId)
       .getRawMany();
+  }
+
+  findPopularRecipes(
+    pagination: Pagination,
+  ): Promise<ListRecipesQueryResult[]> {
+    return new ListRecipesQuery(
+      this.recipeListItemRepository.createQueryBuilder('recipe'),
+    )
+      .paginate(pagination)
+      .published()
+      .orderByPopularityAndGetRawMany();
   }
 }

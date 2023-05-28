@@ -49,6 +49,10 @@ export class RecipesService {
     };
   }
 
+  async listPopularRecipes(): Promise<IRecipeListItemDto[]> {
+    return this.recipesRepository.findPopularRecipes(Pagination.firstPage(10));
+  }
+
   async getRecipe(id: RecipeId, currentUserId: UserId): Promise<IRecipeDto> {
     const recipe = await this.recipeDetailsRepository.findOneBy({
       id,
