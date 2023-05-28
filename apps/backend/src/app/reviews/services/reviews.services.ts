@@ -20,11 +20,12 @@ export class ReviewsService {
   }
 
   async modifyReview(
+    userId: string,
     recipeId: string,
     reviewDto: IAddReviewDto,
   ): Promise<void> {
     const existingReview = await this.reviewRepository.findByUserAndRecipe(
-      null, // Pass null or omit the user ID parameter to retrieve the review by recipe ID only
+      userId,
       recipeId,
     );
 

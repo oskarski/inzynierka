@@ -41,7 +41,8 @@ export class ReviewsController {
 
       if (hasReviewed) {
         await this.reviewsService.modifyReview(
-          reviewDto.recipe_id, // Pass the recipe ID instead of the user ID
+          currentUser.id,
+          reviewDto.recipe_id,
           reviewDto,
         );
       } else {
