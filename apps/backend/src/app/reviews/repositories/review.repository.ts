@@ -36,7 +36,7 @@ export class ReviewRepository {
     recipe_id: string;
     reviewerId: string;
     created_at: any;
-    value: any;
+    value: number;
   }): Review {
     return this.repository.create(review);
   }

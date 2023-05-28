@@ -28,7 +28,7 @@ export class Review {
   @JoinColumn({ name: 'reviewer_id' })
   reviewer: User;
 
-  @Column()
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   value: number;
 
   @Column({ nullable: true })
