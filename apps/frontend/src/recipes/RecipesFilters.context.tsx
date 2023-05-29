@@ -10,6 +10,7 @@ import {
   IIngredientListItemDto,
   IListRecipesFiltersDto,
   IListRecipesPreparationTimeFiltersDto,
+  IListRecipesReviewFiltersDto,
   IngredientId,
   RecipeCategoryId,
   RecipeDifficulty,
@@ -20,6 +21,10 @@ type FiltersAction =
   | {
       type: 'select-preparation-time-filter';
       value: IListRecipesPreparationTimeFiltersDto;
+    }
+  | {
+      type: 'select-review-filter';
+      value: IListRecipesReviewFiltersDto;
     }
   | {
       type: 'select-dish-type-filter';
@@ -87,6 +92,11 @@ const filtersReducer = (
         ...state,
         minPreparationTime: action.value.minPreparationTime,
         maxPreparationTime: action.value.maxPreparationTime,
+      };
+    case 'select-review-filter':
+      return {
+        ...state,
+        minReview: action.value.minReview,
       };
     case 'select-dish-type-filter':
       return {
@@ -221,6 +231,7 @@ interface IRecipesFiltersContext {
   setPreparationTimeFilter: (
     filter: IListRecipesPreparationTimeFiltersDto
   ) => void;
+  setReviewFilter: (filter: IListRecipesReviewFiltersDto) => void;
   clearDishTypeFilter: () => void;
   selectDishTypeFilter: (categoryId: RecipeCategoryId) => void;
   unselectDishTypeFilter: (categoryId: RecipeCategoryId) => void;
@@ -256,6 +267,12 @@ export const RecipesFiltersProvider = ({ children }: PropsWithChildren<{}>) => {
   const setPreparationTimeFilter = useCallback(
     (value: IListRecipesPreparationTimeFiltersDto) =>
       dispatch({ type: 'select-preparation-time-filter', value }),
+    []
+  );
+
+  const setReviewFilter = useCallback(
+    (value: IListRecipesReviewFiltersDto) =>
+      dispatch({ type: 'select-review-filter', value }),
     []
   );
 
@@ -352,6 +369,7 @@ export const RecipesFiltersProvider = ({ children }: PropsWithChildren<{}>) => {
     clearSelection,
     filters,
     setPreparationTimeFilter,
+    setReviewFilter,
     clearDishTypeFilter,
     selectDishTypeFilter,
     unselectDishTypeFilter,
@@ -385,6 +403,7 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     clearSelection,
     filters,
     setPreparationTimeFilter,
+    setReviewFilter,
     clearDishTypeFilter,
     selectDishTypeFilter,
     unselectDishTypeFilter,
@@ -426,6 +445,10 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
   assertIsDefined(
     setPreparationTimeFilter,
     'IRecipesFiltersContext.setPreparationTimeFilter must be defined!'
+  );
+  assertIsDefined(
+    setReviewFilter,
+    'IRecipesFiltersContext.setReviewFilter must be defined!'
   );
   assertIsDefined(
     clearDishTypeFilter,
@@ -496,6 +519,7 @@ export const useRecipesFilters = (): IRecipesFiltersContext => {
     clearSelection,
     filters,
     setPreparationTimeFilter,
+    setReviewFilter,
     clearDishTypeFilter,
     selectDishTypeFilter,
     unselectDishTypeFilter,

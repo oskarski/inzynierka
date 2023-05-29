@@ -64,10 +64,15 @@ export interface IListRecipesDifficultyFiltersDto {
   readonly difficulty?: RecipeDifficulty[];
 }
 
+export interface IListRecipesReviewFiltersDto {
+  readonly minReview?: number;
+}
+
 export interface IListRecipesFiltersDto
   extends IListRecipesPreparationTimeFiltersDto,
     IListRecipesCategoryFiltersDto,
-    IListRecipesDifficultyFiltersDto {}
+    IListRecipesDifficultyFiltersDto,
+    IListRecipesReviewFiltersDto {}
 
 export interface IListRecipesQueryDto extends IListRecipesFiltersDto {
   readonly ingredients?: IListRecipesIngredientFilterDto[];

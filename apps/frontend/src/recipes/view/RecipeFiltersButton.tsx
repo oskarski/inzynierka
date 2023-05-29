@@ -2,10 +2,9 @@ import { AppPopup } from '@fe/components';
 import { ControlOutlined } from '@ant-design/icons';
 import { Badge, Button, Checkbox, Radio, SafeArea } from 'antd-mobile';
 import React, { useMemo } from 'react';
-import { useRecipesFilters } from '@fe/recipes';
+import { useRecipesFilters, RecipeDifficultyText } from '@fe/recipes';
 import { useListCategories } from '@fe/recipes-categories';
 import { CategoryType, RecipeDifficulty } from '@lib/shared';
-import { RecipeDifficultyText } from '@fe/recipes/view/RecipeDifficultyText';
 
 export const RecipeFiltersButton = () => {
   const { filters } = useRecipesFilters();
@@ -22,6 +21,7 @@ export const RecipeFiltersButton = () => {
       selectedFiltersCount += filters.otherCategoryIds.length;
     if (filters.minPreparationTime !== undefined) selectedFiltersCount += 1;
     if (filters.maxPreparationTime !== undefined) selectedFiltersCount += 1;
+    if (filters.minReview !== undefined) selectedFiltersCount += 1;
 
     return selectedFiltersCount;
   }, [filters]);
@@ -58,6 +58,8 @@ const RecipeFiltersPopupContent = AppPopup.withAppPopupContent(() => {
         <DietTypeFilters />
 
         <OtherCategoryFilters />
+
+        <ReviewFilters />
       </div>
 
       <div className="pt-4">
@@ -302,6 +304,7 @@ function OtherCategoryFilters() {
   });
 
   if (error) return null;
+  if (otherCategories?.length === 0) return null;
 
   return (
     <div className="space-y-3">
@@ -384,6 +387,52 @@ function PreparationTimeFilters() {
             }
           >
             Ponad godzinę
+          </Radio>
+        </Radio.Group>
+      </div>
+    </div>
+  );
+}
+
+function ReviewFilters() {
+  const { setPreparationTimeFilter, setReviewFilter } = useRecipesFilters();
+
+  return (
+    <div className="space-y-3">
+      <h5 className="text-lg text-default font-medium">Ocena</h5>
+
+      <div className="-mx-1">
+        <Radio.Group defaultValue="select-any-preparation-time-filter">
+          <Radio
+            className="px-1 mb-3"
+            value="select-any-preparation-time-filter"
+            onChange={() => setReviewFilter({ minReview: undefined })}
+          >
+            Dowolna
+          </Radio>
+
+          <Radio
+            className="px-1 mb-3"
+            value="select-max-20-min-preparation-time-filter"
+            onChange={() => setReviewFilter({ minReview: 3 })}
+          >
+            Dobry - ponad 3 gwiazdki
+          </Radio>
+
+          <Radio
+            className="px-1 mb-3"
+            value="select-max-60-min-preparation-time-filter"
+            onChange={() => setReviewFilter({ minReview: 4 })}
+          >
+            Bardzo dobry - ponad 4 gwiazdki
+          </Radio>
+
+          <Radio
+            className="px-1 mb-3"
+            value="select-min-60-min-preparation-time-filter"
+            onChange={() => setReviewFilter({ minReview: 5 })}
+          >
+            Doskonały - 5 gwiazdek
           </Radio>
         </Radio.Group>
       </div>

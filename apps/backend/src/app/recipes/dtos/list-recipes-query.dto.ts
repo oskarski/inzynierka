@@ -13,6 +13,9 @@ import {
   IsInt,
   IsPositive,
   IsEnum,
+  IsNumber,
+  Min,
+  Max,
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { PaginationQueryDto } from '../../utils';
@@ -70,4 +73,11 @@ export class ListRecipesQueryDto
   @IsArray()
   @IsEnum(RecipeDifficulty, { each: true })
   readonly difficulty?: RecipeDifficulty[];
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(5)
+  @Transform(({ value }) => parseFloat(value))
+  readonly minReview?: number;
 }

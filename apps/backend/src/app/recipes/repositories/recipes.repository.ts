@@ -27,6 +27,7 @@ import {
   RecipeState,
   UserId,
   RecipeDifficulty,
+  IListRecipesReviewFiltersDto,
 } from '@lib/shared';
 import { uniq } from 'lodash';
 
@@ -235,6 +236,17 @@ class ListRecipesQuery {
           minPreparationTime: filters.minPreparationTime,
         },
       );
+
+    return this;
+  }
+
+  filterByReview(filters: IListRecipesReviewFiltersDto): this {
+    if (filters.minReview)
+      this.queryBuilder
+        .andWhere('recipe.review IS NOT NULL')
+        .andWhere('recipe.review >= :minReview', {
+          minReview: filters.minReview,
+        });
 
     return this;
   }
@@ -465,6 +477,7 @@ export class RecipesRepository {
       .paginate(pagination)
       .published()
       .filterByPreparationTime(filters)
+      .filterByReview(filters)
       .filterByDishType(filters)
       .filterByCuisineType(filters)
       .filterByDietType(filters)
@@ -535,6 +548,12 @@ export class RecipesRepository {
       query.andWhere('recipes.preparation_time <= :maxPreparationTime', {
         maxPreparationTime: queryDto.maxPreparationTime,
       });
+    if (queryDto.minReview)
+      query
+        .andWhere('recipes.review IS NOT NULL')
+        .andWhere('recipes.review >= :minReview', {
+          minReview: queryDto.minReview,
+        });
     if (queryDto.minPreparationTime)
       query.andWhere('recipes.preparation_time >= :minPreparationTime', {
         minPreparationTime: queryDto.minPreparationTime,
