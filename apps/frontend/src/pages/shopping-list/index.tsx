@@ -23,6 +23,7 @@ import {
 } from '@fe/shopping-list';
 import { IShoppingListItemDto } from '@lib/shared';
 import { useUnitOptions } from '@fe/ingredients';
+import { AddIngredientsToShoppingListButton } from '@fe/shopping-list/view/AddIngredientsToShoppingListButton';
 
 export const getServerSideProps: GetServerSideProps = HydrateReactQueryState(
   SignedInGuard(async ({}, queryClient, user) => {
@@ -108,16 +109,7 @@ export default function ShoppingListPage() {
         )}
 
         <div className="fixed z-10 bottom-20 left-4 right-4 sm:bottom-6">
-          <Button
-            block={true}
-            color="primary"
-            onClick={() => {
-              // TODO Add
-              console.log('ADD');
-            }}
-          >
-            Dodaj
-          </Button>
+          <AddIngredientsToShoppingListButton />
 
           <SafeArea position="bottom" />
         </div>
