@@ -108,7 +108,7 @@ export default function ShoppingListPage() {
           </List>
         )}
 
-        <div className="fixed z-10 bottom-20 left-4 right-4 sm:bottom-6">
+        <div className="fixed z-10 bottom-20 left-4 right-4 sm:bottom-6 md:left-48">
           <AddIngredientsToShoppingListButton />
 
           <SafeArea position="bottom" />
