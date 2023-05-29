@@ -21,7 +21,9 @@ import { Review } from './entities';
 @Controller('reviews')
 @UseGuards(PrivateApiGuard)
 export class ReviewsController {
-  constructor(private readonly reviewsService: ReviewsService) {}
+  constructor(private readonly reviewsService: ReviewsService) {
+    console.log(reviewsService); // Sprawdź, czy instancja jest poprawnie wstrzykiwana
+  }
 
   @Get()
   async listReviews(): Promise<Review[]> {
@@ -32,7 +34,7 @@ export class ReviewsController {
   async addOrUpdateReview(
     @Body() reviewDto: IAddReviewDto,
     @CurrentUser() currentUser: User,
-  ): Promise<void> {
+  ): Promise<number> {
     if (currentUser) {
       const hasReviewed = await this.reviewsService.hasReviewedRecipe(
         currentUser.id,
@@ -53,6 +55,14 @@ export class ReviewsController {
           reviewDto,
         );
       }
+
+      // Calculate and update the average rating
+      await this.reviewsService.updateAverageRating(reviewDto.recipe_id);
+
+      // Calculate and return the updated average rating
+      return await this.reviewsService.calculateAverageRating(
+        reviewDto.recipe_id,
+      );
     } else {
       throw new BadRequestException('User not found');
     }

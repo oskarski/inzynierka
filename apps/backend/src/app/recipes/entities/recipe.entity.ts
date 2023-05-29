@@ -91,35 +91,4 @@ export class Recipe {
 
   @Column({ name: 'cover_image', nullable: true })
   coverImage: string | null;
-
-  constructor(
-    @InjectRepository(Review)
-    private readonly reviewRepository: Repository<Review>,
-    @InjectRepository(Recipe)
-    private readonly recipeRepository: Repository<Recipe>,
-  ) {}
-
-  @AfterInsert()
-  @AfterUpdate()
-  async updateAverageRating(): Promise<void> {
-    const reviewQuery = this.reviewRepository
-      .createQueryBuilder('review')
-      .where('review.recipe = :recipe', { recipe: this });
-
-    const reviews = await reviewQuery.getMany();
-    const totalReviews = reviews.length;
-
-    if (totalReviews === 0) {
-      this.review = null;
-    } else {
-      const totalRating = reviews.reduce(
-        (sum, review) => sum + review.value,
-        0,
-      );
-      const averageRating = totalRating / totalReviews;
-      this.review = averageRating;
-    }
-
-    await this.recipeRepository.save(this);
-  }
 }

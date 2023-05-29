@@ -1,18 +1,13 @@
 import { DataSource, EntityManager, Repository } from 'typeorm';
 import { Review } from '../entities';
-import {
-  InjectDataSource,
-  InjectEntityManager,
-  InjectRepository,
-} from '@nestjs/typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
+import { FindManyOptions } from 'typeorm';
 
 @Injectable()
 export class ReviewRepository {
   constructor(
     @InjectRepository(Review) private repository: Repository<Review>,
-    @InjectEntityManager() private entityManager: EntityManager,
-    @InjectDataSource() private dataSource: DataSource,
   ) {}
 
   findAll(): Promise<Review[]> {
@@ -30,6 +25,16 @@ export class ReviewRepository {
       .getOne();
 
     return review;
+  }
+
+  async findByRecipeId(recipeId: string): Promise<Review[]> {
+    const options: FindManyOptions<Review> = {
+      where: {
+        recipe_id: recipeId as any,
+      },
+    };
+
+    return this.repository.find(options);
   }
 
   create(review: {
