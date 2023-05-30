@@ -39,7 +39,8 @@ export class ShoppingListService {
 
         if (existingItem) {
           // If an existing item exists, update its quantity
-          existingItem.quantity += item.quantity;
+          existingItem.quantity =
+            parseFloat(`${existingItem.quantity}`) + item.quantity;
           groupedItems[key] = existingItem;
         } else {
           // Create a new ShoppingList instance
