@@ -88,7 +88,6 @@ export class ReviewsService {
       .from('reviews', 'reviews')
       .where('recipe_id = :recipeId', { recipeId: recipeId })
       .execute();
-    console.log(averageRating);
     return parseInt(averageRating);
   }
 }
