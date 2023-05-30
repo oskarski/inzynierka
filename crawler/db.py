@@ -192,6 +192,15 @@ FROM (
 ON CONFLICT (recipe_id, ingredient_id) DO NOTHING;
 ''')
 
+cur.execute('''
+UPDATE recipes
+SET cover_image = (
+SELECT Min(image)
+FROM crawler_recipes
+WHERE recipes.name = crawler_recipes.title
+);
+''')
+
 # commit the changes to the database and close the cursor and connection
 conn.commit()
 
