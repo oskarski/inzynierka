@@ -8,54 +8,62 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CurrentUser, PrivateApiGuard } from '../auth';
-import { IShoppingListItemDto } from '@lib/shared';
+import { IShoppingListItemDto, ShoppingListItemId } from '@lib/shared';
 import {
   BulkAddToShoppingListDto,
   BulkDeleteShoppingListItemsDto,
   UpdateShoppingListItemDto,
 } from './dtos';
 import { User } from '../iam/entities';
-
+import { ShoppingListService } from './services';
+import { ShoppingList } from './entities';
+import { Ingredient } from '../ingredients/entities';
+import { FindOneOptions, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 @Controller('shopping-list')
 @UseGuards(PrivateApiGuard)
 export class ShoppingListController {
-  constructor() {}
+  constructor(
+    @InjectRepository(Ingredient)
+    private readonly ingredientsRepository: Repository<Ingredient>,
+    private readonly shoppingListService: ShoppingListService,
+  ) {}
 
   @Get()
   async listShoppingListItems(): Promise<IShoppingListItemDto[]> {
-    // TODO Drop hardcoded list
-    return [
-      {
-        id: '1',
-        name: 'Pomidorki koktajlowe',
-        quantity: 0.5,
-        unit: 'kg',
-        completed: false,
-      },
-      {
-        id: '2',
-        name: 'Pomidory w puszce',
-        quantity: 400,
-        unit: 'ml',
-        completed: true,
-      },
-      {
-        id: '3',
-        name: 'Ząbek czosnku',
-        quantity: 1,
-        unit: 'szt.',
-        completed: false,
-      },
-    ] as IShoppingListItemDto[];
+    const shoppingListItems =
+      await this.shoppingListService.listShoppingListItems();
+
+    const shoppingListItemDtos: IShoppingListItemDto[] = await Promise.all(
+      shoppingListItems.map(async (item) => {
+        const query = `SELECT name FROM ingredients WHERE id = '${item.ingredient_id}'`;
+        const result = await this.ingredientsRepository.query(query);
+
+        if (!result || !result[0] || !result[0].name) {
+          throw new Error(
+            `Ingredient not found for ingredient_id: ${item.ingredient_id}`,
+          );
+        }
+
+        return {
+          id: item.id as ShoppingListItemId,
+          name: result[0].name,
+          quantity: item.quantity,
+          unit: item.unit,
+          completed: item.completed,
+        };
+      }),
+    );
+
+    return shoppingListItemDtos;
   }
 
   @Post('/bulk')
-  bulkAddToShoppingList(
+  async bulkAddToShoppingList(
     @Body() dto: BulkAddToShoppingListDto,
     @CurrentUser() currentUser: User,
   ): Promise<IShoppingListItemDto[]> {
-    // TODO Add to shopping list logic
-
+    await this.shoppingListService.bulkAddToShoppingList(dto, currentUser);
     return this.listShoppingListItems();
   }
 
@@ -70,12 +78,14 @@ export class ShoppingListController {
   }
 
   @Delete('/bulk')
-  bulkDeleteShoppingListItems(
+  async bulkDeleteShoppingListItems(
     @Body() dto: BulkDeleteShoppingListItemsDto,
     @CurrentUser() currentUser: User,
   ): Promise<IShoppingListItemDto[]> {
-    // TODO Delete shopping list items logic
-
+    await this.shoppingListService.deleteShoppingListItems(
+      dto.itemIds,
+      currentUser,
+    );
     return this.listShoppingListItems();
   }
 }
