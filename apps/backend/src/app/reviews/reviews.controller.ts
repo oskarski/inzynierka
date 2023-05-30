@@ -21,9 +21,7 @@ import { Review } from './entities';
 @Controller('reviews')
 @UseGuards(PrivateApiGuard)
 export class ReviewsController {
-  constructor(private readonly reviewsService: ReviewsService) {
-    console.log(reviewsService); // Sprawdź, czy instancja jest poprawnie wstrzykiwana
-  }
+  constructor(private readonly reviewsService: ReviewsService) {}
 
   @Get()
   async listReviews(): Promise<Review[]> {
