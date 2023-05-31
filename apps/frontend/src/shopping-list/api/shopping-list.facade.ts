@@ -7,6 +7,7 @@ import {
   IUpdateShoppingListItemDto,
   ShoppingListItemId,
 } from '@lib/shared';
+import { useQueryClient } from 'react-query';
 
 export const GetShoppingListQueryKey = [
   'shoppingListApi.listShoppingListItems',
@@ -25,11 +26,19 @@ export const useBulkAddToShoppingList = ({
 }: {
   onSuccess?: () => void;
 }) => {
+  const queryClient = useQueryClient();
+
   const { shoppingListApi } = useShoppingListApi();
 
   return useAdaptedMutation<IShoppingListItemDto[], IBulkAddToShoppingListDto>(
     (dto) => shoppingListApi.bulkAddToShoppingList(dto),
-    { onSuccess }
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(GetShoppingListQueryKey);
+
+        if (onSuccess) onSuccess();
+      },
+    }
   );
 };
 
@@ -41,11 +50,19 @@ export const useUpdateShoppingListItem = (
     onSuccess?: () => void;
   }
 ) => {
+  const queryClient = useQueryClient();
+
   const { shoppingListApi } = useShoppingListApi();
 
   return useAdaptedMutation<IShoppingListItemDto[], IUpdateShoppingListItemDto>(
     (dto) => shoppingListApi.updateShoppingListItem(id, dto),
-    { onSuccess }
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(GetShoppingListQueryKey);
+
+        if (onSuccess) onSuccess();
+      },
+    }
   );
 };
 
@@ -54,10 +71,18 @@ export const useBulkDeleteShoppingListItems = ({
 }: {
   onSuccess?: () => void;
 } = {}) => {
+  const queryClient = useQueryClient();
+
   const { shoppingListApi } = useShoppingListApi();
 
   return useAdaptedMutation<
     IShoppingListItemDto[],
     IBulkDeleteShoppingListItemsDto
-  >((dto) => shoppingListApi.bulkDeleteShoppingListItems(dto), { onSuccess });
+  >((dto) => shoppingListApi.bulkDeleteShoppingListItems(dto), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(GetShoppingListQueryKey);
+
+      if (onSuccess) onSuccess();
+    },
+  });
 };
