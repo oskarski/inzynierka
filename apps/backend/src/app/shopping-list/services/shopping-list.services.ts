@@ -3,7 +3,7 @@ import { IShoppingListItemDto } from '@lib/shared';
 import { ShoppingListRepository } from '../repositories';
 import { User } from '../../iam/entities';
 import { ShoppingList } from '../entities';
-import { BulkAddToShoppingListDto } from '../dtos';
+import { BulkAddToShoppingListDto, UpdateShoppingListItemDto } from '../dtos';
 
 @Injectable()
 export class ShoppingListService {
@@ -70,5 +70,29 @@ export class ShoppingListService {
   ): Promise<void> {
     // Perform the deletion logic using the provided itemIds and currentUser
     await this.shoppingListRepository.delete(itemIds, currentUser);
+  }
+
+  async updateShoppingListItem(
+    itemId: string,
+    dto: UpdateShoppingListItemDto,
+    currentUser: User,
+  ): Promise<ShoppingList | null> {
+    // Find the shopping list item in the repository
+    const item = await this.shoppingListRepository.findById(itemId);
+
+    if (!item) {
+      return null; // Item not found
+    }
+
+    // Update the properties of the item based on the dto
+    item.quantity = dto.quantity;
+    item.unit = dto.unit;
+    item.completed = dto.completed;
+
+    // Set the user to the current user
+    item.user = currentUser;
+
+    // Save the updated item in the repository
+    return this.shoppingListRepository.save(item);
   }
 }

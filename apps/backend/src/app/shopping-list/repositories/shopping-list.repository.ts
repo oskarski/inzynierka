@@ -47,4 +47,8 @@ export class ShoppingListRepository {
     // Return the updated list of shopping lists
     return this.repository.find();
   }
+
+  save(shoppingList: ShoppingList): Promise<ShoppingList> {
+    return this.repository.save(shoppingList);
+  }
 }

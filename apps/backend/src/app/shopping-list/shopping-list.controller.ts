@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Post,
   Put,
   UseGuards,
@@ -68,11 +69,20 @@ export class ShoppingListController {
   }
 
   @Put(':id')
-  updateShoppingListItem(
+  async updateShoppingListItem(
+    @Param('id') id: ShoppingListItemId,
     @Body() dto: UpdateShoppingListItemDto,
     @CurrentUser() currentUser: User,
   ): Promise<IShoppingListItemDto[]> {
-    // TODO Update shopping list item logic
+    const updatedItem = await this.shoppingListService.updateShoppingListItem(
+      id,
+      dto,
+      currentUser,
+    );
+
+    if (!updatedItem) {
+      throw new Error(`Failed to update shopping list item with ID: ${id}`);
+    }
 
     return this.listShoppingListItems();
   }
