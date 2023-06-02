@@ -95,7 +95,7 @@ export default function ShoppingListPage() {
         )}
 
         {shoppingList && shoppingList.length > 0 && (
-          <List style={{ '--padding-left': '0' }}>
+          <List style={{ '--padding-left': '0' }} className="pb-16">
             {shoppingList.map((item) => (
               <ShoppingListItem key={item.id} item={item} />
             ))}
