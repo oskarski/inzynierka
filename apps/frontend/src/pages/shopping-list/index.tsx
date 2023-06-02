@@ -91,12 +91,6 @@ export default function ShoppingListPage() {
                 Już teraz dodaj produkty do listy!
               </>
             }
-            cta={
-              //  TODO trigger popup
-              <Button color="primary" fill="outline">
-                Dodaj do zakupów
-              </Button>
-            }
           />
         )}
 
