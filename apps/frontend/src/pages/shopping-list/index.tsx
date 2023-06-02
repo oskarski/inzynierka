@@ -144,7 +144,11 @@ function ShoppingListItem({ item }: ShoppingListItemProps) {
           value={item.id}
           disabled={updateLoading}
           onChange={(value) =>
-            updateShoppingListItem({ ...item, completed: value })
+            updateShoppingListItem({
+              quantity: item.quantity,
+              unit: item.unit,
+              completed: value,
+            })
           }
         />
       }
