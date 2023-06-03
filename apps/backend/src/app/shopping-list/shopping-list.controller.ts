@@ -31,9 +31,11 @@ export class ShoppingListController {
   ) {}
 
   @Get()
-  async listShoppingListItems(): Promise<IShoppingListItemDto[]> {
+  async listShoppingListItems(
+    @CurrentUser() currentUser: User,
+  ): Promise<IShoppingListItemDto[]> {
     const shoppingListItems =
-      await this.shoppingListService.listShoppingListItems();
+      await this.shoppingListService.listShoppingListItems(currentUser.id);
 
     const shoppingListItemDtos: IShoppingListItemDto[] = await Promise.all(
       shoppingListItems.map(async (item) => {
@@ -65,7 +67,7 @@ export class ShoppingListController {
     @CurrentUser() currentUser: User,
   ): Promise<IShoppingListItemDto[]> {
     await this.shoppingListService.bulkAddToShoppingList(dto, currentUser);
-    return this.listShoppingListItems();
+    return this.listShoppingListItems(currentUser);
   }
 
   @Put(':id')
@@ -84,7 +86,7 @@ export class ShoppingListController {
       throw new Error(`Failed to update shopping list item with ID: ${id}`);
     }
 
-    return this.listShoppingListItems();
+    return this.listShoppingListItems(currentUser);
   }
 
   @Delete('/bulk')
@@ -96,6 +98,6 @@ export class ShoppingListController {
       dto.itemIds,
       currentUser,
     );
-    return this.listShoppingListItems();
+    return this.listShoppingListItems(currentUser);
   }
 }

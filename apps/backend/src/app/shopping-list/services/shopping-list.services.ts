@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IShoppingListItemDto } from '@lib/shared';
+import { UserId } from '@lib/shared';
 import { ShoppingListRepository } from '../repositories';
 import { User } from '../../iam/entities';
 import { ShoppingList } from '../entities';
@@ -11,9 +11,9 @@ export class ShoppingListService {
     private readonly shoppingListRepository: ShoppingListRepository,
   ) {}
 
-  async listShoppingListItems(): Promise<ShoppingList[]> {
+  async listShoppingListItems(currentUserId: UserId): Promise<ShoppingList[]> {
     // Call the repository method to retrieve the list of shopping list items
-    return this.shoppingListRepository.findAll();
+    return this.shoppingListRepository.findAll(currentUserId);
   }
 
   async bulkAddToShoppingList(
@@ -21,7 +21,7 @@ export class ShoppingListService {
     currentUser: User,
   ): Promise<void> {
     const existingItems: ShoppingList[] =
-      await this.shoppingListRepository.findAll();
+      await this.shoppingListRepository.findAll(currentUser.id);
 
     const groupedItems: { [key: string]: ShoppingList } = {};
 
@@ -78,7 +78,10 @@ export class ShoppingListService {
     currentUser: User,
   ): Promise<ShoppingList | null> {
     // Find the shopping list item in the repository
-    const item = await this.shoppingListRepository.findById(itemId);
+    const item = await this.shoppingListRepository.findById(
+      itemId,
+      currentUser.id,
+    );
 
     if (!item) {
       return null; // Item not found
@@ -88,9 +91,6 @@ export class ShoppingListService {
     item.quantity = dto.quantity;
     item.unit = dto.unit;
     item.completed = dto.completed;
-
-    // Set the user to the current user
-    item.user = currentUser;
 
     // Save the updated item in the repository
     return this.shoppingListRepository.save(item);

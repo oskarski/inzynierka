@@ -3,6 +3,7 @@ import { ShoppingList } from '../entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { User } from '../../iam/entities';
+import { UserId } from '@lib/shared';
 
 @Injectable()
 export class ShoppingListRepository {
@@ -11,12 +12,15 @@ export class ShoppingListRepository {
     private repository: Repository<ShoppingList>,
   ) {}
 
-  findAll(): Promise<ShoppingList[]> {
-    return this.repository.find();
+  findAll(currentUserId: UserId): Promise<ShoppingList[]> {
+    return this.repository.find({ where: { user_id: currentUserId } });
   }
 
-  findById(id: string): Promise<ShoppingList | undefined> {
-    return this.repository.findOne({ where: { id } });
+  findById(
+    id: string,
+    currentUserId: UserId,
+  ): Promise<ShoppingList | undefined> {
+    return this.repository.findOne({ where: { id, user_id: currentUserId } });
   }
 
   create(shoppingList: ShoppingList): Promise<ShoppingList> {
@@ -36,12 +40,9 @@ export class ShoppingListRepository {
     const shoppingListsToDelete = await this.repository
       .createQueryBuilder('shoppingList')
       .whereInIds(itemIds)
+      .andWhere('user_id = :user_id', { user_id: currentUser.id })
       .getMany();
 
-    // Update the user and delete the shopping lists
-    shoppingListsToDelete.forEach((shoppingList) => {
-      shoppingList.user = currentUser;
-    });
     await this.repository.remove(shoppingListsToDelete);
 
     // Return the updated list of shopping lists
