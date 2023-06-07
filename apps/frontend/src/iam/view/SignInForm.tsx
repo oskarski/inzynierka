@@ -1,15 +1,20 @@
-import { useSignIn } from '../api';
+import { useSignedInUser, useSignIn } from '../api';
 import { AppForm, SubmitButton, TextField } from '@fe/form';
 import { routes, useRouting } from '@fe/utils';
 import Link from 'next/link';
 import { Button } from 'antd-mobile';
+import { useEffect } from 'react';
 
 export const SignInForm = () => {
   const { redirectTo } = useRouting();
 
-  const [signIn, loading, error] = useSignIn({
-    onSuccess: () => redirectTo(routes.home()),
-  });
+  const [user] = useSignedInUser();
+
+  const [signIn, loading, error] = useSignIn();
+
+  useEffect(() => {
+    if (user) redirectTo(routes.home());
+  }, [user]);
 
   return (
     <AppForm
