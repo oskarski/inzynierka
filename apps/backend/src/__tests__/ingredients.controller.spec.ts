@@ -36,22 +36,6 @@ describe(IngredientsController.name, () => {
   });
 
   describe('listAll()', () => {
-    // xiting this test to prevent costly setup ( most popupar default results require connections to recipes )
-    xit('returns 5 default search results when the query is empty', async () => {
-      const ingredients =
-        await testCtx.controllers.ingredientController.listAll({
-          name: '',
-        });
-
-      expect(ingredients).toEqual([
-        expect.objectContaining({ name: 'jagody goji' }),
-        expect.objectContaining({ name: 'czarnuszka' }),
-        expect.objectContaining({ name: 'drożdże' }),
-        expect.objectContaining({ name: 'brunatne pieczarki' }),
-        expect.objectContaining({ name: 'ser żółty wędzony' }),
-      ]);
-    });
-
     it('returns search results matching the query', async () => {
       const ingredients =
         await testCtx.controllers.ingredientController.listAll({

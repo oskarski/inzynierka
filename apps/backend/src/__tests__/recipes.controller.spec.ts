@@ -323,47 +323,4 @@ describe(RecipesController.name, () => {
       });
     });
   });
-
-  describe('getRecipeDetails()', () => {
-    // Skipping this test for now due to lack of setup for @CurrentUser() decorator in tests
-    it.skip('returns recipe details', async () => {
-      // const foundRecipe =
-      //   await testCtx.controllers.recipeController.getRecipeDetails(
-      //     Id('3fe1b69b-3970-42e7-aa31-982f58472163'),
-      //   );
-      // expect(foundRecipe).toEqual({
-      //   id: '3fe1b69b-3970-42e7-aa31-982f58472163',
-      //   name: 'Pizza margarita',
-      //   description: 'Królowa gatunku, czyli margherita!',
-      //   preparationTime: 1500,
-      //   portions: 8,
-      //   categoryIds: ['7263df84-ac67-4cdd-8c0c-860caff5fb90'],
-      //   instructions: [
-      //     { step: 'Weź telefon' },
-      //     { step: 'Zamów pizze' },
-      //     { step: 'Smacznego!' },
-      //   ],
-      //   ingredients: [
-      //     {
-      //       id: expect.stringContaining('-'),
-      //       name: 'Mąka',
-      //       quantity: 320,
-      //       unit: 'g',
-      //     },
-      //     {
-      //       id: expect.stringContaining('-'),
-      //       name: 'Sos pomidorowy',
-      //       quantity: 1,
-      //       unit: 'szt.',
-      //     },
-      //     {
-      //       id: expect.stringContaining('-'),
-      //       name: 'Mozzarella',
-      //       quantity: 250,
-      //       unit: 'g',
-      //     },
-      //   ],
-      // });
-    });
-  });
 });
