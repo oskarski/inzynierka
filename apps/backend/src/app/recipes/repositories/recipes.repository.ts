@@ -579,7 +579,7 @@ export class RecipesRepository {
         { otherCategoryIds: queryDto.otherCategoryIds },
       );
     if (queryDto.difficulty)
-      query.andWhere('recipes.difficulty && ARRAY[:...difficulty]::uuid[]', {
+      query.andWhere('recipes.difficulty IN (:...difficulty)', {
         difficulty: queryDto.difficulty,
       });
 
