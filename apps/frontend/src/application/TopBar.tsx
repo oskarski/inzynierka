@@ -62,7 +62,6 @@ const ProfileAvatar = AppPopup.withAppPopup(() => {
   return (
     <>
       <AppPopup.TriggerButton className="inline-block">
-        {/*TODO Replace with current user avatar*/}
         <Avatar
           src=""
           className="ml-auto"

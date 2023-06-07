@@ -8,7 +8,6 @@ export const RecipeCategoryTag = ({
 }: PropsWithChildren<RecipeCategoryTagProps>) => {
   return (
     <Tag
-      // TODO Think how to handle different colors
       color="#FEF9C3"
       style={{
         '--text-color': '#CA8A04',

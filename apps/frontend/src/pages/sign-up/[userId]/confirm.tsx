@@ -5,7 +5,6 @@ import { UserId } from '@lib/shared';
 import { PublicPage } from '../../../server/server-public-page';
 import { SectionTitle } from '@fe/components';
 
-// This needs to be `getServerSideProps` since it has dynamic url -> perhaps we should pass userId in query ...
 export const getServerSideProps = PublicPage();
 
 export default function SignUpConfirmPage() {
@@ -21,7 +20,6 @@ export default function SignUpConfirmPage() {
       </Head>
 
       <main>
-        {/* TODO Move this check to server side and if not correct go to /404 */}
         {userIdQueryParam && emailQueryParam && (
           <div className="mx-auto sm:mt-10 sm:max-w-md">
             <SectionTitle className="mb-6">Potwierdź rejestracje</SectionTitle>

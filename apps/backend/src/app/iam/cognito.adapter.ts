@@ -46,7 +46,6 @@ export class CognitoAdapter implements ICognitoAdapter {
 
       return signUpResponse.UserSub as UserId;
     } catch (error) {
-      // TODO Handle error
       throw new BadRequestException();
     }
   }
@@ -61,7 +60,6 @@ export class CognitoAdapter implements ICognitoAdapter {
 
       await this.cognitoClient.send(confirmSignUpCommand);
     } catch (error) {
-      // TODO Handle error
       throw new BadRequestException();
     }
   }

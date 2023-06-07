@@ -19,7 +19,6 @@ export class IacStack extends cdk.Stack {
     const db = new Db(this, vpc);
 
     db.instance.connections.allowFrom(beApp.instance, Port.tcp(5432));
-    // TODO remove to prevent access to db from the internet
     db.instance.connections.allowFromAnyIpv4(Port.tcp(5432));
   }
 }

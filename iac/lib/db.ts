@@ -10,7 +10,6 @@ export class Db {
     this.instance = new rds.DatabaseInstance(stack, 'inzynierka-db-instance', {
       vpc: vpc.instance,
       vpcSubnets: {
-        // TODO Change to `PRIVATE_ISOLATED`
         subnetType: ec2.SubnetType.PUBLIC,
       },
       engine: rds.DatabaseInstanceEngine.postgres({
@@ -31,7 +30,6 @@ export class Db {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       deletionProtection: false,
       databaseName: 'inzynierka',
-      // TODO Change to `false`
       publiclyAccessible: true,
     });
   }
