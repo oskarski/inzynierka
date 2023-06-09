@@ -197,7 +197,7 @@ class ListRecipesQuery {
   favourite(userId: UserId): this {
     this.queryBuilder
       .innerJoin('users_favourite_recipes', 'ufr', 'ufr.recipe_id = recipe.id')
-      .where('ufr.user_id = :userId', { userId })
+      .andWhere('ufr.user_id = :userId', { userId })
       .andWhere('recipe.authorId IS NULL OR recipe.authorId = :userId', {
         userId,
       });
@@ -206,13 +206,13 @@ class ListRecipesQuery {
   }
 
   createdBy(userId: UserId): this {
-    this.queryBuilder.where('recipe.authorId = :userId', { userId });
+    this.queryBuilder.andWhere('recipe.authorId = :userId', { userId });
 
     return this;
   }
 
   published(): this {
-    this.queryBuilder.where('state = :state', {
+    this.queryBuilder.andWhere('state = :state', {
       state: RecipeState.published,
     });
 
@@ -330,8 +330,7 @@ class ListRecipesQuery {
         'fr',
         'fr.recipe_id = recipe.id',
       )
-      .where('recipe.review >= 3.5')
-      .orWhere('recipe.review IS NULL')
+      .andWhere('(recipe.review >= 3.5 OR recipe.review IS NULL)')
       .orderBy('popularity', 'DESC', 'NULLS LAST')
       .getRawMany();
   }
@@ -618,8 +617,8 @@ export class RecipesRepository {
     return new ListRecipesQuery(
       this.recipeListItemRepository.createQueryBuilder('recipe'),
     )
-      .paginate(pagination)
       .published()
+      .paginate(pagination)
       .orderByPopularityAndGetRawMany();
   }
 }
