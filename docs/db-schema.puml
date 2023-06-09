@@ -1,117 +1,85 @@
 @startuml
-object Recipe  {
+object recipes  {
     <#F1F1F1,#F1F1F1>|= |= |= |
-    | *id |  uuid | **PK** |
-    | *name | varchar(20) |
-    | *description | varchar |
-    | *preparation_time | integer |
-    | *portions | integer |
-    | *instructions | jsonb |
-    | cuisine_type_id | uuid | **FK** |
+    | id | uuid | **PK** |
+    | name | varchar |
+    | description | varchar |
+    | preparation_time | integer |
+    | portions | integer |
+    | instructions | jsonb |
+    | author_id | uuid | **FK** |
+    | state | varchar |
+    | difficulty | recipes_difficulty_enum |
+    | review | numeric |
+    | cover_image | varchar |
 }
 
-object RecipeIngredient {
+object recipe_ingredients {
   <#F1F1F1,#F1F1F1>|= |= |= |
-    | quantity | integer |
-    | unit | varchar(20) |
-    | food_item_id | uuid| **PK** **FK** |
     | recipie_id | uuid | **PK** **FK** |
+    | ingredient_id | uuid | **PK** **FK** |
+    | quantity | numeric |
+    | unit | varchar |
 }
 
-note bottom of RecipeIngredient
-    Perhaps we should mark some
-    ingredients as "special" and
-    "common" to show that they are
-    really common or really rare?
 
-    Eg. Oil or salt are really common
-    ingredients, but sychuan pepper
-    or thai basil aren't.
-end note
-
-object Ingredient {
-  <#F1F1F1,#F1F1F1>|= |= |= |
-    | *id |  uuid | **PK** |
-    | *name | varchar(20) |
-    | food_item_category_id | uuid | **FK** |
-}
-
-object IngredientCategory {
+object ingredients {
   <#F1F1F1,#F1F1F1>|= |= |= |
     | id |  uuid | **PK** |
-    | name | varchar(20) |
+    | name | varchar |
 }
 
-note right of IngredientCategory
-    Not sure if we need this table. Perhaps
-    `Ingredient` entity should store category
-    as column?
-end note
-
-object CuisineType {
+object categories {
     <#F1F1F1,#F1F1F1>|= |= |= |
     | id |  uuid | **PK** |
-    | name | varchar(20) |
+    | name | varchar |
+    | type | categories_type_enum |
 }
 
-note top of CuisineType
-    Not sure if we need this table. Perhaps
-    `Recipie` entity should store cuisine type
-    as column? Or maybe it should be defined
-    as `Category`?
-end note
-
-object Category {
+object recipe_categories {
     <#F1F1F1,#F1F1F1>|= |= |= |
-    | *id |  uuid | **PK** |
-    | *name | varchar(20) |
+    | recipe_id | uuid | **PK FK** |
+    | category_id | uuid | **PK FK** |
 }
 
-object Recipe_Category {
+object users {
     <#F1F1F1,#F1F1F1>|= |= |= |
-    | *recipe_id | uuid | **PK FK** |
-    | *recipe_category_id | uuid | **PK FK** |
+    | id |  uuid | **PK** |
+    | status |  varchar |
 }
 
-object User {
+object users_favourite_recipes {
     <#F1F1F1,#F1F1F1>|= |= |= |
-    | *id |  uuid | **PK** |
+    | user_id |  uuid | **PK FK** |
+    | recipe_id |  uuid | **PK FK** |
 }
 
-object UserFavouriteRecipe {
+object reviews {
     <#F1F1F1,#F1F1F1>|= |= |= |
-    | *user_id |  uuid | **PK FK** |
-    | *dish_id |  uuid | **PK FK** |
-}
-
-object Review {
-    <#F1F1F1,#F1F1F1>|= |= |= |
-    | user_id | uuid | **PK FK** |
-    | dish_id | uuid | **PK FK** |
+    | recipe_id | uuid | **PK FK** |
+    | reviewer_id | uuid | **PK FK** |
     | created_at | timestamp | |
-    | review_value | integer | |
+    | value | numeric | |
 }
 
-object ShoppingList {
+object shopping_list {
     <#F1F1F1,#F1F1F1>|= |= |= |
     | id | uuid | **PK** |
     | user_id | uuid | **FK** |
-    | food_item_id | uuid | **FK** |
-    | quantity | decimal | |
-    | unit | varchar(20) | |
-    | completed | boolean | |
+    | ingredient_id | uuid | **FK** |
+    | quantity | numeric |
+    | unit | varchar |
+    | completed | boolean |
 }
 
-Recipe -down-{ RecipeIngredient
-RecipeIngredient }-right- Ingredient
-Ingredient }-- IngredientCategory
-Recipe }-up- CuisineType
-Recipe -left-{ Recipe_Category
-Recipe_Category }-up- Category
-Recipe -right-{ UserFavouriteRecipe
-UserFavouriteRecipe }-right- User
-Recipe -up-{ Review
-Review }-down- User
-User -- ShoppingList
-ShoppingList -left-{ Ingredient
+recipes -down-{ recipe_ingredients
+recipe_ingredients }-right- ingredients
+recipes -left-{ recipe_categories
+recipe_categories }-up- categories
+recipes -right-{ users_favourite_recipes
+users_favourite_recipes }-right- users
+recipes -up-{ reviews
+reviews }-down- users
+users -- shopping_list
+shopping_list -left-{ ingredients
 @enduml
