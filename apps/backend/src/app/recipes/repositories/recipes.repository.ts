@@ -196,8 +196,12 @@ class ListRecipesQuery {
 
   favourite(userId: UserId): this {
     this.queryBuilder
-      .innerJoin('users_favourite_recipes', 'ufr', 'ufr.recipe_id = recipe.id')
-      .andWhere('ufr.user_id = :userId', { userId })
+      .innerJoin(
+        'users_favourite_recipes',
+        'ufr',
+        'ufr.recipe_id = recipe.id AND ufr.user_id = :userId',
+        { userId },
+      )
       .andWhere('recipe.authorId IS NULL OR recipe.authorId = :userId', {
         userId,
       });
