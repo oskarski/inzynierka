@@ -9,6 +9,6 @@ export * from './RecipeFiltersButton';
 export * from './EmptyRecipesList';
 export * from './EmptyFavouriteRecipesList';
 export * from './RecipeDifficultyText';
-export * from './RecipeForm';
+export * from './RecipeForm/RecipeForm';
 export * from './RecipeStateTag';
 export * from './RecipeDeleteButton';
