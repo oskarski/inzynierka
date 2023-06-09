@@ -1,0 +1,54 @@
+@startuml
+object crawler_recipes  {
+    <#F1F1F1,#F1F1F1>|= |= |= |
+    | id | integer | **PK** |
+    | title | varchar |
+    | description | varchar |
+    | link | varchar |
+    | image | varchar |
+    | difficulty | varchar |
+    | time | integer |
+    | size | integer |
+    | wege | varchar |
+    | dish_type | varchar |
+    | cuisine_type | varchar |
+
+}
+
+object crawler_recipeinstruction {
+  <#F1F1F1,#F1F1F1>|= |= |= |
+    | id |  integer | **PK** |
+    | link | varchar |
+    | jsondescription | jsonb |
+}
+
+object crawler_recipetype{
+  <#F1F1F1,#F1F1F1>|= |= |= |
+    | id |  integer | **PK** |
+    | link | varchar |
+    | type | varchar |
+    | name | varchar |
+}
+
+object crawler_recipecuisine{
+  <#F1F1F1,#F1F1F1>|= |= |= |
+    | id |  integer | **PK** |
+    | link | varchar |
+    | cuisine | varchar |
+    | name | varchar |
+}
+
+
+object crawler_ingredients {
+  <#F1F1F1,#F1F1F1>|= |= |= |
+    | id |  integer | **PK** |
+    | recipie_id | integer |
+    | name | varchar |
+    | amount | numeric |
+    | unit | varchar |
+}
+
+
+
+
+@enduml
