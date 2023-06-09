@@ -1,7 +1,11 @@
 import { AppForm, SubmitButton } from '@fe/form';
 import React from 'react';
 import { Button, CapsuleTabs, Form, SafeArea } from 'antd-mobile';
-import { FormValidationOrApiError } from '@fe/errors';
+import {
+  ApiErrorMessage,
+  FormValidationOrApiError,
+  FormValidationSummaryErrorMessage,
+} from '@fe/errors';
 import { IRecipe } from '../../api';
 import {
   RecipeFormGeneralTab,
@@ -43,26 +47,28 @@ export const RecipeForm = ({
       className="pb-24 sm:pb-10"
       form={form}
       onSubmit={primaryAction.onSubmit}
-      error={error}
+      error={null}
       footerClassName="fixed bottom-20 left-4 right-4 sm:bottom-6 md:left-48"
       submitBtn={
-        <div className="space-y-3">
+        <div>
           {secondaryAction && (
-            <Button
-              type="button"
-              loading={secondaryAction.loading}
-              disabled={primaryAction.loading}
-              block={true}
-              color="primary"
-              size="middle"
-              onClick={() => {
-                const formValues = form.getFieldsValue(true);
+            <div className="mb-3">
+              <Button
+                type="button"
+                loading={secondaryAction.loading}
+                disabled={primaryAction.loading}
+                block={true}
+                color="primary"
+                size="middle"
+                onClick={() => {
+                  const formValues = form.getFieldsValue(true);
 
-                secondaryAction.onSubmit(formValues);
-              }}
-            >
-              {secondaryAction.cta}
-            </Button>
+                  secondaryAction.onSubmit(formValues);
+                }}
+              >
+                {secondaryAction.cta}
+              </Button>
+            </div>
           )}
 
           <div className="bg-white">
@@ -75,6 +81,13 @@ export const RecipeForm = ({
               Zapisz
             </SubmitButton>
           </div>
+
+          {error && (
+            <div className="pt-2 bg-white">
+              <FormValidationSummaryErrorMessage error={error} />
+              <ApiErrorMessage error={error} />
+            </div>
+          )}
 
           <SafeArea position="bottom" />
         </div>
