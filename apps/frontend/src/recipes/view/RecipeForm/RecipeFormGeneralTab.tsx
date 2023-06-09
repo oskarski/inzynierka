@@ -1,15 +1,25 @@
-import { FormValidationOrApiError } from '@fe/errors';
+import { FormValidationError, FormValidationOrApiError } from '@fe/errors';
 import { IRecipe, RecipeDifficultyText } from '@fe/recipes';
 import { useListCategories } from '@fe/recipes-categories';
 import { CategoryType, RecipeDifficulty } from '@lib/shared';
 import { intersection } from 'lodash';
 import { CheckboxField, RadioField, TextAreaField, TextField } from '@fe/form';
 import React from 'react';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 interface RecipeFormGeneralTabProps {
   error: FormValidationOrApiError | null;
   defaultValues?: IRecipe;
 }
+
+const names = {
+  name: 'name',
+  description: 'description',
+  difficulty: 'difficulty',
+  dietType: 'dietType',
+  dishType: 'dishType',
+  cuisineType: 'cuisineType',
+};
 
 export function RecipeFormGeneralTab({
   error,
@@ -50,14 +60,14 @@ export function RecipeFormGeneralTab({
   return (
     <>
       <TextField
-        name="name"
+        name={names.name}
         label="Tytuł"
         error={error}
         initialValue={defaultValues?.name}
       />
 
       <TextAreaField
-        name="description"
+        name={names.description}
         label="Opis"
         rows={3}
         error={error}
@@ -65,7 +75,7 @@ export function RecipeFormGeneralTab({
       />
 
       <RadioField
-        name="difficulty"
+        name={names.difficulty}
         label="Trudność"
         error={error}
         initialValue={defaultValues?.difficulty || RecipeDifficulty.medium}
@@ -91,7 +101,7 @@ export function RecipeFormGeneralTab({
 
       {dietTypeCategories && (
         <CheckboxField
-          name="dietType"
+          name={names.dietType}
           label="Dieta"
           error={error}
           initialValue={initialDietTypes}
@@ -106,7 +116,7 @@ export function RecipeFormGeneralTab({
 
       {dietTypeCategories && (
         <CheckboxField
-          name="dishType"
+          name={names.dishType}
           label="Typ Dania"
           error={error}
           initialValue={initialDishTypes}
@@ -121,7 +131,7 @@ export function RecipeFormGeneralTab({
 
       {cuisineTypeCategories && (
         <CheckboxField
-          name="cuisineType"
+          name={names.cuisineType}
           label="Kuchnia"
           error={error}
           initialValue={initialCuisineTypes}
@@ -134,5 +144,26 @@ export function RecipeFormGeneralTab({
         />
       )}
     </>
+  );
+}
+
+interface RecipeFormGeneralTabTitleProps {
+  error: FormValidationOrApiError | null;
+}
+
+export function RecipeFormGeneralTabTitle({
+  error,
+}: RecipeFormGeneralTabTitleProps) {
+  const tabHasErrors =
+    error instanceof FormValidationError &&
+    intersection(Object.keys(error.errorsMap), Object.values(names)).length > 0;
+
+  return (
+    <div className="flex items-center justify-center">
+      {tabHasErrors && (
+        <ExclamationCircleOutlined className="text-sm leading-none mr-1" />
+      )}
+      Ogólne
+    </div>
   );
 }

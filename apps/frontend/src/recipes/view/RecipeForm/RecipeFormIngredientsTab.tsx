@@ -1,4 +1,5 @@
 import {
+  FormValidationError,
   FormValidationErrorMessage,
   FormValidationOrApiError,
 } from '@fe/errors';
@@ -11,14 +12,20 @@ import {
   useUnitOptions,
 } from '@fe/ingredients';
 import { HiddenField, PickerBasedSelectField, StepperField } from '@fe/form';
-import { TeamOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, TeamOutlined } from '@ant-design/icons';
 import { List } from 'antd-mobile';
 import React from 'react';
+import { intersection } from 'lodash';
 
 interface RecipeFormIngredientsTabProps {
   error: FormValidationOrApiError | null;
   defaultValues?: IRecipe;
 }
+
+const names = {
+  portions: 'portions',
+  ingredients: 'ingredients',
+};
 
 export function RecipeFormIngredientsTab({
   error,
@@ -37,7 +44,7 @@ export function RecipeFormIngredientsTab({
     <>
       <div className="border-b mb-3">
         <StepperField
-          name="portions"
+          name={names.portions}
           min={1}
           initialValue={defaultValues?.portions || 4}
           error={error}
@@ -53,7 +60,7 @@ export function RecipeFormIngredientsTab({
       <IngredientsSearch>
         <IngredientsSearchBar className="mb-3" />
 
-        <FormValidationErrorMessage name="ingredients" error={error} />
+        <FormValidationErrorMessage name={names.ingredients} error={error} />
 
         <div className="overflow-y-auto">
           <IngredientsSearchResultList
@@ -118,5 +125,26 @@ export function RecipeFormIngredientsTab({
         </div>
       </IngredientsSearch>
     </>
+  );
+}
+
+interface RecipeFormIngredientsTabTitleProps {
+  error: FormValidationOrApiError | null;
+}
+
+export function RecipeFormIngredientsTabTitle({
+  error,
+}: RecipeFormIngredientsTabTitleProps) {
+  const tabHasErrors =
+    error instanceof FormValidationError &&
+    intersection(Object.keys(error.errorsMap), Object.values(names)).length > 0;
+
+  return (
+    <div className="flex items-center justify-center">
+      {tabHasErrors && (
+        <ExclamationCircleOutlined className="text-sm leading-none mr-1" />
+      )}
+      Składniki
+    </div>
   );
 }

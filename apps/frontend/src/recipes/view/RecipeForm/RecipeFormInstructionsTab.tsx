@@ -1,4 +1,5 @@
 import {
+  FormValidationError,
   FormValidationErrorMessage,
   FormValidationOrApiError,
 } from '@fe/errors';
@@ -6,16 +7,23 @@ import { IRecipe } from '@fe/recipes';
 import { StepperField, TextAreaField } from '@fe/form';
 import {
   ClockCircleOutlined,
+  ExclamationCircleOutlined,
   MinusCircleOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import { Form } from 'antd-mobile';
 import React from 'react';
+import { intersection } from 'lodash';
 
 interface RecipeFormInstructionsTabProps {
   error: FormValidationOrApiError | null;
   defaultValues?: IRecipe;
 }
+
+const names = {
+  preparationTime: 'preparationTime',
+  instructions: 'instructions',
+};
 
 export function RecipeFormInstructionsTab({
   error,
@@ -25,7 +33,7 @@ export function RecipeFormInstructionsTab({
     <>
       <div className="border-b mb-3">
         <StepperField
-          name="preparationTime"
+          name={names.preparationTime}
           min={5}
           initialValue={defaultValues ? defaultValues.preparationTime / 60 : 30}
           step={5}
@@ -42,7 +50,7 @@ export function RecipeFormInstructionsTab({
 
       <div className="instructions-field">
         <Form.Array
-          name="instructions"
+          name={names.instructions}
           renderAdd={() => (
             <PlusCircleOutlined className="text-primary text-xl" />
           )}
@@ -85,8 +93,36 @@ export function RecipeFormInstructionsTab({
           }
         </Form.Array>
 
-        <FormValidationErrorMessage name="instructions" error={error} />
+        <FormValidationErrorMessage name={names.instructions} error={error} />
       </div>
     </>
+  );
+}
+
+interface RecipeFormInstructionsTabTitleProps {
+  error: FormValidationOrApiError | null;
+}
+
+export function RecipeFormInstructionsTabTitle({
+  error,
+}: RecipeFormInstructionsTabTitleProps) {
+  const tabHasErrors =
+    error instanceof FormValidationError &&
+    Object.keys(error.errorsMap).find((errorNameKey) =>
+      Object.values(names).reduce(
+        (prev, current) => prev || errorNameKey.startsWith(current),
+        false
+      )
+    );
+
+  error instanceof FormValidationError && console.log(error.errorsMap);
+
+  return (
+    <div className="flex items-center justify-center">
+      {tabHasErrors && (
+        <ExclamationCircleOutlined className="text-sm leading-none mr-1" />
+      )}
+      Instrukcje
+    </div>
   );
 }

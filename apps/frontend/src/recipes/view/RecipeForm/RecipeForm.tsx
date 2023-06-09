@@ -3,9 +3,18 @@ import React from 'react';
 import { Button, CapsuleTabs, Form, SafeArea } from 'antd-mobile';
 import { FormValidationOrApiError } from '@fe/errors';
 import { IRecipe } from '../../api';
-import { RecipeFormGeneralTab } from './RecipeFormGeneralTab';
-import { RecipeFormIngredientsTab } from './RecipeFormIngredientsTab';
-import { RecipeFormInstructionsTab } from './RecipeFormInstructionsTab';
+import {
+  RecipeFormGeneralTab,
+  RecipeFormGeneralTabTitle,
+} from './RecipeFormGeneralTab';
+import {
+  RecipeFormIngredientsTab,
+  RecipeFormIngredientsTabTitle,
+} from './RecipeFormIngredientsTab';
+import {
+  RecipeFormInstructionsTab,
+  RecipeFormInstructionsTabTitle,
+} from './RecipeFormInstructionsTab';
 
 interface RecipeFormProps {
   error: FormValidationOrApiError | null;
@@ -72,11 +81,19 @@ export const RecipeForm = ({
       }
     >
       <CapsuleTabs>
-        <CapsuleTabs.Tab title="Ogólne" key="general" forceRender={true}>
+        <CapsuleTabs.Tab
+          title={<RecipeFormGeneralTabTitle error={error} />}
+          key="general"
+          forceRender={true}
+        >
           <RecipeFormGeneralTab error={error} defaultValues={defaultValues} />
         </CapsuleTabs.Tab>
 
-        <CapsuleTabs.Tab title="Składniki" key="ingredients" forceRender={true}>
+        <CapsuleTabs.Tab
+          title={<RecipeFormIngredientsTabTitle error={error} />}
+          key="ingredients"
+          forceRender={true}
+        >
           <RecipeFormIngredientsTab
             error={error}
             defaultValues={defaultValues}
@@ -84,7 +101,7 @@ export const RecipeForm = ({
         </CapsuleTabs.Tab>
 
         <CapsuleTabs.Tab
-          title="Instrukcje"
+          title={<RecipeFormInstructionsTabTitle error={error} />}
           key="instructions"
           forceRender={true}
         >
